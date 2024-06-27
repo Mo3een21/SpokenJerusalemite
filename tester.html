@@ -1,179 +1,32 @@
-<!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Community Story</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            direction: rtl;
-            background-color: #f5f5f5;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .highlight {
-            color: #ff6347; /* Use your brand color */
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .numbers {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #ff6347; /* Use your brand color */
-        }
-
-        .team {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .team-member {
-            width: calc(25% - 20px);
-            background: white;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .team-member img {
-            width: 100%;
-            height: auto;
-            border-radius: 50%;
-        }
-
-        .team-member .details {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .team-member:hover .details {
-            transform: translateY(0);
-        }
-
-        .contact-form {
-            background: white;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-
-        .contact-form input, .contact-form select, .contact-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .contact-form textarea {
-            height: 100px;
-        }
-
-        .contact-form button {
-            background: #ff6347; /* Use your brand color */
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-
-        .contact-form button:hover {
-            background: #e55337; /* A darker shade of the brand color */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="tester.css">
+  <title>Document</title>
 </head>
 <body>
-    <div class="container">
-        <p><span class="highlight">סיפור הקהילה שלנו</span> התחיל עם שתי חברות ירושלמיות, ממזרח ומערב העיר, וצמח כיום לקהילה המשותפת הגדולה והותיקה בירושלים.
-        ירושלמית מדוברת שמה את השפה במרכז, במטרה להפוך אותה מגורם המייצר פחד וניכור, לכלי המאפשר תקשורת, הבנה והיכרות אמיתית בין אוכלוסיות העיר.
+  <div class="container">
+    <div class="text">
+      <p class="highlight">
+        סיפור הקהילה שלנו התחיל עם שתי חברות ירושלמיות, ממזרח ומערב העיר, וצמח כיום לקהילה המשותפת הגדולה והותיקה בירושלים.
+        ירושלמית מדוברת שמה את השפה במרכז, במטרה להפוך אותה מגורם המייצר פחד וניכור, לכלי המאפשר תקשורת, הבנה והיכרות אמיתית בין אוכלוסיות העיר. 
         בעיר אולי המתוחה בארץ, אנחנו מצליחות ליצור יחד שפה משותפת ולהפגיש בין מאות נשים, שסביר להניח שלא היו נפגשות אחרת.
-        מעבר למפגש המשותף, אנחנו פועלות לקדם שוויון זכויות והזדמנויות, ולהבטיח שהשפה לא תהווה חסם בפני אף אישה לעצמאות והגשמה עצמית.
-        הקהילה נמצאת בצמיחה מתמדת משנת 2017, ומנוהלת באופן שוויוני ע"י צוות של מתנדבות ממזרח וממערב העיר, כחלק מעמותת כולנא ירושלים.
+        מעבר למפגש המשותף, אנחנו פועלות לקדם שוויון זכויות והזדמנויות, ולהבטיח שהשפה לא תהווה חסם בפני אף אישה לעצמאות והגשמה עצמית. 
+        הקהילה נמצאת בצמיחה מתמדת משנת 2017, ומנוהלת באופן שוויוני ע"י צוות של מתנדבות ממזרח וממערב העיר, כחלק מעמותת כולנא ירושלים. 
         מעבר לפעילות הפנים של הקהילה, אנו מציעות קורסי שפה, סדנאות ושירותי תרגום לא.נשים וארגונים מכל הארץ. 
-        <a href="#contact" class="highlight">פנו אלינו לפרטים נוספים!</a></p>
-
-        <div class="numbers">
-            <div>2900 נשים מכל המגוון הירושלמי</div>
-            <div>+ 50 מתנדבות</div>
-            <div>+ 7 שנות קהילה</div>
-        </div>
-
-        <h2 class="highlight">הצוות שלנו</h2>
-        <div class="team">
-            <div class="team-member">
-                <img src="path_to_image1.jpg" alt="Lior Orien">
-                <div class="details">
-                    <p>ליאור אוריין</p>
-                    <p>מנהלת משותפת</p>
-                </div>
-            </div>
-            <div class="team-member">
-                <img src="path_to_image2.jpg" alt="Suzan Sayad">
-                <div class="details">
-                    <p>סוזן סייאד</p>
-                    <p>מנהלת משותפת</p>
-                </div>
-            </div>
-            <!-- Add more team members as needed -->
-        </div>
-
-        <h2 class="highlight" id="contact">דברו איתנו!</h2>
-        <div class="contact-form">
-            <form>
-                <label for="name">שם:</label>
-                <input type="text" id="name" name="name" required>
-                
-                <label for="email">מייל:</label>
-                <input type="email" id="email" name="email" required>
-                
-                <label for="phone">טלפון:</label>
-                <input type="tel" id="phone" name="phone" required>
-                
-                <label for="subject">נושא הפנייה:</label>
-                <select id="subject" name="subject" required>
-                    <option value="">בחר נושא</option>
-                    <option value="language_exchange">חילופי שפות</option>
-                    <option value="hebrew_arabic_courses">קורסי עברית / ערבית מדוברת</option>
-                    <option value="translation_services">הזמנת שירותי תרגום</option>
-                    <option value="workshop_activity">הזמנת סדנה או פעילות</option>
-                    <option value="volunteering">התנדבות</option>
-                    <option value="employment_help">עזרה בתעסוקה (רק בערבית)</option>
-                    <option value="donation">תרומה</option>
-                    <option value="other">נושא אחר</option>
-                </select>
-                
-                <label for="message">רוצה לספר לנו עוד?</label>
-                <textarea id="message" name="message"></textarea>
-                
-                <button type="submit">שלח</button>
-            </form>
-        </div>
+        <Link href="/contact" class="highlight">פנו אלינו לפרטים נוספים!</Link>
+      </p>
     </div>
+    <div class="ImageFounder">
+      <img
+        src="public/assets/images/3.jpeg"
+      
+      />
+    </div>
+  </div>
+  
+
+
 </body>
 </html>

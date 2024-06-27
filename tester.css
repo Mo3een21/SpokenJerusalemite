@@ -1,0 +1,8 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr auto; /* one column for text (flexible) and one for the image (auto-sized) */
+    gap: 20px; /* space between the text and image */
+    align-items: center; /* vertically align items */
+  }
+
+  
