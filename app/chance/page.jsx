@@ -9,9 +9,10 @@ export default function aboutus() {
   return (
     <>
       <NavBar />
+      # first line
       <div className="main">
         <div className="section">
-          <div className="image-container" style={{ backgroundImage: `url("/assets/opportunities/opportunities-1.jpeg")` }}>
+          <div className="image-container" style={{ backgroundImage: `url("/assets/chanceImages/opportunities-1.jpeg")` }}>
             <div className="image-title">
               <h2>שפה להזדמנויות</h2>
             </div>
@@ -36,7 +37,7 @@ export default function aboutus() {
             <li>קבוצות לתרגול עברית</li>
           </ul>
           <p>בזכות רשת סולידריות של מתנדבות מהקהילה המסייעות כל אחת בתחומה.</p>
-          <div className="image-container" style={{ backgroundImage: `url("/assets/opportunities/opportunities-2.jpeg")` }}>
+          <div className="image-container" style={{ backgroundImage: `url("/assets/chanceImages/opportunities-2.jpeg")` }}>
             <div className="image-title">
               <h2>השותפים שלנו</h2>
             </div>
@@ -45,7 +46,7 @@ export default function aboutus() {
           <Slider />
           <br></br>
           <br></br>
-          <div className="image-container" style={{ backgroundImage: `url("/assets/opportunities/opportunities-3.jpeg")` }}>
+          <div className="image-container" style={{ backgroundImage: `url("/assets/chanceImages/opportunities-3.jpeg")` }}>
             <div className="image-title">
               <h2>קורסי העברית שלנו</h2>
             </div>
