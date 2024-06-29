@@ -1,20 +1,28 @@
-import NavBar from'/components/NavBar'
-import MainSection from '/components/MainSection';
-import InfoSection from '@/components/InfoSection';
-export default function aboutus() {
-  return (
-    <div style={styles.app}>
-            <NavBar />
-            {/* <h2>hi</h2> */}
-            {/* <MainSection /> */}
-            <InfoSection />
+'use client';
+import React, { useState } from 'react';
+import NavBar from '/components/NavBar';
+import AboutusComponent from '/components/AboutusComponent';
+import InfoSection from '/components/InfoSection';
+import './aboutus.css'; // Import the CSS file normally
+
+const AboutUs = () => {
+    const [language, setLanguage] = useState('HE'); // Default language set to 'HE'
+
+    const toggleLanguage = () => {
+        setLanguage((prevLanguage) => (prevLanguage === 'AR' ? 'HE' : 'AR'));
+    };
+
+    return (
+        <div className="styles.aboutus">
+            <NavBar language={language} toggleLanguage={toggleLanguage} />
+            return (
+        
+            <AboutusComponent language={language} />
+        
+    );
+            <InfoSection language={language} />
         </div>
-  )
-}
-const styles = {
-    app: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-    },
+    );
 };
+
+export default AboutUs;

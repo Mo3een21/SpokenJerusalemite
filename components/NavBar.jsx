@@ -1,10 +1,9 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 
-const NavBar = () => {
+const NavBar = ({ language, toggleLanguage })  => {
     const [hoveredItem, setHoveredItem] = useState(null);
-    const [language, setLanguage] = useState('AR');
+    const [hoveredButton, setHoveredButton] = useState(null); // State to track hovered button
     const [isLogoHovered, setIsLogoHovered] = useState(false);
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isMobileView, setIsMobileView] = useState(false);
@@ -26,7 +25,7 @@ const NavBar = () => {
         return () => {
             window.removeEventListener('resize', handleResize); // Cleanup the event listener
         };
-    }, [])
+    }, []);
 
     const handleLogoMouseEnter = () => {
         setIsLogoHovered(true);
@@ -44,8 +43,16 @@ const NavBar = () => {
         setHoveredItem(null);
     };
 
+    const handleButtonMouseEnter = (buttonName) => {
+        setHoveredButton(buttonName);
+    };
+
+    const handleButtonMouseLeave = () => {
+        setHoveredButton(null);
+    };
+
     const handleLogoClick = () => {
-        console.log('Logo clicked');
+        window.location.href = '/'; // Redirect to the home page
     };
 
     const getItemStyle = (itemName) => {
@@ -69,16 +76,14 @@ const NavBar = () => {
         return {
             color: 'rgb(33, 84, 84)',
             textDecoration: 'none',
-            transition: `color ${transitionDelay} ease, text-decoration ${transitionDelay} ease`,
+            transition: `color ${transitionDelay} ease, textDecoration ${transitionDelay} ease`,
         };
     };
 
-    const toggleLanguage = () => {
-        setLanguage(language === 'AR' ? 'HE' : 'AR');
-    };
+
 
     const redirectToLinkedIn = () => {
-        window.location.href = 'https://www.linkedin.com/company/spoken-jerusalemite-%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%9E%D7%99%D7%AA-%D7%9E%D7%93%D7%95%D7%91%D7%A8%D7%AA-%D9%85%D8%AD%D8%A7%D8%93%D8%AB%D8%A9-%D9%85%D9%82%D8%AF%D8%B3%D9%8A%D8%A9/';
+        window.location.href = 'https://www.linkedin.com/company/spoken-jerusalemite-%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%9E%D7%99%D7%AA-%D7%9E%D7%93%D7%95%D7%91%D7%A8%D7%AA-%D9%9E%D8%AD%D8%A7%D8%93%D8%AA%D8%A9-%D9%85%D9%82%D8%AF%D8%B3%D9%99%D8%A9/';
     };
 
     const redirectToFacebook = () => {
@@ -94,19 +99,30 @@ const NavBar = () => {
         setIsZoomedIn(isMobileView && !isNavOpen); // Set isZoomedIn only in mobile view and when opening the nav
     };
 
-
-
-    const navItems = [
-        { label: 'דף ראשי', id: 'home', url: '../' },
-        { label: 'מי אנחנו', id: 'aboutus', url: '../aboutus' },
-        { label: 'קהילה לומדת: חילופי שפות', id: 'community', url: '../community' },
-        { label: 'שפה להזדמנויות', id: 'chance', url: '../chance' },
-        { label: 'נשות הקהילה', id: 'women', url: '../women' },
-        { label: 'קורסי שפה', id: 'courses', url: '../courses' },
-        { label: 'שירותי תרגום', id: 'services', url: '../services' },
-        { label: 'הצטרפו אלינו', id: 'joinus', url: '../joinus' },
-        { label: 'תמכו בנו', id: 'donate', url: '../donate' }
-    ];
+    const navItems = {
+        HE: [
+            { label: 'דף ראשי', id: 'home', url: '../' },
+            { label: 'מי אנחנו', id: 'aboutus', url: '../aboutus' },
+            { label: 'קהילה לומדת: חילופי שפות', id: 'community', url: '../community' },
+            { label: 'שפה להזדמנויות', id: 'chance', url: '../chance' },
+            { label: 'נשות הקהילה', id: 'women', url: '../women' },
+            { label: 'קורסי שפה', id: 'courses', url: '../courses' },
+            { label: 'שירותי תרגום', id: 'services', url: '../services' },
+            { label: 'הצטרפו אלינו', id: 'joinus', url: '../joinus' },
+            { label: 'תמכו בנו', id: 'donate', url: '../donate' }
+        ],
+        AR: [
+            { label: 'الصفحة الرئيسية', id: 'home', url: '../' },
+            { label: 'من نحن', id: 'aboutus', url: '../aboutus' },
+            { label: 'مجتمع تعلم: تبادل اللغات', id: 'community', url: '../community' },
+            { label: 'اللغة للفرص', id: 'chance', url: '../chance' },
+            { label: 'نساء المجتمع', id: 'women', url: '../women' },
+            { label: 'دورات اللغة', id: 'courses', url: '../courses' },
+            { label: 'خدمات الترجمة', id: 'services', url: '../services' },
+            { label: 'انضموا إلينا', id: 'joinus', url: '../joinus' },
+            { label: 'ادعمونا', id: 'donate', url: '../donate' }
+        ]
+    };
 
     return (
         <nav style={styles.nav}>
@@ -129,14 +145,37 @@ const NavBar = () => {
                 </a>
             )}
             <div style={styles.row}>
-                <button style={styles.imageButton} onClick={redirectToLinkedIn}>
+                <button
+                    style={hoveredButton === 'linkedin' ? { ...styles.imageButton, ...styles.enlargedImageButton } : styles.imageButton}
+                    onMouseEnter={() => handleButtonMouseEnter('linkedin')}
+                    onMouseLeave={handleButtonMouseLeave}
+                    onClick={redirectToLinkedIn}
+                >
                     <img src="/assets/images/LILogo.png" alt="LinkedIn" style={styles.image} />
                 </button>
-                <button style={styles.imageButton} onClick={redirectToFacebook}>
+                <button
+                    style={hoveredButton === 'facebook' ? { ...styles.imageButton, ...styles.enlargedImageButton } : styles.imageButton}
+                    onMouseEnter={() => handleButtonMouseEnter('facebook')}
+                    onMouseLeave={handleButtonMouseLeave}
+                    onClick={redirectToFacebook}
+                >
                     <img src="/assets/images/FBLogo.png" alt="Facebook" style={styles.image} />
                 </button>
-                <button style={styles.imageButton} onClick={redirectToInstagram}>
+                <button
+                    style={hoveredButton === 'instagram' ? { ...styles.imageButton, ...styles.enlargedImageButton } : styles.imageButton}
+                    onMouseEnter={() => handleButtonMouseEnter('instagram')}
+                    onMouseLeave={handleButtonMouseLeave}
+                    onClick={redirectToInstagram}
+                >
                     <img src="/assets/images/IGLogo.png" alt="Instagram" style={styles.image} />
+                </button>
+                <button
+                    style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
+                    onMouseEnter={() => handleButtonMouseEnter('language')}
+                    onMouseLeave={handleButtonMouseLeave}
+                    onClick={toggleLanguage}
+                >
+                    {language === 'AR' ? 'HE' : 'AR'}
                 </button>
             </div>
             <ul style={isMobileView 
@@ -146,7 +185,8 @@ const NavBar = () => {
                     flexDirection: (isZoomedIn ? 'column' : 'row'),
                     position: 'absolute',
                     top: '60px',
-                    right: '20px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
                     backgroundColor: 'rgb(255, 247, 237)',
                     border: '2px solid rgb(33, 84, 84)',
                     borderRadius: '10px',
@@ -156,23 +196,20 @@ const NavBar = () => {
                 } 
                 : styles.navList
             }>
-                {navItems.map(({ label, id, url }) => (
-    <li
-        key={id}
-        style={{ ...(isMobileView ? styles.mobileNavItem : styles.navItem), ...getItemStyle(label) }}
-        onMouseEnter={() => handleMouseEnter(label)}
-        onMouseLeave={handleMouseLeave}
-    >
-        <Link href={url}>
-            <div className="customLink" style={{ ...styles.navLink, ...getLinkStyle(label)  }}>
-                <strong>{label}</strong>
-                {hoveredItem === label && <div style={styles.navItemUnderline}></div>}
-            </div>
-        </Link>
-    </li>
-))}
+                {navItems[language].map(({ label, id, url }) => (
+                    <li
+                        key={id}
+                        style={{ ...(isMobileView ? styles.mobileNavItem : styles.navItem), ...getItemStyle(label) }}
+                        onMouseEnter={() => handleMouseEnter(label)}
+                        onMouseLeave={handleMouseLeave}
+                    >
+                        <a href={url} style={{ ...styles.navLink, ...getLinkStyle(label) }}>
+                            <strong>{label}</strong>
+                            {hoveredItem === label && <div style={styles.navItemUnderline}></div>}
+                        </a>
+                    </li>
+                ))}
             </ul>
-            
             <button
                 style={isLogoHovered ? { ...styles.logoButton, ...styles.enlargedLogo } : styles.logoButton}
                 onClick={handleLogoClick}
@@ -186,8 +223,8 @@ const NavBar = () => {
             </button>
         </nav>
     );
-    
 }
+
 const styles = {
     nav: {
         position: 'fixed',
@@ -217,27 +254,40 @@ const styles = {
     navItem: {
         marginLeft: '2%',
         transition: 'background-color 0.9s',
-        color: 'rgb(33, 84, 84)'
+        color: 'rgb(33, 84, 84)',
     },
     navLink: {
-        color: 'rgb(247, 199, 201)',
-        textDecoration: 'none',
+        color: 'rgb(33, 84, 84)', // Changed the color
+        textDecoration: 'none', // Removed the underline
     },
     languageButton: {
         margin: '0 1%',
         backgroundColor: 'transparent',
-        border: 'none',
         cursor: 'pointer',
         padding: 0,
         color: 'rgb(33, 84, 84)',
         fontSize: '14px',
+        transition: 'transform 0.3s ease, background-color 0.3s ease', // Add transition
+        height: '10vh', // Adjust the height using viewport height (vh)
+        width: '10vh', // Adjust the width using viewport height (vh)
+        fontWeight: 'bold',
+        border: 'none', // Ensure there's no border
+        outline: 'none', // Ensure there's no outline
+    },
+    enlargedLanguageButton: {
+        transform: 'scale(1.1)', // Enlarge the button on hover
+        color: 'rgb(245, 146, 149)', // Change background color on hover
     },
     imageButton: {
         margin: '0 1%',
         backgroundColor: 'rgb(255, 247, 237)',
         border: 'none',
         cursor: 'pointer',
-        padding: 0
+        padding: 0,
+        transition: 'transform 0.3s ease',
+    },
+    enlargedImageButton: {
+        transform: 'scale(1.1)',
     },
     image: {
         width: '4vw',
@@ -261,8 +311,9 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '10vw',
-        height: '8vw',
+        marginRight: '3%',
+        width: '14vw',
+        height: '10vw',
         transition: 'transform 0.3s ease',
     },
     navToggleButton: {
@@ -278,9 +329,9 @@ const styles = {
         transform: 'scale(1.1)',
     },
     customLink: {
-        color: 'white',
-        textDecoration: 'lineThrough', /* Remove underline for all links */
-    }
+        color: 'rgb(33, 84, 84)', // Changed the color
+        textDecoration: 'none', // Removed the underline for all links
+    },
 };
 
 export default NavBar;

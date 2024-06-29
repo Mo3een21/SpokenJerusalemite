@@ -1,0 +1,137 @@
+body{
+  background-color: rgb(255, 247, 237);
+}
+.container {
+    direction: rtl;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); /* Create responsive columns */
+    gap: 20px; /* Add space between grid items */
+    margin: 20px;
+    margin-top: 100px; /* Add margin around the container */
+  }
+  .text{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+  }
+  .highlight{
+  max-width: 500px;  
+  }
+  
+  .project {
+    height: 200px;
+    background-color: rgb(255, 242, 226); /* Background color for project cards */
+    color: rgb(33, 84, 84);
+    padding: 10px; /* Add padding inside project cards */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+    text-align: center; /* Center-align text inside project cards */
+    border: 2px solid rgb(33, 84, 84); /* Solid green border */
+  }
+  
+  .project img {
+    max-width: 85%;
+    height: 85%; /* Ensure images fit within the project cards */
+    border-radius: 8px; /* Rounded corners for images */
+  }
+  
+  .project-title {
+    font-size: 1.2em; /* Increase font size for titles */
+    margin-top: 10px; /* Add space above titles */
+    font-weight: bold; /* Bold titles */
+  }
+  
+  .project-description {
+    font-size: 1em; /* Standard font size for descriptions */
+    margin-top: 5px; /* Add space above descriptions */
+    color: #555; /* Slightly lighter color for descriptions */
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px); /* Adds blur effect to the background */
+  }
+  
+  /* Updated CSS for modal content */
+  .modal-content {
+    background-color: rgb(255, 247, 237);
+    color:rgb(33, 84, 84);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    width: 80%;
+    max-width: 500px;
+    z-index: 100; /* Ensure modal is above backdrop */
+  }
+  
+  .modal-content h2 {
+    margin-top: 0;
+  }
+  
+  .modal-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: rgb(33, 84, 84);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .modal-content button:hover {
+    background-color: rgb(19, 58, 58);
+  }
+
+
+
+  
+ .flexer{
+    display: flex;
+    justify-content:  center;
+    
+ } 
+.contact-form {
+    direction: rtl;
+    
+    background: rgb(255, 247, 237);
+    padding: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.contact-form input, .contact-form select, .contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.contact-form textarea {
+    height: 100px;
+}
+
+.contact-form button {
+    background: rgb(245, 146, 149); /* Use your brand color */
+    color: rgb(255, 247, 237);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.contact-form button:hover {
+    background: rgb(235, 112, 105); /* A darker shade of the brand color */
+}

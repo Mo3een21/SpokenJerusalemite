@@ -1,14 +1,21 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
-import MainSection from '../components/MainSection';
+import MainSection from '../components/MyPage';
 import InfoSection from '../components/InfoSection';
 
 const HomePage = () => {
+    const [language, setLanguage] = useState('HE'); // Default language set to 'HE'
+
+    const toggleLanguage = () => {
+        setLanguage((prevLanguage) => (prevLanguage === 'AR' ? 'HE' : 'AR'));
+    };
+
     return (
         <div style={styles.app}>
-            <NavBar />
+            <NavBar language={language} toggleLanguage={toggleLanguage} />
             <MainSection />
-            <InfoSection />
+            <InfoSection language={language} />
         </div>
     );
 }
