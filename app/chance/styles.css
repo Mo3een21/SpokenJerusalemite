@@ -59,12 +59,7 @@ html {
 }
 
 
-
-
-
-
-
-
+/* SLIDER */
 
 .slider-container {
   position: relative;
@@ -167,5 +162,5 @@ form button:hover {
 }
 
 p, ul, h2 {
-  margin: 20px 0; /* Add margin to space out text elements */
+  margin: 20px 0; 
 }
