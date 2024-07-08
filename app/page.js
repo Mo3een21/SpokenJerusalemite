@@ -14,7 +14,7 @@ const HomePage = () => {
     return (
         <div style={styles.app}>
             <NavBar language={language} toggleLanguage={toggleLanguage} />
-            <MainSection />
+            <MainSection language={language}/>
             <InfoSection language={language} />
         </div>
     );
