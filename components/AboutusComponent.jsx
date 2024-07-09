@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect,useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import images from "../app/images.js";
 
@@ -165,9 +165,16 @@ export default function AboutusComponent({ language }) {
                     הקהילה נמצאת בצמיחה מתמדת משנת 2017, ומנוהלת באופן שוויוני ע"י צוות של מתנדבות ממזרח וממערב העיר, כחלק מעמותת כולנא ירושלים.
                     מעבר לפעילות הפנים של הקהילה, אנו מציעות קורסי שפה, סדנאות ושירותי תרגום לא.נשים וארגונים מכל הארץ.
                     `}
-                    <Link href="/contact" className='highlight'>
-                        {language === 'AR' ? 'تواصلوا معنا لمزيد من التفاصيل!' : 'פנו אלינו לפרטים נוספים!'}
-                    </Link>
+                    <Link 
+    href="#"
+    className='highlight'
+    onClick={(e) => {
+        e.preventDefault();
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }}
+>
+    {language === 'AR' ? 'تواصلوا معنا لمزيد من التفاصيل!' : 'פנו אלינו לפרטים נוספים!'}
+</Link>
                 </p>
                 <div className='ImageFounder'>
                     <Image 
@@ -208,149 +215,149 @@ export default function AboutusComponent({ language }) {
                     </div>
                 </div>
                 <div className="team-member">
-        <Image 
-            src="/assets/images/nogazar.jpg"
-            alt="Noga Zar"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'نجاة زر' : 'נגה זר'}</p>
-            <p>{language === 'AR' ? 'منسق الأحداث' : 'רכזת אירועים'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/hibabarq.jpg"
-            alt="Haba Barak"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'هباء برق' : 'הבה ברק'}</p>
-            <p>{language === 'AR' ? 'منسق الأحداث' : 'רכזת אירועים'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/odiahgori.jpg"
-            alt="Odia Guri"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'عادية غوري' : 'אודיה גורי'}</p>
-            <p>{language === 'AR' ? 'مدير البرامج وتطوير الأعمال' : 'מנהלת תכניות ופיתוח עסקי'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/dareenodeh.jpg"
-            alt="Darin Ouda"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'دارين عودة' : 'דרין עודה'}</p>
-            <p>{language === 'AR' ? 'مدرب' : 'מנחה'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/yasmeenrishq.jpg"
-            alt="Yasmin Rashk"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'ياسمين رشق' : 'יאסמין רשק'}</p>
-            <p>{language === 'AR' ? 'منسق برنامج التوظيف' : 'רכזת תכנית התעסוקה'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/yasmeenrishq.jpg"
-            alt="Ayla Erlich"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'آيلا إيرليش' : 'איילה ארליך'}</p>
-            <p>{language === 'AR' ? 'مدير المحتوى والبيداغوجيا' : 'מנהלת תוכן ופדגוגיה'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/tamarajaber.jpg"
-            alt="Tamara Jaber"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'تمارا جابر' : 'תמארה ג\'אבר'}</p>
-            <p>{language === 'AR' ? 'منسق مجتمعات الممارسة' : 'רכזת קהילות תרגול'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/hagarbartna.jpg"
-            alt="Hagar Bartna"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'هاجر برتنا' : 'הגר ברתנא'}</p>
-            <p>{language === 'AR' ? 'منسق الاجتماعات' : 'רכזת מפגשים'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/nogazar.jpg"
-            alt="Noga Gadish"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'نجاة جدش' : 'נוגה גדיש'}</p>
-            <p>{language === 'AR' ? 'مدرب' : 'מנחה'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/yaelhazan.jpg"
-            alt="Yael Hazan"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'يائيل حزان' : 'יעל חזן'}</p>
-            <p>{language === 'AR' ? 'منسق المجتمع' : 'רכזת קהילה'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/hadeelshqeirat.jpg"
-            alt="Hadil Shakirat"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'هديل شقيرات' : 'הדיל שקיראת'}</p>
-            <p>{language === 'AR' ? 'منسق المجتمع' : 'רכזת קהילה'}</p>
-        </div>
-    </div>
-    <div className="team-member">
-        <Image 
-            src="/assets/images/yaelhazan.jpg"
-            alt="Intasar Khales"
-            width={150}
-            height={150}
-        />
-        <div className="details">
-            <p>{language === 'AR' ? 'انتصار خالس' : 'אנתסאר חאלס'}</p>
-            <p>{language === 'AR' ? 'مدرب' : 'מנחה'}</p>
-        </div>
-    </div>
+                    <Image 
+                        src="/assets/images/nogazar.jpg"
+                        alt="Noga Zar"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'نجاة زر' : 'נגה זר'}</p>
+                        <p>{language === 'AR' ? 'منسق الأحداث' : 'רכזת אירועים'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/hibabarq.jpg"
+                        alt="Haba Barak"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'هباء برق' : 'הבה ברק'}</p>
+                        <p>{language === 'AR' ? 'منسق الأحداث' : 'רכזת אירועים'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/odiahgori.jpg"
+                        alt="Odia Guri"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'عادية غوري' : 'אודיה גורי'}</p>
+                        <p>{language === 'AR' ? 'مدير البرامج وتطوير الأعمال' : 'מנהלת תכניות ופיתוח עסקי'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/dareenodeh.jpg"
+                        alt="Darin Ouda"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'دارين عودة' : 'דרין עודה'}</p>
+                        <p>{language === 'AR' ? 'مدرب' : 'מנחה'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/yasmeenrishq.jpg"
+                        alt="Yasmin Rashk"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'ياسمين رشق' : 'יאסמין רשק'}</p>
+                        <p>{language === 'AR' ? 'منسق برنامج التوظيف' : 'רכזת תכנית התעסוקה'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/yasmeenrishq.jpg"
+                        alt="Ayla Erlich"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'آيلا إيرليش' : 'איילה ארליך'}</p>
+                        <p>{language === 'AR' ? 'مدير المحتوى والبيداغوجيا' : 'מנהלת תוכן ופדגוגיה'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/tamarajaber.jpg"
+                        alt="Tamara Jaber"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'تمارا جابر' : 'תמארה ג\'אבר'}</p>
+                        <p>{language === 'AR' ? 'منسق مجتمعات الممارسة' : 'רכזת קהילות תרגול'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/hagarbartna.jpg"
+                        alt="Hagar Bartna"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'هاجر برتنا' : 'הגר ברתנא'}</p>
+                        <p>{language === 'AR' ? 'منسق الاجتماعات' : 'רכזת מפגשים'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/nogazar.jpg"
+                        alt="Noga Gadish"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'نجاة جدش' : 'נוגה גדיש'}</p>
+                        <p>{language === 'AR' ? 'مدرب' : 'מנחה'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/yaelhazan.jpg"
+                        alt="Yael Hazan"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'يائيل حزان' : 'יעל חזן'}</p>
+                        <p>{language === 'AR' ? 'منسق المجتمع' : 'רכזת קהילה'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/hadeelshqeirat.jpg"
+                        alt="Hadil Shakirat"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'هديل شقيرات' : 'הדיל שקיראת'}</p>
+                        <p>{language === 'AR' ? 'منسق المجتمع' : 'רכזת קהילה'}</p>
+                    </div>
+                </div>
+                <div className="team-member">
+                    <Image 
+                        src="/assets/images/yaelhazan.jpg"
+                        alt="Intasar Khales"
+                        width={150}
+                        height={150}
+                    />
+                    <div className="details">
+                        <p>{language === 'AR' ? 'انتصار خالس' : 'אנתסאר חאלס'}</p>
+                        <p>{language === 'AR' ? 'مدرب' : 'מנחה'}</p>
+                    </div>
+                </div>
             </div>
 
             <h2 className="highlight" id="contact">{language === 'AR' ? 'تحدثوا إلينا!' : 'דברו איתנו!'}</h2>
