@@ -19,7 +19,7 @@ const Community = () => {
               
                 <LanguageExchange language={language} />
             </div>
-            <InfoSection></InfoSection>
+            <InfoSection language={language}/>
         </div>
     );
 };

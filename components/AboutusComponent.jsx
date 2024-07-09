@@ -144,6 +144,9 @@ export default function AboutusComponent({ language }) {
 
     return (
         <div className="container">
+            <button className="scroll-button" onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}>
+                 {language === 'AR' ? 'للتعبئة' : 'לטופס'}
+            </button>
             <div className="text">
                 <p className='highlight'>
                     {language === 'AR' ? 
@@ -175,11 +178,6 @@ export default function AboutusComponent({ language }) {
                     />
                 </div>
             </div>
-            {/* <div className="numbers">
-                <div>{language === 'AR' ? '2900 امرأة من جميع أنحاء القدس' : '2900 נשים מכל המגוון הירושלמי'}</div>
-                <div>{language === 'AR' ? '+ 50 متطوعة' : '+ 50 מתנדבות'}</div>
-                <div>{language === 'AR' ? '+ 7 سنوات من المجتمع' : '+ 7 שנות קהילה'}</div>
-            </div> */}
             <ImageGrid></ImageGrid>
 
             <h2 className="highlight">{language === 'AR' ? 'فريقنا' : 'הצוות שלנו'}</h2>
@@ -187,7 +185,7 @@ export default function AboutusComponent({ language }) {
                 {/* Team members */}
                 <div className="team-member">
                     <Image 
-                        src="/assets/images"
+                        src="/assets/images/yasmeenrishq.jpg"
                         alt="Lior Orien"
                         width={150}
                         height={150}
@@ -271,7 +269,7 @@ export default function AboutusComponent({ language }) {
     </div>
     <div className="team-member">
         <Image 
-            src=""
+            src="/assets/images/yasmeenrishq.jpg"
             alt="Ayla Erlich"
             width={150}
             height={150}
@@ -343,7 +341,7 @@ export default function AboutusComponent({ language }) {
     </div>
     <div className="team-member">
         <Image 
-            src="/assets/images/intisarkhales.jpg"
+            src="/assets/images/yaelhazan.jpg"
             alt="Intasar Khales"
             width={150}
             height={150}

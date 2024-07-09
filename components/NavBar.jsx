@@ -101,7 +101,7 @@ const NavBar = ({ language, toggleLanguage })  => {
 
     const navItems = {
         HE: [
-            { label: 'דף ראשי', id: 'home', url: '../' },
+            // { label: 'דף ראשי', id: 'home', url: '../' },
             { label: 'מי אנחנו', id: 'aboutus', url: '../aboutus' },
             { label: 'קהילה לומדת: חילופי שפות', id: 'community', url: '../community' },
             { label: 'שפה להזדמנויות', id: 'chance', url: '../chance' },
@@ -112,7 +112,7 @@ const NavBar = ({ language, toggleLanguage })  => {
             { label: 'תמכו בנו', id: 'donate', url: '../donate' }
         ],
         AR: [
-            { label: 'الصفحة الرئيسية', id: 'home', url: '../' },
+            // { label: 'الصفحة الرئيسية', id: 'home', url: '../' },
             { label: 'من نحن', id: 'aboutus', url: '../aboutus' },
             { label: 'مجتمع تعلم: تبادل اللغات', id: 'community', url: '../community' },
             { label: 'اللغة للفرص', id: 'chance', url: '../chance' },
@@ -126,25 +126,46 @@ const NavBar = ({ language, toggleLanguage })  => {
 
     return (
         <nav style={styles.nav}>
-            {isMobileView && (
-                <a
-                    href="javascript:void(0)"
-                    className="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px ShowWhenFocus"
-                    id="kt_header_menu_mobile_toggle"
-                    aria-label="פתיחת תפריט אישי להגדרות משתמש"
-                    aria-expanded={isNavOpen}
-                    role="button"
-                    onClick={toggleNav}
+        {isMobileView && (
+            <a
+                href="javascript:void(0)"
+                className="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px ShowWhenFocus"
+                id="kt_header_menu_mobile_toggle"
+                aria-label="פתיחת תפריט אישי להגדרות משתמש"
+                aria-expanded={isNavOpen}
+                role="button"
+                onClick={toggleNav}
+            >
+                <span className="svg-icon svg-icon-2x" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" style={{ fill: 'none' }}>
+                        <path d="M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z" fill="black"></path>
+                        <path opacity="0.3" d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z" fill="black"></path>
+                    </svg>
+                </span>
+            </a>
+        )}
+        <div style={styles.row}>
+            <div style={styles.topRow}>
+            <button
+                id="signin-button"
+                style={hoveredButton === 'signin' ? { ...styles.signInButton, ...styles.enlargedSignInButton } : styles.signInButton}
+                onMouseEnter={() => handleButtonMouseEnter('signin')}
+                onMouseLeave={handleButtonMouseLeave}
+                onClick={() => window.location.href = '/signin'}
+            >
+                לכניסה
+            </button>
+                <button
+                    style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
+                    onMouseEnter={() => handleButtonMouseEnter('language')}
+                    onMouseLeave={handleButtonMouseLeave}
+                    onClick={toggleLanguage}
                 >
-                    <span className="svg-icon svg-icon-2x" aria-hidden="true">
-                        <svg width="24" height="24" viewBox="0 0 24 24" style={{ fill: 'none' }}>
-                            <path d="M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z" fill="black"></path>
-                            <path opacity="0.3" d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z" fill="black"></path>
-                        </svg>
-                    </span>
-                </a>
-            )}
-            <div style={styles.row}>
+                    {language === 'AR' ? 'HE' : 'AR'}
+                </button>
+            </div>
+            <div style={styles.separator}></div> {/* Separator line */}
+            <div style={styles.bottomRow}>
                 <button
                     style={hoveredButton === 'linkedin' ? { ...styles.imageButton, ...styles.enlargedImageButton } : styles.imageButton}
                     onMouseEnter={() => handleButtonMouseEnter('linkedin')}
@@ -169,15 +190,8 @@ const NavBar = ({ language, toggleLanguage })  => {
                 >
                     <img src="/assets/images/IGLogo.png" alt="Instagram" style={styles.image} />
                 </button>
-                <button
-                    style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
-                    onMouseEnter={() => handleButtonMouseEnter('language')}
-                    onMouseLeave={handleButtonMouseLeave}
-                    onClick={toggleLanguage}
-                >
-                    {language === 'AR' ? 'HE' : 'AR'}
-                </button>
             </div>
+        </div>
             <ul style={isMobileView 
                 ? { 
                     ...styles.navList,
@@ -235,11 +249,12 @@ const styles = {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '2px 2%', // Decreased top and bottom padding
+        padding: '8.5px 3%', // Decreased top and bottom padding
         backgroundColor: 'rgb(255, 247, 237)',
         color: 'rgb(247, 199, 201)',
         borderBottom: '4px solid rgb(33, 84, 84)',
         height: '60px', // Decreased the height of the navigation bar
+        fontSize:'16px'
     },
     navList: {
         listStyleType: 'none',
@@ -264,22 +279,25 @@ const styles = {
         margin: '0 1%',
         backgroundColor: 'transparent',
         cursor: 'pointer',
-        padding: 0,
+        padding: '8px 16px', // Added padding for button size
         color: 'rgb(33, 84, 84)',
         fontSize: '14px',
         transition: 'transform 0.3s ease, background-color 0.3s ease', // Add transition
-        height: '10vh', // Adjust the height using viewport height (vh)
-        width: '10vh', // Adjust the width using viewport height (vh)
+        height: '4vh', // Adjust the height using viewport height (vh)
+        width: '4vh', // Adjust the width using viewport height (vh)
         fontWeight: 'bold',
-        border: 'none', // Ensure there's no border
+        border: 'none', // Added border
+        // borderRadius: '8px', // Added border radius
         outline: 'none', // Ensure there's no outline
     },
     enlargedLanguageButton: {
         transform: 'scale(1.1)', // Enlarge the button on hover
-        color: 'rgb(245, 146, 149)', // Change background color on hover
+        // backgroundColor: 'rgb(245, 146, 149)', // Change background color on hover
+        color: 'rgb(245, 146, 149)', // Change text color on hover
     },
     imageButton: {
-        margin: '0 1%',
+        margin: '0 0.5%', // Adjust margin to better fit
+        marginBottom: '0px', // Added marginBottom to drag it up
         backgroundColor: 'rgb(255, 247, 237)',
         border: 'none',
         cursor: 'pointer',
@@ -290,8 +308,8 @@ const styles = {
         transform: 'scale(1.1)',
     },
     image: {
-        width: '4vw',
-        height: '4vw',
+        width: '2.2vw', // Adjusted size
+        height: '2.2vw', // Adjusted size
         backgroundColor: 'rgb(255, 247, 237)'
     },
     logo: {
@@ -301,6 +319,7 @@ const styles = {
     },
     row: {
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
     },
     logoButton: {
@@ -327,6 +346,44 @@ const styles = {
     },
     enlargedLogo: {
         transform: 'scale(1.1)',
+    },
+    topRow: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        width: '100%',
+        marginBottom: '10px', // Added margin bottom to separate from the main row
+    },
+    bottomRow: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+    },
+    signInButton: {
+        margin: '0 1%',
+        marginTop: '5px', // Added marginTop to drag it down
+        backgroundColor: 'rgb(33, 84, 84)', // Added background color
+        cursor: 'pointer',
+        padding: '5px 7px', // Further reduced padding for smaller size
+        color: 'white', // Changed text color
+        fontSize: '10px', // Reduced font size
+        fontWeight: 'bold',
+        border: '2px solid rgb(33, 84, 84)', // Added border
+        borderRadius: '4px', // Reduced border radius for rectangular shape
+        outline: 'none',
+        transition: 'transform 0.3s ease, background-color 0.3s ease, color 0.3s ease',
+    },
+    enlargedSignInButton: {
+        transform: 'scale(1.1)',
+        backgroundColor: 'rgb(245, 146, 149)', // Change background color on hover
+        color: 'white', // Change text color on hover
+    },
+    separator: {
+        width: '85%',
+        height: '1px',
+        backgroundColor: 'rgb(33, 84, 84)',
+        marginBottom: '5px', // Add some vertical spacing
     },
     customLink: {
         color: 'rgb(33, 84, 84)', // Changed the color

@@ -15,11 +15,10 @@ const AboutUs = () => {
     return (
         <div className="styles.aboutus">
             <NavBar language={language} toggleLanguage={toggleLanguage} />
-            return (
+            
         
             <AboutusComponent language={language} />
         
-    );
             <InfoSection language={language} />
         </div>
     );

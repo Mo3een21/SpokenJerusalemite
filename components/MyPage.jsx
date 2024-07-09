@@ -361,14 +361,17 @@ const ImageSlider = ({ language }) => {
   ];
 
   const sliderRef = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const slider = sliderRef.current;
-    if (slider) {
+    const container = containerRef.current;
+
+    if (slider && container) {
       const animation = slider.animate(
-        [{ transform: 'translateX(0)' }, { transform: `translateX(-90%)` }],
+        [{ transform: 'translateX(0)' }, { transform: `translateX(-${container.clientWidth}px)` }],
         {
-          duration: image_shtafem.length * 1500, // Adjust duration for smoother animation
+          duration: image_shtafem.length * 2300, // Adjust duration for smoother animation
           iterations: Infinity,
           easing: 'linear',
         }
@@ -389,7 +392,7 @@ const ImageSlider = ({ language }) => {
           'השותפות והשותפים מאפשרים לנו להתקיים במגוון תחומים, כל אחת ואחת חשובה לפעילות שלנו ואנחנו מודות לכולן על תרומתן לפעילות שלנו'
         }
       </p>
-      <div className="image-slider">
+      <div className="image-slider" ref={containerRef}>
         <div className="image-container" ref={sliderRef}>
           {image_shtafem.concat(image_shtafem).map((image, index) => (
             <img key={index} src={image} alt={`Image ${index}`} className="image-item" />
