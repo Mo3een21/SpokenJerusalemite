@@ -147,13 +147,13 @@ const NavBar = ({ language, toggleLanguage })  => {
         <div style={styles.row}>
             <div style={styles.topRow}>
             <button
-                id="signin-button"
-                style={hoveredButton === 'signin' ? { ...styles.signInButton, ...styles.enlargedSignInButton } : styles.signInButton}
-                onMouseEnter={() => handleButtonMouseEnter('signin')}
-                onMouseLeave={handleButtonMouseLeave}
-                onClick={() => window.location.href = '/signin'}
-            >
-                לכניסה
+                    id="signin-button"
+                    style={hoveredButton === 'signin' ? { ...styles.signInButton, ...styles.enlargedSignInButton } : styles.signInButton}
+                    onMouseEnter={() => handleButtonMouseEnter('signin')}
+                    onMouseLeave={handleButtonMouseLeave}
+                    onClick={() => window.location.href = '/signin'}
+                >
+                    {language === 'AR' ? 'تسجيل الدخول' : 'לכניסה'}
             </button>
                 <button
                     style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
@@ -164,33 +164,7 @@ const NavBar = ({ language, toggleLanguage })  => {
                     {language === 'AR' ? 'HE' : 'AR'}
                 </button>
             </div>
-            <div style={styles.separator}></div> {/* Separator line */}
-            <div style={styles.bottomRow}>
-                <button
-                    style={hoveredButton === 'linkedin' ? { ...styles.imageButton, ...styles.enlargedImageButton } : styles.imageButton}
-                    onMouseEnter={() => handleButtonMouseEnter('linkedin')}
-                    onMouseLeave={handleButtonMouseLeave}
-                    onClick={redirectToLinkedIn}
-                >
-                    <img src="/assets/images/LILogo.png" alt="LinkedIn" style={styles.image} />
-                </button>
-                <button
-                    style={hoveredButton === 'facebook' ? { ...styles.imageButton, ...styles.enlargedImageButton } : styles.imageButton}
-                    onMouseEnter={() => handleButtonMouseEnter('facebook')}
-                    onMouseLeave={handleButtonMouseLeave}
-                    onClick={redirectToFacebook}
-                >
-                    <img src="/assets/images/FBLogo.png" alt="Facebook" style={styles.image} />
-                </button>
-                <button
-                    style={hoveredButton === 'instagram' ? { ...styles.imageButton, ...styles.enlargedImageButton } : styles.imageButton}
-                    onMouseEnter={() => handleButtonMouseEnter('instagram')}
-                    onMouseLeave={handleButtonMouseLeave}
-                    onClick={redirectToInstagram}
-                >
-                    <img src="/assets/images/IGLogo.png" alt="Instagram" style={styles.image} />
-                </button>
-            </div>
+            
         </div>
             <ul style={isMobileView 
                 ? { 
@@ -280,6 +254,7 @@ const styles = {
         backgroundColor: 'transparent',
         cursor: 'pointer',
         padding: '8px 16px', // Added padding for button size
+        paddingBottom:'15px',
         color: 'rgb(33, 84, 84)',
         fontSize: '14px',
         transition: 'transform 0.3s ease, background-color 0.3s ease', // Add transition
@@ -367,10 +342,10 @@ const styles = {
         cursor: 'pointer',
         padding: '5px 7px', // Further reduced padding for smaller size
         color: 'white', // Changed text color
-        fontSize: '10px', // Reduced font size
+        fontSize: '14px', // Reduced font size
         fontWeight: 'bold',
         border: '2px solid rgb(33, 84, 84)', // Added border
-        borderRadius: '4px', // Reduced border radius for rectangular shape
+        borderRadius: '5px', // Reduced border radius for rectangular shape
         outline: 'none',
         transition: 'transform 0.3s ease, background-color 0.3s ease, color 0.3s ease',
     },
@@ -378,12 +353,6 @@ const styles = {
         transform: 'scale(1.1)',
         backgroundColor: 'rgb(245, 146, 149)', // Change background color on hover
         color: 'white', // Change text color on hover
-    },
-    separator: {
-        width: '85%',
-        height: '1px',
-        backgroundColor: 'rgb(33, 84, 84)',
-        marginBottom: '5px', // Add some vertical spacing
     },
     customLink: {
         color: 'rgb(33, 84, 84)', // Changed the color

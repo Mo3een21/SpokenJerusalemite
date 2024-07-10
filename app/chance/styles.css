@@ -11,7 +11,7 @@ body, html {
 
 html {
   background-color:rgba(255, 247, 237);
-  color: black;
+  color:#215454,
 }
 
 .main {
@@ -20,6 +20,7 @@ html {
   width: 100%;
   padding: 20px; /* Add padding around the main content */
   box-sizing: border-box;
+  color:#215454,
 }
 
 .section {

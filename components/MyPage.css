@@ -1,6 +1,7 @@
 /* Styles from mypage.css */
 body{
   background-color:rgb(255, 247, 237) ;
+  
 }
 .aaaaaa {
   width: 100%;
@@ -70,6 +71,7 @@ body{
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  padding: 0 10%; /* Add 10% padding to left and right */
 }
 
 .images_wrapper {
@@ -80,6 +82,7 @@ body{
   padding-right: 10px;
   align-items: center;
   justify-content: center;
+  
 }
 
 .responsive-image {
@@ -157,6 +160,7 @@ body{
   padding: 20px;
   padding-left: 4%;
   padding-right: 4%;
+  padding: 0 20%; /* Add 10% padding to left and right */
 }
 
 .image-grid::before,
@@ -193,6 +197,7 @@ body{
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #f4f4f4;
+  padding: 0 10%; /* Add 10% padding to left and right */
   /* border: 2px solid rgb(33, 84, 84); */
 }
 
@@ -249,6 +254,8 @@ body{
 .categories-container {
   text-align: center;
   padding: 20px;
+  padding: 0 10%; /* Add 10% padding to left and right */
+
 }
 
 .main-title {
@@ -339,6 +346,7 @@ body{
 .gallery-container {
   text-align: center;
   padding: 20px;
+  padding: 0 10%; /* Add 10% padding to left and right */
 }
 
 .main-title {
@@ -461,6 +469,7 @@ body{
 .carousel-page {
   text-align: center;
   padding: 20px;
+  padding: 0 10%; /* Add 10% padding to left and right */
 }
 
 .top-line {

@@ -385,13 +385,6 @@ const ImageSlider = ({ language }) => {
       <hr className="top-line" />
       <h1 className="main-title">{language === 'AR' ? 'شركاء' : 'שותפים'}</h1>
       <div className="title-separator"></div>
-      <p className="explanation">
-        {language === 'AR' ?
-          'الشراكات تتيح لنا العمل في مجموعة متنوعة من المجالات، كل واحد منهم مهم لنشاطنا ونحن نشكرهم جميعًا على مساهمتهم في نشاطنا'
-          :
-          'השותפות והשותפים מאפשרים לנו להתקיים במגוון תחומים, כל אחת ואחת חשובה לפעילות שלנו ואנחנו מודות לכולן על תרומתן לפעילות שלנו'
-        }
-      </p>
       <div className="image-slider" ref={containerRef}>
         <div className="image-container" ref={sliderRef}>
           {image_shtafem.concat(image_shtafem).map((image, index) => (

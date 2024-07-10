@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Slider from '/components/Slider';
 import './styles.css';
 
-const AboutUs = () => {
+const Chance = () => {
     const [language, setLanguage] = useState('HE'); // Default language set to 'HE'
 
     const toggleLanguage = () => {
@@ -100,8 +100,9 @@ const AboutUs = () => {
 
                 </div>
             </div>
+            <InfoSection language={language} />
         </>
     );
 };
 
-export default AboutUs;
+export default Chance;
