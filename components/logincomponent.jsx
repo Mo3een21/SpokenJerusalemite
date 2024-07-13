@@ -11,13 +11,13 @@ function Login() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      console.log("User logged in Successfully");
+      alert("User logged in Successfully");
       window.location.href = "..";
       toast.success("User logged in Successfully", {
         position: "top-center",
       });
     } catch (error) {
-      console.log(error.message);
+      alert("Incorrect Email or Password!!!\n Try Again");
 
       toast.error(error.message, {
         position: "bottom-center",

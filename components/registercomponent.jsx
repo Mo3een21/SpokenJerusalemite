@@ -26,12 +26,12 @@ function Register() {
           photo: ""
         });
       }
-      console.log("User Registered Successfully!!");
+      alert("User Registered Successfully!!");
       toast.success("User Registered Successfully!!", {
         position: "top-center",
       });
     } catch (error) {
-      console.log(error.message);
+      alert(error.message);
       toast.error(error.message, {
         position: "bottom-center",
       });

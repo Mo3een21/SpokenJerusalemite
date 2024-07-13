@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../app/firebase/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+
 const NavBar = ({ language, toggleLanguage })  => {
     const [hoveredItem, setHoveredItem] = useState(null);
     const [hoveredButton, setHoveredButton] = useState(null); // State to track hovered button
@@ -16,20 +17,17 @@ const NavBar = ({ language, toggleLanguage })  => {
         const handleResize = () => {
             if (window.innerWidth < 768) {
                 setIsMobileView(true);
-                setIsNavOpen(false); // Close nav list when in mobile view
+                setIsNavOpen(false);
             } else {
                 setIsMobileView(false);
             }
         };
 
-        handleResize(); // Call the function to set initial state
-        window.addEventListener('resize', handleResize); // Add event listener for window resize
-
-        return () => {
-            window.removeEventListener('resize', handleResize); // Cleanup the event listener
-        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
 
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            console.log("Auth state changed, current user:", currentUser);
             setUser(currentUser);
         });
 
@@ -38,6 +36,7 @@ const NavBar = ({ language, toggleLanguage })  => {
             unsubscribe();
         };
     }, []);
+
 
     const handleLogoMouseEnter = () => {
         setIsLogoHovered(true);

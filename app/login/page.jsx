@@ -15,17 +15,6 @@ const AuthPage = () => {
     <div className="auth-page">
       <div className="auth-container">
         {isLogin ? <Login /> : <Register />}
-        <div className="toggle-container">
-          {isLogin ? (
-            <p>
-              New user? <span onClick={toggleAuthMode}>Register Here</span>
-            </p>
-          ) : (
-            <p>
-              Already registered? <span onClick={toggleAuthMode}>Login</span>
-            </p>
-          )}
-        </div>
       </div>
     </div>
   );
