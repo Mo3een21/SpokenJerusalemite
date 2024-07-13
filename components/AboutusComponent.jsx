@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import images from "../app/images.js";
 
+
 emailjs.init({
     publicKey: 'tWA5BESHzduW8do5B',
     blockHeadless: true,
@@ -182,14 +183,14 @@ export default function AboutusComponent({ language }) {
                 {/* Team members */}
                 <div className="team-member">
                     <Image 
-                        src="/assets/images/yasmeenrishq.jpg"
+                        src=""
                         alt="Lior Orien"
                         width={150}
                         height={150}
                     />
                     <div className="details">
                         <p>{language === 'AR' ? 'ليؤور أورين' : 'ליאור אוריין'}</p>
-                        <p>{language === 'AR' ? 'مدير مشارك' : 'מנהלת משותפת'}</p>
+                        <p>{language === 'AR' ? 'مديرة مشاركة' : 'מנהלת משותפת'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -200,8 +201,8 @@ export default function AboutusComponent({ language }) {
                         height={150}
                     />
                     <div className="details">
-                        <p>{language === 'AR' ? 'سوزان سيايد' : 'סוזן סייאד'}</p>
-                        <p>{language === 'AR' ? 'مدير مشارك' : 'מנהלת משותפת'}</p>
+                        <p>{language === 'AR' ? 'سوزان صياد' : 'סוזן סייאד'}</p>
+                        <p>{language === 'AR' ? 'مديرة مشاركة' : 'מנהלת משותפת'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -212,8 +213,8 @@ export default function AboutusComponent({ language }) {
                         height={150}
                     />
                     <div className="details">
-                        <p>{language === 'AR' ? 'نجاة زر' : 'נגה זר'}</p>
-                        <p>{language === 'AR' ? 'منسق الأحداث' : 'רכזת אירועים'}</p>
+                        <p>{language === 'AR' ? 'نوجا زر' : 'נגה זר'}</p>
+                        <p>{language === 'AR' ? 'منسقة الأحداث' : 'רכזת אירועים'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -224,8 +225,8 @@ export default function AboutusComponent({ language }) {
                         height={150}
                     />
                     <div className="details">
-                        <p>{language === 'AR' ? 'هباء برق' : 'הבה ברק'}</p>
-                        <p>{language === 'AR' ? 'منسق الأحداث' : 'רכזת אירועים'}</p>
+                        <p>{language === 'AR' ? 'هبة برق' : 'הבה ברק'}</p>
+                        <p>{language === 'AR' ? 'منسقة الأحداث' : 'רכזת אירועים'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -237,7 +238,7 @@ export default function AboutusComponent({ language }) {
                     />
                     <div className="details">
                         <p>{language === 'AR' ? 'عادية غوري' : 'אודיה גורי'}</p>
-                        <p>{language === 'AR' ? 'مدير البرامج وتطوير الأعمال' : 'מנהלת תכניות ופיתוח עסקי'}</p>
+                        <p>{language === 'AR' ? 'مديرة البرامج وتطوير الأعمال' : 'מנהלת תכניות ופיתוח עסקי'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -249,7 +250,7 @@ export default function AboutusComponent({ language }) {
                     />
                     <div className="details">
                         <p>{language === 'AR' ? 'دارين عودة' : 'דרין עודה'}</p>
-                        <p>{language === 'AR' ? 'مدرب' : 'מנחה'}</p>
+                        <p>{language === 'AR' ? 'مدربة' : 'מנחה'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -261,19 +262,19 @@ export default function AboutusComponent({ language }) {
                     />
                     <div className="details">
                         <p>{language === 'AR' ? 'ياسمين رشق' : 'יאסמין רשק'}</p>
-                        <p>{language === 'AR' ? 'منسق برنامج التوظيف' : 'רכזת תכנית התעסוקה'}</p>
+                        <p>{language === 'AR' ? 'منسقة برنامج التوظيف' : 'רכזת תכנית התעסוקה'}</p>
                     </div>
                 </div>
                 <div className="team-member">
                     <Image 
-                        src="/assets/images/yasmeenrishq.jpg"
+                        src=""
                         alt="Ayla Erlich"
                         width={150}
                         height={150}
                     />
                     <div className="details">
                         <p>{language === 'AR' ? 'آيلا إيرليش' : 'איילה ארליך'}</p>
-                        <p>{language === 'AR' ? 'مدير المحتوى والبيداغوجيا' : 'מנהלת תוכן ופדגוגיה'}</p>
+                        <p>{language === 'AR' ? 'مديرة المحتوى والبيداغوجيا' : 'מנהלת תוכן ופדגוגיה'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -285,7 +286,7 @@ export default function AboutusComponent({ language }) {
                     />
                     <div className="details">
                         <p>{language === 'AR' ? 'تمارا جابر' : 'תמארה ג\'אבר'}</p>
-                        <p>{language === 'AR' ? 'منسق مجتمعات الممارسة' : 'רכזת קהילות תרגול'}</p>
+                        <p>{language === 'AR' ? 'منسقة مجتمعات الممارسة' : 'רכזת קהילות תרגול'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -297,19 +298,19 @@ export default function AboutusComponent({ language }) {
                     />
                     <div className="details">
                         <p>{language === 'AR' ? 'هاجر برتنا' : 'הגר ברתנא'}</p>
-                        <p>{language === 'AR' ? 'منسق الاجتماعات' : 'רכזת מפגשים'}</p>
+                        <p>{language === 'AR' ? 'منسقة الاجتماعات' : 'רכזת מפגשים'}</p>
                     </div>
                 </div>
                 <div className="team-member">
                     <Image 
-                        src="/assets/images/nogazar.jpg"
+                        src=""
                         alt="Noga Gadish"
                         width={150}
                         height={150}
                     />
                     <div className="details">
-                        <p>{language === 'AR' ? 'نجاة جدش' : 'נוגה גדיש'}</p>
-                        <p>{language === 'AR' ? 'مدرب' : 'מנחה'}</p>
+                        <p>{language === 'AR' ? 'نوجا جدش' : 'נוגה גדיש'}</p>
+                        <p>{language === 'AR' ? 'مدربة' : 'מנחה'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -320,8 +321,8 @@ export default function AboutusComponent({ language }) {
                         height={150}
                     />
                     <div className="details">
-                        <p>{language === 'AR' ? 'يائيل حزان' : 'יעל חזן'}</p>
-                        <p>{language === 'AR' ? 'منسق المجتمع' : 'רכזת קהילה'}</p>
+                        <p>{language === 'AR' ? 'ياعيل حزان' : 'יעל חזן'}</p>
+                        <p>{language === 'AR' ? 'منسقة المجتمع' : 'רכזת קהילה'}</p>
                     </div>
                 </div>
                 <div className="team-member">
@@ -333,19 +334,19 @@ export default function AboutusComponent({ language }) {
                     />
                     <div className="details">
                         <p>{language === 'AR' ? 'هديل شقيرات' : 'הדיל שקיראת'}</p>
-                        <p>{language === 'AR' ? 'منسق المجتمع' : 'רכזת קהילה'}</p>
+                        <p>{language === 'AR' ? 'منسقة المجتمع' : 'רכזת קהילה'}</p>
                     </div>
                 </div>
                 <div className="team-member">
                     <Image 
-                        src="/assets/images/yaelhazan.jpg"
+                        src=""
                         alt="Intasar Khales"
                         width={150}
                         height={150}
                     />
                     <div className="details">
                         <p>{language === 'AR' ? 'انتصار خالس' : 'אנתסאר חאלס'}</p>
-                        <p>{language === 'AR' ? 'مدرب' : 'מנחה'}</p>
+                        <p>{language === 'AR' ? 'مدربة' : 'מנחה'}</p>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-
+import { auth } from '../app/firebase/firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 const NavBar = ({ language, toggleLanguage })  => {
     const [hoveredItem, setHoveredItem] = useState(null);
     const [hoveredButton, setHoveredButton] = useState(null); // State to track hovered button
@@ -8,6 +9,8 @@ const NavBar = ({ language, toggleLanguage })  => {
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isMobileView, setIsMobileView] = useState(false);
     const [isZoomedIn, setIsZoomedIn] = useState(false); // New state for zoomed-in view
+    const [user, setUser] = useState(null);
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -24,6 +27,15 @@ const NavBar = ({ language, toggleLanguage })  => {
 
         return () => {
             window.removeEventListener('resize', handleResize); // Cleanup the event listener
+        };
+
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            unsubscribe();
         };
     }, []);
 
@@ -53,6 +65,14 @@ const NavBar = ({ language, toggleLanguage })  => {
 
     const handleLogoClick = () => {
         window.location.href = '/'; // Redirect to the home page
+    };
+    const handleSignOut = async () => {
+        try {
+            await signOut(auth);
+            console.log("User signed out successfully");
+        } catch (error) {
+            console.error("Error signing out: ", error);
+        }
     };
 
     const getItemStyle = (itemName) => {
@@ -146,23 +166,36 @@ const NavBar = ({ language, toggleLanguage })  => {
         )}
         <div style={styles.row}>
             <div style={styles.topRow}>
-            <button
-                    id="signin-button"
-                    style={hoveredButton === 'signin' ? { ...styles.signInButton, ...styles.enlargedSignInButton } : styles.signInButton}
-                    onMouseEnter={() => handleButtonMouseEnter('signin')}
-                    onMouseLeave={handleButtonMouseLeave}
-                    onClick={() => window.location.href = '/signin'}
-                >
-                    {language === 'AR' ? 'تسجيل الدخول' : 'לכניסה'}
-            </button>
-                <button
-                    style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
-                    onMouseEnter={() => handleButtonMouseEnter('language')}
-                    onMouseLeave={handleButtonMouseLeave}
-                    onClick={toggleLanguage}
-                >
-                    {language === 'AR' ? 'HE' : 'AR'}
-                </button>
+            {user ? (
+                        <button
+                            id="signout-button"
+                            style={hoveredButton === 'signout' ? { ...styles.signInButton, ...styles.enlargedSignInButton } : styles.signInButton}
+                            onMouseEnter={() => handleButtonMouseEnter('signout')}
+                            onMouseLeave={handleButtonMouseLeave}
+                            onClick={handleSignOut}
+                        >
+                            {language === 'AR' ? 'تسجيل الخروج' : 'יציאה'}
+                        </button>
+                    ) : (
+                        <button
+                            id="signin-button"
+                            style={hoveredButton === 'signin' ? { ...styles.signInButton, ...styles.enlargedSignInButton } : styles.signInButton}
+                            onMouseEnter={() => handleButtonMouseEnter('signin')}
+                            onMouseLeave={handleButtonMouseLeave}
+                            onClick={() => window.location.href = '../login'}
+                        >
+                            {language === 'AR' ? 'تسجيل الدخول' : 'כניסה'}
+                        </button>
+                    )}
+                    <button
+                        style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
+                        onMouseEnter={() => handleButtonMouseEnter('language')}
+                        onMouseLeave={handleButtonMouseLeave}
+                        onClick={toggleLanguage}
+                    >
+                        {language === 'AR' ? 'HE' : 'AR'}
+                    </button>
+            
             </div>
             
         </div>
