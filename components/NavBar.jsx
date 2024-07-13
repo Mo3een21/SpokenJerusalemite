@@ -103,7 +103,7 @@ const NavBar = ({ language, toggleLanguage })  => {
         HE: [
             // { label: 'דף ראשי', id: 'home', url: '../' },
             { label: 'מי אנחנו', id: 'aboutus', url: '../aboutus' },
-            { label: 'קהילה לומדת: חילופי שפות', id: 'community', url: '../community' },
+            { label: 'חילופי שפות', id: 'community', url: '../community' },
             { label: 'שפה להזדמנויות', id: 'chance', url: '../chance' },
             { label: 'נשות הקהילה', id: 'women', url: '../women' },
             { label: 'קורסי שפה', id: 'courses', url: '../courses' },
@@ -114,7 +114,7 @@ const NavBar = ({ language, toggleLanguage })  => {
         AR: [
             // { label: 'الصفحة الرئيسية', id: 'home', url: '../' },
             { label: 'من نحن', id: 'aboutus', url: '../aboutus' },
-            { label: 'مجتمع تعلم: تبادل اللغات', id: 'community', url: '../community' },
+            { label: 'تبادل اللغات', id: 'community', url: '../community' },
             { label: 'اللغة للفرص', id: 'chance', url: '../chance' },
             { label: 'نساء المجتمع', id: 'women', url: '../women' },
             { label: 'دورات اللغة', id: 'courses', url: '../courses' },
@@ -228,20 +228,25 @@ const styles = {
         color: 'rgb(247, 199, 201)',
         borderBottom: '4px solid rgb(33, 84, 84)',
         height: '60px', // Decreased the height of the navigation bar
-        fontSize:'16px'
+        fontSize:'16px',
+        flexWrap: 'nowrap', // Ensure no wrapping
+
     },
     navList: {
         listStyleType: 'none',
+        justifyContent: 'flex-end', // Align items to the end of the container
         display: 'flex',
         margin: 0,
         padding: 0,
         direction: 'rtl',
+        whiteSpace: 'nowrap', // Prevent items from wrapping
+        marginRight:'10%'
     },
     navListHidden: {
         display: 'none',
     },
     navItem: {
-        marginLeft: '2%',
+        marginLeft: '3%', // Increased margin for more padding between items
         transition: 'background-color 0.9s',
         color: 'rgb(33, 84, 84)',
     },
