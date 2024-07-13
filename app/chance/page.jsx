@@ -1,14 +1,53 @@
-
 'use client';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import NavBar from '/components/NavBar';
-import InfoSection from '/components/InfoSection';
 import Link from 'next/link';
+import InfoSection from '@/components/InfoSection';
+import emailjs from '@emailjs/browser';
 import Slider from '/components/Slider';
 import './styles.css';
 
-const Chance = () => {
+emailjs.init({
+    publicKey: 'tWA5BESHzduW8do5B',
+    blockHeadless: true,
+    limitRate: {
+        id: 'app',
+        throttle: 10000,
+    },
+});
+
+const AboutUs = () => {
     const [language, setLanguage] = useState('HE'); // Default language set to 'HE'
+    const nameRef = useRef();
+    const emailRef = useRef();
+    const phoneRef = useRef();
+    const messageRef = useRef();
+    const subjectRef = useRef();
+    const form = useRef();
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        emailjs.sendForm('service_onlznch', 'template_nm3z6tt', form.current, {
+            publicKey: 'tWA5BESHzduW8do5B',
+        }).then(
+            () => {
+                setSuccessMessage(language === 'AR' ? "تم إرسال البريد الإلكتروني بنجاح" : "Email sent successfully");
+            },
+            (error) => {
+                setErrorMessage(language === 'AR' ? "مشكلة في إرسال البريد الإلكتروني" : "Problem with sending email", error);
+                console.log(error);
+            },
+        );
+
+        nameRef.current.value = '';
+        emailRef.current.value = '';
+        phoneRef.current.value = '';
+        subjectRef.current.value = '';
+        messageRef.current.value = '';
+    };
 
     const toggleLanguage = () => {
         setLanguage((prevLanguage) => (prevLanguage === 'AR' ? 'HE' : 'AR'));
@@ -18,6 +57,17 @@ const Chance = () => {
         <>
             <NavBar language={language} toggleLanguage={toggleLanguage} />
             <div className="main">
+                <button
+                    className="scroll-button"
+                    onClick={() => {
+                        const contactForm = document.getElementById('contact-form');
+                        if (contactForm) {
+                            contactForm.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }}
+                >
+                    {language === 'AR' ? 'للانضمام' : 'להצטרף'}
+                </button>
                 <div className="section">
                     <div className="image-container" style={{ backgroundImage: `url("/assets/chanceImages/opportunities-1.jpeg")` }}>
                         <div className="image-title">
@@ -25,15 +75,15 @@ const Chance = () => {
                         </div>
                     </div>
                     <p>
-                        {language === 'HE' ?
-                            "73% מהנשים הערביות בירושלים אינן מצליחות להשתלב בשוק העבודה (לפי מכון ירושלים למחקרי מדיניות, 2022). במהלך שנות פעילותנו אנחנו פוגשות נשים מוכשרות ואיכותיות שאינן מצליחות למצות את הפוטנציאל שלהן. למה? חסם השפה, פחד וחוסר היכרות עם מערב העיר, היעדר נטוורקינג. בשנת 2020 החלטנו לנצל את כוחותינו כקהילה משותפת ולפתוח דלתות." :
-                            "73% من النساء العربيات في القدس لا ينجحن في الاندماج في سوق العمل (وفقًا لمعهد القدس لأبحاث السياسات ، 2022). خلال سنوات نشاطنا ، نلتقي بنساء موهوبات وذات جودة لا ينجحن في استيعاب إمكاناتهن الكاملة. لماذا؟ عائق اللغة ، الخوف وعدم المعرفة بمناطق غرب المدينة ، ونقص الشبكات الاجتماعية. في عام 2020 ، قررنا استغلال قوتنا كمجتمع مشترك وفتح أبوابًا."
+                        {language === 'HE'
+                            ? "73% מהנשים הערביות בירושלים אינן מצליחות להשתלב בשוק העבודה (לפי מכון ירושלים למחקרי מדיניות, 2022). במהלך שנות פעילותנו אנחנו פוגשות נשים מוכשרות ואיכותיות שאינן מצליחות למצות את הפוטנציאל שלהן. למה? חסם השפה, פחד וחוסר היכרות עם מערב העיר, היעדר נטוורקינג. בשנת 2020 החלטנו לנצל את כוחותינו כקהילה משותפת ולפתוח דלתות."
+                            : "73% من النساء العربيات في القدس لا ينجحن في الاندماج في سوق العمل (وفقًا لمعهد القدس لأبحاث السياسات ، 2022). خلال سنوات نشاطنا ، نلتقي بنساء موهوبات وذات جودة لا ينجحن في استيعاب إمكاناتهن الكاملة. لماذا؟ عائق اللغة ، الخوف وعدم المعرفة بمناطق غرب المدينة ، ونقص الشبكات الاجتماعية. في عام 2020 ، قررنا استغلال قوتنا كمجتمع مشترك وفتح أبوابًا."
                         }
                     </p>
                     <p>
-                        {language === 'HE' ?
-                            "הקמנו את קהילת 'בנחקק אחלאמנה بنحقق أحلامنا' קהילת פיתוח אישי ומקצועי עבור נשים מירושלים המזרחית. חברות בקהילה כיום למעלה מאלף נשים מתחומי עיסוק מגוונים, המסייעות זו לזו בכל שאלה. הקהילה מציעה:" :
-                            "قمنا بتأسيس مجتمع 'بنحقق أحلامنا' كمجتمع للتطوير الشخصي والمهني للنساء في القدس الشرقية. تضم الآن أكثر من ألف امرأة من مختلف مجالات العمل ، يساعدن بعضهن البعض في أي مسألة. يقدم المجتمع:"
+                        {language === 'HE'
+                            ? "הקמנו את קהילת 'בנחקק אחלאמנה بنحقق أحلامنا' קהילת פיתוח אישי ומקצועי עבור נשים מירושלים המזרחית. חברות בקהילה כיום למעלה מאלף נשים מתחומי עיסוק מגוונים, המסייעות זו לזו בכל שאלה. הקהילה מציעה:"
+                            : "قمنا بتأسيس مجتمع 'بنحقق أحلامنا' كمجتمع للتطوير الشخصي والمهني للنساء في القدس الشرقية. تضم الآن أكثر من ألف امرأة من مختلف مجالات العمل ، يساعدن بعضهن البعض في أي مسألة. يقدم المجتمع:"
                         }
                     </p>
                     <ul className="lista">
@@ -45,9 +95,9 @@ const Chance = () => {
                         <li>{language === 'HE' ? 'קבוצות לתרגול עברית' : 'مجموعات لتدريب اللغة العبرية'}</li>
                     </ul>
                     <p>
-                        {language === 'HE' ?
-                            "בזכות רשת סולידריות של מתנדבות מהקהילה המסייעות כל אחת בתחומה." :
-                            "بفضل شبكة التضامن بين المتطوعات من المجتمع المساعدة الخاصة في كل مجال."
+                        {language === 'HE'
+                            ? "בזכות רשת סולידריות של מתנדבות מהקהילה המסייעות כל אחת בתחומה."
+                            : "بفضل شبكة التضامن بين المتطوعات من المجتمع المساعدة الخاصة في كل مجال."
                         }
                     </p>
                     <div className="image-container" style={{ backgroundImage: `url("/assets/chanceImages/opportunities-2.jpeg")` }}>
@@ -65,23 +115,22 @@ const Chance = () => {
                         </div>
                     </div>
                     <p>
-                        {language === 'HE' ?
-                            "הקורסים הייחודיים שלנו שמים דגש על מיומנויות שיחה ותקשורת פורמלית ובלתי פורמלית. הם נבנו במטרה להוציא את הלומד.ת כמה שיותר מהר מהכיתה, משלב הלמידה לשלב התרגול, הדיבור והיישום. הם כוללים מרכיבי תרגול רבים על מנת לאפשר צבירת ביטחון בשימוש בשפה. צוות המורות שלנו דוברות עברית שפת אם וערבית ברמה גבוהה, הן מכירות את החסמים ואת החברה המזרח ירושלמית ופועלות ליצור סביבה לימודית מיטבית."
-                            :
-                            "دوراتنا الفريدة التي تركز على مهارات التحدث والاتصال الرسمي وغير الرسمي. تم بناؤها لإخراج التلميذ بأسرع ما يمكن من الفصل، من مرحلة التعلم إلى مرحلة الممارسة من خلال التعليم الشخصي. نرى في ذلك وسيلة لتعزيز وتحسين الاستثمار والإنفاق."
+                        {language === 'HE'
+                            ? "הקורסים הייחודיים שלנו שמים דגש על מיומנויות שיחה ותקשורת פורמלית ובלתי פורמלית. הם נבנו במטרה להוציא את הלומד.ת כמה שיותר מהר מהכיתה, משלב הלמידה לשלב התרגול, הדיבור והיישום. הם כוללים מרכיבי תרגול רבים על מנת לאפשר צבירת ביטחון בשימוש בשפה. צוות המורות שלנו דוברות עברית שפת אם וערבית ברמה גבוהה, הן מכירות את החסמים ואת החברה המזרח ירושלמית ופועלות ליצור סביבה לימודית מיטבית."
+                            : "دوراتنا الفريدة التي تركز على مهارات التحدث والاتصال الرسمي وغير الرسمي. تم بناؤها لإخراج التلميذ بأسرع ما يمكن من الفصل، من مرحلة التعلم إلى مرحلة الممارسة من خلال التعليم الشخصي. نرى في ذلك وسيلة لتعزيز وتحسين الاستثمار والإنفاق."
                         }
                     </p>
                     <p>
-                        {language === 'HE' ?
-                            "תלמידות ובוגרות הקורסים יכולות להצטרף ל" :
-                            "يمكن لطالباتنا وخريجات دوراتنا الانضمام إلى "
+                        {language === 'HE'
+                            ? "תלמידות ובוגרות הקורסים יכולות להצטרף ל"
+                            : "يمكن لطالباتنا وخريجات دوراتنا الانضمام إلى "
                         }
                         <Link href="/courses">
                             {language === 'HE' ? "קהילה הלומדת שלנו" : "المجتمع التعليمي لدينا"}
                         </Link>,
-                        {language === 'HE' ?
-                            " בה מגוון אפשרויות לתרגול השפה עם דוברותיה. שם, יוכלו בדרך חוויתית ומהירה להתקדם בין שלבי הלימוד, לתרגל ולצבור ביטחון בשימוש בשפה." :
-                            " حيث يمكنهن التقدم بطريقة تجريبية وسريعة بين مراحل التعلم، للتدريب واكتساب الثقة في استخدام اللغة."
+                        {language === 'HE'
+                            ? " בה מגוון אפשרויות לתרגול השפה עם דוברותיה. שם, יוכלו בדרך חוויתית ומהירה להתקדם בין שלבי הלימוד, לתרגל ולצבור ביטחון בשימוש בשפה."
+                            : " حيث يمكنهن التقدم بطريقة تجريبية وسريعة بين مراحل التعلم، للتدريب واكتساب الثقة في استخدام اللغة."
                         }
                     </p>
 
@@ -99,10 +148,37 @@ const Chance = () => {
                     </Link>
 
                 </div>
+                <form id="contact-form" className='contact-form' ref={form} onSubmit={handleSubmit}>
+                    <label htmlFor="name">{language === 'AR' ? 'اسم:' : 'שם:'}</label>
+                    <input type="text" id="name" name="name" required ref={nameRef} />
+                    
+                    <label htmlFor="email">{language === 'AR' ? 'البريد الإلكتروني:' : 'מייל:'}</label>
+                    <input type="email" id="email" name="email" required ref={emailRef}/>
+                    
+                    <label htmlFor="phone">{language === 'AR' ? 'هاتف:' : 'טלפון:'}</label>
+                    <input type="tel" id="phone" name="phone" required ref={phoneRef}/>
+                    
+                    <label htmlFor="subject">{language === 'AR' ? 'موضوع الاستفسار:' : 'נושא הפנייה:'}</label>
+                    <select id="subject" name="subject" required ref={subjectRef}>
+                        <option value="">{language === 'AR' ? 'كيف معني/ة تنضميلنا؟' : 'איך היית מעוניינ/ת להשתלב?'}</option>
+                        <option value="התנדבות בפרויקט">{language === 'AR' ? 'تطوع في المشاريع' : 'התנדבות בפרויקט'}</option>
+                        <option value="פרסום משרה">{language === 'AR' ? 'نشر وظيفة' : 'פרסום משרה'}</option>
+                        <option value="שיתוף פעולה">{language === 'AR' ? 'عمل جماعي' : 'שיתוף פעולה'}</option>
+                        <option value="הזמנת קורסים">{language === 'AR' ? 'طلب كورسات' : 'הזמנת קורסים'}</option>
+                        <option value="אחר">{language === 'AR' ? 'أخرى' : 'אחר'}</option>
+                    </select>
+                    
+                    <label htmlFor="message">{language === 'AR' ? 'احكيلنا كمان' : 'ספרי לנו עוד'}</label>
+                    <textarea id="message" name="message" required ref={messageRef}></textarea>
+                    
+                    <button type="submit">{language === 'AR' ? 'إرسال' : 'שליחה'}</button>
+                    {successMessage && <p>{successMessage}</p>}
+                    {errorMessage && <p>{errorMessage}</p>}
+                </form>
             </div>
-            <InfoSection language={language} />
+            <InfoSection language={language}  ></InfoSection>
         </>
     );
 };
 
-export default Chance;
+export default AboutUs;

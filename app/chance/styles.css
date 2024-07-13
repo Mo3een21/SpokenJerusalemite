@@ -11,7 +11,7 @@ body, html {
 
 html {
   background-color:rgba(255, 247, 237);
-  color:#215454,
+  color: black;
 }
 
 .main {
@@ -20,9 +20,31 @@ html {
   width: 100%;
   padding: 20px; /* Add padding around the main content */
   box-sizing: border-box;
-  color:#215454,
+}
+.scroll-button {
+  position: fixed;
+  top: 82px; /* Adjusted position */
+  right: 0.5px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(33, 84, 84, 0.7); /* semi-transparent background */
+  color: rgb(255, 247, 237);
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  font-size: 10px;
+  transition: background 0.3s ease;
 }
 
+.scroll-button:hover {
+  background: rgba(33, 84, 84, 0.9); /* darker shade on hover */
+}
 .section {
   width: 100%;
   padding: 20px; /* Add padding around each section */
@@ -136,37 +158,52 @@ html {
   padding-right: 20px;
 }
 
-form {
-  max-width: 600px;
-  margin: auto;
+.contact-form {
+  background: rgba(245, 146, 149, 0.42);
+  padding: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: rgb(33, 84, 84);
+  margin-top: 20px;
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 10px; /* Optional: Adding rounded corners for a nicer look */
 }
 
-form label {
-  display: block;
-  margin: 10px 0;
-}
-
-form input, form select, form textarea {
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
   width: 100%;
   padding: 8px;
-  margin-top: 5px;
-  box-sizing: border-box;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgb(255, 247, 237);
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 10px;
+  text-align: right;
 }
 
-form button {
-  display: block;
-  margin: 20px auto;
+.contact-form textarea {
+  height: 100px;
+  background-color: rgb(255, 247, 237);
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 10px;
+  text-align: right;
+}
+
+.contact-form button {
+  background: rgb(33, 84, 84); /* Use your brand color */
+  color: rgb(255, 247, 237);
   padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 1em;
+  transition: background 0.6s ease;
 }
 
-form button:hover {
-  background-color: #45a049;
-}
-
-p, ul, h2 {
-  margin: 20px 0; /* Add margin to space out text elements */
+.contact-form button:hover {
+  background: rgb(255, 247, 237); /* A darker shade of the brand color */
+  color: #215454;
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 15px;
 }

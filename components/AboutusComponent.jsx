@@ -44,13 +44,13 @@ export default function AboutusComponent({ language }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const formData = {
-            name: nameRef.current.value,
-            email: emailRef.current.value,
-            phone: phoneRef.current.value,
-            subject: subjectRef.current.value,
-            message: messageRef.current.value
-        };
+        // const formData = {
+        //     name: nameRef.current.value,
+        //     email: emailRef.current.value,
+        //     phone: phoneRef.current.value,
+        //     subject: subjectRef.current.value,
+        //     message: messageRef.current.value
+        // };
        
         emailjs.sendForm('service_onlznch', 'template_nm3z6tt', form.current, {
           publicKey: 'tWA5BESHzduW8do5B',
