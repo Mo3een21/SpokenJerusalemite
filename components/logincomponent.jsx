@@ -11,7 +11,6 @@ function Login() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("User logged in Successfully");
       window.location.href = "..";
       toast.success("User logged in Successfully", {
         position: "top-center",
@@ -53,7 +52,7 @@ function Login() {
 
       <div className="d-grid">
         <button type="submit" className="btn btn-primary">
-          Submit
+          Sign In
         </button>
       </div>
       <p className="forgot-password text-right">

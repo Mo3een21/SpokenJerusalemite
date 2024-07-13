@@ -1,11 +1,14 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import images from "../app/images.js";
-
+import { db } from '../app/firebase/firebase'; // Import your Firestore database
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import Modal from './Modal';
+import { auth } from '../app/firebase/firebase'; // Import Firebase auth
+import { onAuthStateChanged } from 'firebase/auth';
 
 emailjs.init({
     publicKey: 'tWA5BESHzduW8do5B',
@@ -25,6 +28,18 @@ export default function AboutusComponent({ language }) {
     const form = useRef();
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [aboutText, setAboutText] = useState('');
+    const [newArabicText, setNewArabicText] = useState('');
+    const [newHebrewText, setNewHebrewText] = useState('');
+    const [isEditing, setIsEditing] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setIsAuthenticated(!!user);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -55,6 +70,7 @@ export default function AboutusComponent({ language }) {
         subjectRef.current.value='';
         messageRef.current.value='';
     };
+
     const ImageGrid = () => {
         const [years, setYears] = useState(0);
         const [women, setWomen] = useState(0);
@@ -142,6 +158,37 @@ export default function AboutusComponent({ language }) {
         </div>
         );
       };
+    
+    useEffect(() => {
+        const fetchAboutText = async () => {
+            const docRef = doc(db, 'AboutUs', 'E66ySCkovcI1AQpf7J2r');
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                setAboutText(language === 'AR' ? data.arabicText : data.hebrewText);
+                setNewArabicText(data.arabicText);
+                setNewHebrewText(data.hebrewText);
+            } else {
+                console.log("No such document!");
+            }
+        };
+
+        fetchAboutText();
+    }, [language]);
+
+    const handleUpdateText = async () => {
+        try {
+            const docRef = doc(db, 'AboutUs', 'E66ySCkovcI1AQpf7J2r');
+            await setDoc(docRef, {
+                arabicText: newArabicText,
+                hebrewText: newHebrewText
+            }, { merge: true });
+            setAboutText(language === 'AR' ? newArabicText : newHebrewText);
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Error updating document: ", error);
+        }
+    };
 
     return (
         <div className="container">
@@ -149,33 +196,52 @@ export default function AboutusComponent({ language }) {
                  {language === 'AR' ? 'للأنضمام' : 'להצטרף'}
             </button>
             <div className="text-container">
-    <p className="highlight">
-        {language === 'AR' ? 
-        `بدأت قصة مجتمعنا بصديقتين مقدسيتين، من شرق وغرب المدينة، ونمت اليوم إلى أكبر وأقدم مجتمع مشترك في القدس.
-        المقدسية المحكية تضع اللغة في المركز، بهدف تحويلها من عامل يولد الخوف والتغريب، إلى أداة تتيح التواصل والفهم والتعارف الحقيقي بين سكان المدينة.
-        في المدينة الأكثر توتراً في البلاد ربما، ننجح في خلق لغة مشتركة ونلتقي بمئات النساء، اللاتي من المحتمل أنهن لم يكن ليلتقين بطريقة أخرى.
-        بالإضافة إلى اللقاء المشترك، نعمل على تعزيز المساواة في الحقوق والفرص، وضمان ألا تشكل اللغة حاجزًا أمام أي امرأة لتحقيق الاستقلال والتمكين الشخصي.
-        المجتمع في نمو مستمر منذ عام 2017، ويدار بشكل متساوٍ من قبل فريق من المتطوعات من شرق وغرب المدينة، كجزء من جمعية كلنا القدس.
-        بالإضافة إلى نشاط المجتمع الداخلي، نقدم دورات لغة، وورش عمل، وخدمات ترجمة للأفراد والمنظمات من جميع أنحاء البلاد.
-        ` 
-        : 
-        `סיפור הקהילה שלנו התחיל עם שתי חברות ירושלמיות, ממזרח ומערב העיר, וצמח כיום לקהילה המשותפת הגדולה והותיקה בירושלים.
-        ירושלמית מדוברת שמה את השפה במרכז, במטרה להפוך אותה מגורם המייצר פחד וניכור, לכלי המאפשר תקשורת, הבנה והיכרות אמיתית בין אוכלוסיות העיר.
-        בעיר אולי המתוחה בארץ, אנחנו מצליחות ליצור יחד שפה משותפת ולהפגיש בין מאות נשים, שסביר להניח שלא היו נפגשות אחרת.
-        מעבר למפגש המשותף, אנחנו פועלות לקדם שוויון זכויות והזדמנויות, ולהבטיח שהשפה לא תהווה חסם בפני אף אישה לעצמאות והגשמה עצמית.
-        הקהילה נמצאת בצמיחה מתמדת משנת 2017, ומנוהלת באופן שוויוני ע"י צוות של מתנדבות ממזרח וממערב העיר, כחלק מעמותת כולנא ירושלים.
-        מעבר לפעילות הפנים של הקהילה, אנו מציעות קורסי שפה, סדנאות ושירותי תרגום לא.נשים וארגונים מכל הארץ.
-        `}
-    </p>
-    <div className="image-founder">
-        <Image 
-            src="/assets/images/3.jpeg"
-            alt="Description of the image"
-            layout="fill"
-            objectFit="cover"
-        />
-    </div>
-</div>
+                <p className="highlight">
+                    {aboutText}
+                </p>
+                <div className="image-founder">
+                    <Image 
+                        src="/assets/images/3.jpeg"
+                        alt="Description of the image"
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </div>
+            </div>
+            {isAuthenticated && (
+                <div className="button-container">
+                    <button onClick={() => setIsEditing(true)} className="edit-button">
+                        <Image 
+                            src="/assets/images/edit.png" // Replace with the correct path to your image
+                            alt={language === 'AR' ? 'تعديل النص' : 'ערוך טקסט'}
+                            width={20} // Adjust the width and height as needed
+                            height={20}
+                        />
+                    </button>
+                </div>
+            )}
+            <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+                <textarea
+                    value={newArabicText}
+                    onChange={(e) => setNewArabicText(e.target.value)}
+                    placeholder="Edit Arabic Text"
+                    style={{ display: language === 'AR' ? 'block' : 'none', width: '100%', height: '150px', marginBottom: '10px' }}
+                />
+                <textarea
+                    value={newHebrewText}
+                    onChange={(e) => setNewHebrewText(e.target.value)}
+                    placeholder="Edit Hebrew Text"
+                    style={{ display: language === 'HE' ? 'block' : 'none', width: '100%', height: '150px', marginBottom: '10px' }}
+                />
+                <div className="button-container">
+                    <button onClick={handleUpdateText} className="save-button">
+                        {language === 'AR' ? 'حفظ' : 'שמור'}
+                    </button>
+                    <button onClick={() => setIsEditing(false)} className="cancel-button">
+                        {language === 'AR' ? 'إلغاء' : 'בטל'}
+                    </button>
+                </div>
+            </Modal>
             <ImageGrid></ImageGrid>
 
             <h2 className="title">{language === 'AR' ? 'فريقنا' : 'הצוות שלנו'}</h2>

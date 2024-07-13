@@ -30,6 +30,7 @@ function Register() {
       toast.success("User Registered Successfully!!", {
         position: "top-center",
       });
+      window.location.href = "../login";
     } catch (error) {
       alert(error.message);
       toast.error(error.message, {
