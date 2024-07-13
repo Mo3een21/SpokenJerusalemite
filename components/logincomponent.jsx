@@ -57,7 +57,7 @@ function Login() {
         </button>
       </div>
       <p className="forgot-password text-right">
-        New user <a href="/register">Register Here</a>
+        New user <a href="../register">Register Here</a>
       </p>
      
     </form>

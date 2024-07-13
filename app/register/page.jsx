@@ -4,25 +4,25 @@ import Login from "/components/logincomponent";
 import Register from "/components/registercomponent";
 import "/components/login.css";
 
-const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+const RegisterPage = () => {
+  const [isRegister, setIsRegister] = useState(true);
 
   const toggleAuthMode = () => {
-    setIsLogin((prevIsLogin) => !prevIsLogin);
+    setIsRegister((prevIsRegister) => !prevIsRegister);
   };
 
   return (
     <div className="auth-page">
       <div className="auth-container">
-        {isLogin ? <Login /> : <Register />}
+        {isRegister ? <Register /> : <Login />}
         <div className="toggle-container">
-          {isLogin ? (
+          {isRegister ? (
             <p>
-              New user? <span onClick={toggleAuthMode}>Register Here</span>
+              Already registered? <span onClick={toggleAuthMode}>Login</span>
             </p>
           ) : (
             <p>
-              Already registered? <span onClick={toggleAuthMode}>Login</span>
+              New user? <span onClick={toggleAuthMode}>Register Here</span>
             </p>
           )}
         </div>
@@ -31,4 +31,4 @@ const AuthPage = () => {
   );
 };
 
-export default AuthPage;
+export default RegisterPage;

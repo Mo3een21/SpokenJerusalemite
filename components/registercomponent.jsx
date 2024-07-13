@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { auth, db } from "../app/firebase/firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import "./login.css";
+import "react-toastify/dist/ReactToastify.css";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -21,7 +23,7 @@ function Register() {
           email: user.email,
           firstName: fname,
           lastName: lname,
-          photo:""
+          photo: ""
         });
       }
       console.log("User Registered Successfully!!");
@@ -94,4 +96,5 @@ function Register() {
     </form>
   );
 }
+
 export default Register;
