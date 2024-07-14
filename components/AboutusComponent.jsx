@@ -1,13 +1,12 @@
-'use client';
-
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import emailjs from '@emailjs/browser';
 import images from "../app/images.js";
-import { db } from '../app/firebase/firebase'; // Import your Firestore database
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db, storage } from '../app/firebase/firebase'; // Import your Firestore and Storage
+import { doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import Modal from './Modal';
-import { auth } from '../app/firebase/firebase'; // Import Firebase auth
+import { auth } from '../app/firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 emailjs.init({
@@ -33,6 +32,21 @@ export default function AboutusComponent({ language }) {
     const [newHebrewText, setNewHebrewText] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [teamMembers, setTeamMembers] = useState([]); // State to hold team members data
+    const [isAdding, setIsAdding] = useState(false); // State to handle add member modal
+    const [isEditingMember, setIsEditingMember] = useState(false); // State to handle edit member modal
+    const [editingMemberId, setEditingMemberId] = useState(null); // State to hold the ID of the member being edited
+    const [newMember, setNewMember] = useState({
+        nameArabic: '',
+        nameHebrew: '',
+        roleArabic: '',
+        roleHebrew: '',
+        imageFile: null,
+    });
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [memberToDelete, setMemberToDelete] = useState(null);
+    const [deleteSuccessMessage, setDeleteSuccessMessage] = useState('');
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setIsAuthenticated(!!user);
@@ -43,23 +57,15 @@ export default function AboutusComponent({ language }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // const formData = {
-        //     name: nameRef.current.value,
-        //     email: emailRef.current.value,
-        //     phone: phoneRef.current.value,
-        //     subject: subjectRef.current.value,
-        //     message: messageRef.current.value
-        // };
-       
+
         emailjs.sendForm('service_onlznch', 'template_nm3z6tt', form.current, {
           publicKey: 'tWA5BESHzduW8do5B',
         }).then(
           () => {
-            setSuccessMessage(language === 'AR' ? "تم إرسال البريد الإلكتروني بنجاح" : "Email sent successfully");
+            setSuccessMessage(language === 'AR' ? "تم إرسال البريد الإلكتروني بنجاح" : "האימייל נשלח בהצלחה");
           },
           (error) => {
-            setErrorMessage(language === 'AR' ? "مشكلة في إرسال البريد الإلكتروني" : "Problem with sending email", error);
+            setErrorMessage(language === 'AR' ? "مشكلة في إرسال البريد الإلكتروني" : "בעיה בשליחת מייל", error);
             console.log(error)
           },
         );
@@ -77,13 +83,13 @@ export default function AboutusComponent({ language }) {
         const [volunteers, setVolunteers] = useState(0);
         const [hasAnimated, setHasAnimated] = useState(false);
         const gridRef = useRef(null);
-      
+
         useEffect(() => {
           const link = document.createElement('link');
           link.href = 'https://fonts.googleapis.com/css2?family=Tel+Aviv+Modernist+Bold&display=swap';
           link.rel = 'stylesheet';
           document.head.appendChild(link);
-      
+
           const handleScroll = () => {
             if (!hasAnimated && gridRef.current) {
               const rect = gridRef.current.getBoundingClientRect();
@@ -92,40 +98,40 @@ export default function AboutusComponent({ language }) {
               }
             }
           };
-      
+
           window.addEventListener('scroll', handleScroll);
           return () => window.removeEventListener('scroll', handleScroll);
         }, [hasAnimated]);
-      
+
         const startAnimation = () => {
           const duration = 900;
           const steps = 100;
           const intervalDuration = duration / steps;
-      
+
           const yearsFinal = 7;
           const womenFinal = 2900;
           const volunteersFinal = 50;
-      
+
           const yearsStep = yearsFinal / steps;
           const womenStep = womenFinal / steps;
           const volunteersStep = volunteersFinal / steps;
-      
+
           let currentStep = 0;
-      
+
           const interval = setInterval(() => {
             currentStep += 1;
             setYears(Math.min(Math.ceil(currentStep * yearsStep), yearsFinal));
             setWomen(Math.min(Math.ceil(currentStep * womenStep), womenFinal));
             setVolunteers(Math.min(Math.ceil(currentStep * volunteersStep), volunteersFinal));
-      
+
             if (currentStep >= steps) {
               clearInterval(interval);
             }
           }, intervalDuration);
-      
+
           setHasAnimated(true);
         };
-      
+
         return (
             <div ref={gridRef} className="image-grid">
             <div className="image_threephotos">
@@ -158,7 +164,17 @@ export default function AboutusComponent({ language }) {
         </div>
         );
       };
-    
+
+    // Define fetchTeamMembers outside of useEffect
+    const fetchTeamMembers = useCallback(async () => {
+        const querySnapshot = await getDocs(collection(db, 'teamMembers'));
+        const members = [];
+        querySnapshot.forEach((doc) => {
+            members.push({ ...doc.data(), id: doc.id });
+        });
+        setTeamMembers(members);
+    }, []);
+
     useEffect(() => {
         const fetchAboutText = async () => {
             const docRef = doc(db, 'AboutUs', 'E66ySCkovcI1AQpf7J2r');
@@ -174,7 +190,51 @@ export default function AboutusComponent({ language }) {
         };
 
         fetchAboutText();
-    }, [language]);
+        fetchTeamMembers();
+    }, [language, fetchTeamMembers]);
+
+    const showSuccessAlert = (message) => {
+        const alertContainer = document.createElement('div');
+        alertContainer.className = 'success-alert';
+        alertContainer.innerHTML = `
+            ${message}
+            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        `;
+    
+        document.body.appendChild(alertContainer);
+    
+        setTimeout(() => {
+            if (alertContainer) {
+                alertContainer.style.display = 'none';
+            }
+        }, 5000); // Adjust the timeout duration as needed
+    };
+
+    const handleAddMember = async () => {
+        if (!newMember.imageFile) {
+            alert('Please upload an image');
+            return;
+        }
+
+        const storageRef = ref(storage, `images/${newMember.imageFile.name}`);
+        await uploadBytes(storageRef, newMember.imageFile);
+        const imageUrl = await getDownloadURL(storageRef);
+
+        const newMemberData = {
+            imageUrl,
+            nameArabic: newMember.nameArabic,
+            nameHebrew: newMember.nameHebrew,
+            roleArabic: newMember.roleArabic,
+            roleHebrew: newMember.roleHebrew,
+        };
+
+        const docRef = doc(collection(db, 'teamMembers'));
+        await setDoc(docRef, newMemberData);
+
+        setIsAdding(false);
+        showSuccessAlert(language === 'AR' ? 'تم إضافة العضو بنجاح' : 'החבר הוסף בהצלחה');
+        fetchTeamMembers(); // Refresh the team members list
+    };
 
     const handleUpdateText = async () => {
         try {
@@ -190,6 +250,65 @@ export default function AboutusComponent({ language }) {
         }
     };
 
+    const handleEditMember = async () => {
+        if (!newMember.imageFile && !newMember.imageUrl) {
+            alert('Please upload an image');
+            return;
+        }
+    
+        let imageUrl = newMember.imageUrl;
+        if (newMember.imageFile) {
+            const storageRef = ref(storage, `images/${newMember.imageFile.name}`);
+            await uploadBytes(storageRef, newMember.imageFile);
+            imageUrl = await getDownloadURL(storageRef);
+        }
+    
+        const updatedMemberData = {
+            imageUrl,
+            nameArabic: newMember.nameArabic,
+            nameHebrew: newMember.nameHebrew,
+            roleArabic: newMember.roleArabic,
+            roleHebrew: newMember.roleHebrew,
+        };
+    
+        const docRef = doc(db, 'teamMembers', editingMemberId);
+        await setDoc(docRef, updatedMemberData, { merge: true });
+    
+        setIsEditingMember(false);
+        showSuccessAlert(language === 'AR' ? 'تم تحديث العضو بنجاح' : 'החבר עודכן בהצלחה');
+        fetchTeamMembers(); // Refresh the team members list
+    };
+
+    const handleDeleteMember = async () => {
+        try {
+            const docRef = doc(db, 'teamMembers', memberToDelete.id);
+            await deleteDoc(docRef);
+
+            const storageRef = ref(storage, memberToDelete.imageUrl);
+            await deleteObject(storageRef);
+
+            setDeleteSuccessMessage(language === 'AR' ? 'تم حذف العضو بنجاح' : 'החבר נמחק בהצלחה');
+            fetchTeamMembers(); // Refresh the team members list
+            setIsDeleteModalOpen(false);
+
+            setTimeout(() => {
+                setDeleteSuccessMessage('');
+            }, 5000); // Adjust the timeout duration as needed
+        } catch (error) {
+            console.error("Error deleting document: ", error);
+        }
+    };
+
+    const openDeleteModal = (member) => {
+        setMemberToDelete(member);
+        setIsDeleteModalOpen(true);
+    };
+
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
+        setMemberToDelete(null);
+    };
+
     return (
         <div className="container">
             <button className="scroll-button" onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}>
@@ -203,8 +322,10 @@ export default function AboutusComponent({ language }) {
                     <Image 
                         src="/assets/images/3.jpeg"
                         alt="Description of the image"
-                        layout="fill"
-                        objectFit="cover"
+                        fill
+                        style={{ objectFit: "cover" }}
+                        sizes="100vw"
+                        priority
                     />
                 </div>
             </div>
@@ -246,177 +367,181 @@ export default function AboutusComponent({ language }) {
 
             <h2 className="title">{language === 'AR' ? 'فريقنا' : 'הצוות שלנו'}</h2>
             <div className="team">
-                {/* Team members */}
-                <div className="team-member">
-                    <Image 
-                        src=""
-                        alt="Lior Orien"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'ليؤور أورين' : 'ליאור אוריין'}</p>
-                        <p>{language === 'AR' ? 'مديرة مشاركة' : 'מנהלת משותפת'}</p>
+                {teamMembers.map((member, index) => (
+                    <div key={index} className="team-member">
+                        <Image 
+                            src={member.imageUrl}
+                            alt={member.name}
+                            width={150}
+                            height={150}
+                            style={{ objectFit: "cover" }}
+                        />
+                        <div className="details">
+                            <p>{language === 'AR' ? member.nameArabic : member.nameHebrew}</p>
+                            <p>{language === 'AR' ? member.roleArabic : member.roleHebrew}</p>
+                            {isAuthenticated && (
+                                <>
+                                    <button onClick={() => {
+                                        setIsEditingMember(true);
+                                        setEditingMemberId(member.id);
+                                        setNewMember({
+                                            nameArabic: member.nameArabic,
+                                            nameHebrew: member.nameHebrew,
+                                            roleArabic: member.roleArabic,
+                                            roleHebrew: member.roleHebrew,
+                                            imageUrl: member.imageUrl
+                                        });
+                                        }}>
+                                        <Image 
+                                            src="/assets/images/editMember.png" // Replace with the correct path to your edit image
+                                            alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+                                            width={20} // Adjust the width and height as needed
+                                            height={20}
+                                        />
+                                    </button>
+
+                                    <button onClick={() => openDeleteModal(member)}>
+                                        <Image 
+                                            src="/assets/images/deleteMember.png" // Replace with the correct path to your delete image
+                                            alt={language === 'AR' ? 'حذف' : 'מחק'}
+                                            width={20} // Adjust the width and height as needed
+                                            height={20}
+                                        />
+                                    </button>
+                                </>
+                            )}
+                        </div>
                     </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/suzansayad.jpg"
-                        alt="Suzan Sayad"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'سوزان صياد' : 'סוזן סייאד'}</p>
-                        <p>{language === 'AR' ? 'مديرة مشاركة' : 'מנהלת משותפת'}</p>
+                ))}
+                {isAuthenticated && (
+                    <div className="team-member add-member-button" onClick={() => setIsAdding(true)}>
+                        <Image 
+                            src="/assets/images/addMember.png" 
+                            alt="Add Member"
+                            width={150}
+                            height={150}
+                            style={{ objectFit: "contain" }}
+                        />
                     </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/nogazar.jpg"
-                        alt="Noga Zar"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'نوجا زر' : 'נגה זר'}</p>
-                        <p>{language === 'AR' ? 'منسقة الأحداث' : 'רכזת אירועים'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/hibabarq.jpg"
-                        alt="Haba Barak"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'هبة برق' : 'הבה ברק'}</p>
-                        <p>{language === 'AR' ? 'منسقة الأحداث' : 'רכזת אירועים'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/odiahgori.jpg"
-                        alt="Odia Guri"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'عادية غوري' : 'אודיה גורי'}</p>
-                        <p>{language === 'AR' ? 'مديرة البرامج وتطوير الأعمال' : 'מנהלת תכניות ופיתוח עסקי'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/dareenodeh.jpg"
-                        alt="Darin Ouda"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'دارين عودة' : 'דרין עודה'}</p>
-                        <p>{language === 'AR' ? 'مدربة' : 'מנחה'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/yasmeenrishq.jpg"
-                        alt="Yasmin Rashk"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'ياسمين رشق' : 'יאסמין רשק'}</p>
-                        <p>{language === 'AR' ? 'منسقة برنامج التوظيف' : 'רכזת תכנית התעסוקה'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src=""
-                        alt="Ayla Erlich"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'آيلا إيرليش' : 'איילה ארליך'}</p>
-                        <p>{language === 'AR' ? 'مديرة المحتوى والبيداغوجيا' : 'מנהלת תוכן ופדגוגיה'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/tamarajaber.jpg"
-                        alt="Tamara Jaber"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'تمارا جابر' : 'תמארה ג\'אבר'}</p>
-                        <p>{language === 'AR' ? 'منسقة مجتمعات الممارسة' : 'רכזת קהילות תרגול'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/hagarbartna.jpg"
-                        alt="Hagar Bartna"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'هاجر برتنا' : 'הגר ברתנא'}</p>
-                        <p>{language === 'AR' ? 'منسقة الاجتماعات' : 'רכזת מפגשים'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src=""
-                        alt="Noga Gadish"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'نوجا جدش' : 'נוגה גדיש'}</p>
-                        <p>{language === 'AR' ? 'مدربة' : 'מנחה'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/yaelhazan.jpg"
-                        alt="Yael Hazan"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'ياعيل حزان' : 'יעל חזן'}</p>
-                        <p>{language === 'AR' ? 'منسقة المجتمع' : 'רכזת קהילה'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src="/assets/images/hadeelshqeirat.jpg"
-                        alt="Hadil Shakirat"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'هديل شقيرات' : 'הדיל שקיראת'}</p>
-                        <p>{language === 'AR' ? 'منسقة المجتمع' : 'רכזת קהילה'}</p>
-                    </div>
-                </div>
-                <div className="team-member">
-                    <Image 
-                        src=""
-                        alt="Intasar Khales"
-                        width={150}
-                        height={150}
-                    />
-                    <div className="details">
-                        <p>{language === 'AR' ? 'انتصار خالس' : 'אנתסאר חאלס'}</p>
-                        <p>{language === 'AR' ? 'مدربة' : 'מנחה'}</p>
-                    </div>
-                </div>
+                )}
             </div>
             <div className="separator"></div>
+
+            <Modal isOpen={isAdding} onClose={() => setIsAdding(false)}>
+                <div className="add-member-modal">
+                    <h2>{language === 'AR' ? 'إضافة عضو جديد' : 'הוסף חבר צוות חדש'}</h2>
+                    <input 
+                        type="text" 
+                        placeholder={language === 'AR' ? 'الاسم بالعربية' : 'שם בערבית'} 
+                        value={newMember.nameArabic}
+                        onChange={(e) => setNewMember({ ...newMember, nameArabic: e.target.value })}
+                        className="modal-input"
+                    />
+                    <input 
+                        type="text" 
+                        placeholder={language === 'AR' ? 'الاسم بالعبرية' : 'שם בעברית'} 
+                        value={newMember.nameHebrew}
+                        onChange={(e) => setNewMember({ ...newMember, nameHebrew: e.target.value })}
+                        className="modal-input"
+                    />
+                    <input 
+                        type="text" 
+                        placeholder={language === 'AR' ? 'الدور بالعربية' : 'תפקיד בערבית'} 
+                        value={newMember.roleArabic}
+                        onChange={(e) => setNewMember({ ...newMember, roleArabic: e.target.value })}
+                        className="modal-input"
+                    />
+                    <input 
+                        type="text" 
+                        placeholder={language === 'AR' ? 'الدور بالعبرية' : 'תפקיד בעברית'} 
+                        value={newMember.roleHebrew}
+                        onChange={(e) => setNewMember({ ...newMember, roleHebrew: e.target.value })}
+                        className="modal-input"
+                    />
+                    <input 
+                        type="file" 
+                        onChange={(e) => setNewMember({ ...newMember, imageFile: e.target.files[0] })}
+                        className="modal-input"
+                    />
+                    <div className="button-container">
+                        <button onClick={handleAddMember} className="save-button">
+                            {language === 'AR' ? 'حفظ' : 'שמור'}
+                        </button>
+                        <button onClick={() => setIsAdding(false)} className="cancel-button">
+                            {language === 'AR' ? 'إلغاء' : 'בטל'}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal isOpen={isEditingMember} onClose={() => setIsEditingMember(false)}>
+                <div className="add-member-modal">
+                    <h2>{language === 'AR' ? 'تحرير العضو' : 'ערוך חבר צוות'}</h2>
+                    <input 
+                        type="text" 
+                        placeholder={language === 'AR' ? 'الاسم بالعربية' : 'שם בערבית'} 
+                        value={newMember.nameArabic}
+                        onChange={(e) => setNewMember({ ...newMember, nameArabic: e.target.value })}
+                        className="modal-input"
+                    />
+                    <input 
+                        type="text" 
+                        placeholder={language === 'AR' ? 'الاسم بالعبرية' : 'שם בעברית'} 
+                        value={newMember.nameHebrew}
+                        onChange={(e) => setNewMember({ ...newMember, nameHebrew: e.target.value })}
+                        className="modal-input"
+                    />
+                    <input 
+                        type="text" 
+                        placeholder={language === 'AR' ? 'الدور بالعربية' : 'תפקיד בערבית'} 
+                        value={newMember.roleArabic}
+                        onChange={(e) => setNewMember({ ...newMember, roleArabic: e.target.value })}
+                        className="modal-input"
+                    />
+                    <input 
+                        type="text" 
+                        placeholder={language === 'AR' ? 'الدور بالعبرية' : 'תפקיד בעברית'} 
+                        value={newMember.roleHebrew}
+                        onChange={(e) => setNewMember({ ...newMember, roleHebrew: e.target.value })}
+                        className="modal-input"
+                    />
+                    <input 
+                        type="file" 
+                        onChange={(e) => setNewMember({ ...newMember, imageFile: e.target.files[0] })}
+                        className="modal-input"
+                    />
+                    <div className="button-container">
+                        <button onClick={handleEditMember} className="save-button">
+                            {language === 'AR' ? 'تحديث' : 'עדכן'}
+                        </button>
+                        <button onClick={() => setIsEditingMember(false)} className="cancel-button">
+                            {language === 'AR' ? 'إلغاء' : 'בטל'}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
+                <div className="delete-modal">
+                    <p>{language === 'AR' ? `هل أنت متأكد أنك تريد حذف ${memberToDelete?.nameArabic}؟` : `האם אתה בטוח שברצונך למחוק את ${memberToDelete?.nameHebrew}?`}</p>
+                    <div className="button-container">
+                        <button onClick={handleDeleteMember} className="save-button">
+                            {language === 'AR' ? 'نعم' : 'כן'}
+                        </button>
+                        <button onClick={closeDeleteModal} className="cancel-button">
+                            {language === 'AR' ? 'لا' : 'לא'}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            {deleteSuccessMessage && (
+                <div className="success-message">
+                    {deleteSuccessMessage}
+                    <button className="close-btn" onClick={() => setDeleteSuccessMessage('')}>&times;</button>
+                </div>
+            )}
+
             <h2 className="title" id="contact">{language === 'AR' ? 'تحدثوا إلينا!' : 'דברו איתנו!'}</h2>
             <div className="contact-form">
                 <form ref={form} onSubmit={handleSubmit}>

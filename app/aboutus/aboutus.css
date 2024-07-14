@@ -330,7 +330,20 @@ textarea {
   border-radius: 50%; /* Rounded shape */
   transition: box-shadow 0.3s ease;
 }
+.team-member.add-member-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px; /* Font size for the "+" sign */
+  color: rgb(33, 84, 84); /* Color of the "+" sign */
+  background: rgb(255, 247, 237); 
+  cursor: pointer;
+  transition: transform 0.3s ease; /* Add transition for hover effect */
+}
 
+.team-member.add-member-button:hover {
+  transform: scale(1.1); /* Enlarge on hover */
+}
 .team-member img {
   width: 100%;
   height: 100%;
@@ -360,6 +373,243 @@ textarea {
 .team-member:hover .details {
   transform: translateY(0);
 }
+
+/* Modal Styles */
+.add-member-modal {
+  background-color: rgb(255, 247, 237);
+  padding: 40px; /* Increase padding for more space inside the modal */
+  border-radius: 8px;
+  width: 90%; /* Increase width */
+  max-width: 900px; /* Increase max-width */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgb(33, 84, 84); /* Border to match the page color scheme */
+  position: relative;
+  text-align: center;
+}
+
+.add-member-modal h2 {
+  color: rgb(33, 84, 84); /* Title color */
+  margin-bottom: 20px; /* Space below the title */
+}
+
+.modal-input {
+  width: 100%;
+  padding: 15px; /* Increase padding for larger input fields */
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgb(255, 247, 237); /* Background color to match the page */
+  border: 2px solid rgb(33, 84, 84); /* Border color to match the page */
+  color: #215454;
+  font-size: 16px; /* Larger font size */
+  box-sizing: border-box;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Center align the buttons */
+  gap: 10px; /* Space between buttons */
+  margin-top: 20px; /* Space above the buttons */
+}
+
+.save-button, .cancel-button {
+  background: rgb(33, 84, 84); /* Use your brand color */
+  color: rgb(255, 247, 237);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.6s ease, color 0.6s ease; /* Add color transition for consistent border */
+  border: 2px solid rgb(33, 84, 84); /* Border color to match the page */
+}
+
+.save-button:hover, .cancel-button:hover {
+  background: rgb(255, 247, 237); /* A darker shade of the brand color */
+  color: #215454;
+}
+
+.cancel-button {
+  color: rgb(255, 247, 237);
+  background-color: #e36370;
+}
+
+.cancel-button:hover {
+  color: #e36370;
+  background-color: rgb(255, 247, 237);
+}
+
+/* Style for the edit and delete buttons within the team-member details */
+.team-member .details button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member .details button:hover {
+  transform: scale(1.1);
+}
+
+
+
+.team-member .details button:hover img {
+  filter: brightness(1.2); /* Slightly brighten the image on hover */
+}
+
+/* Style for the delete image button */
+.team-member .details button img {
+  width: 30px;
+  height: 30px;
+  transition: filter 0.3s ease;
+}
+
+.team-member .details button:hover img {
+  filter: brightness(1.2); /* Slightly brighten the image on hover */
+}
+/* Delete Confirmation Modal Styles */
+.delete-modal {
+  background-color: rgb(255, 247, 237);
+  padding: 30px;
+  border-radius: 8px;
+  width: 80%; /* Adjust width as needed */
+  max-width: 500px; /* Adjust max-width as needed */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgb(33, 84, 84); /* Matching border color */
+  text-align: center;
+  margin: auto;
+}
+
+.delete-modal p {
+  font-size: 1.2em;
+  color: rgb(33, 84, 84); /* Matching text color */
+  margin-bottom: 20px;
+}
+
+.delete-modal .button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Space between buttons */
+}
+
+.delete-modal .save-button,
+.delete-modal .cancel-button {
+  background: rgb(206, 3, 3); /* Use brand color */
+  color: rgb(255, 247, 237);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s ease, color 0.3s ease; /* Add transition for hover effect */
+}
+
+.delete-modal .save-button:hover,
+.delete-modal .cancel-button:hover {
+  background: rgb(255, 247, 237); /* Hover background color */
+  color: rgb(33, 84, 84); /* Hover text color */
+  border: 2px solid rgb(33, 84, 84); /* Adding border on hover */
+}
+
+.delete-modal .cancel-button {
+  background-color: #e36370;
+}
+
+.delete-modal .cancel-button:hover {
+  background-color: rgb(255, 247, 237);
+  color: #e36370;
+}
+
+
+/* Success Alert Styles */
+.success-alert {
+  position: fixed;
+  top: 20px; /* Adjust top position as needed */
+  right: 20px; /* Adjust right position as needed */
+  background-color: #d4edda; /* Light green background for success */
+  color: #155724; /* Dark green text for success */
+  padding: 15px 20px;
+  border: 1px solid #c3e6cb; /* Border color for success */
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  font-size: 16px; /* Font size for the alert text */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeInOut 5s ease-in-out forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10%, 90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Close button for the alert */
+.success-alert .close-btn {
+  background: none;
+  border: none;
+  color: #155724; /* Same color as the alert text */
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.success-alert .close-btn:hover {
+  color: #0b2e13; /* Darker shade for hover effect */
+}
+
+/* Success Message Styles */
+.success-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #d4edda; /* Light green background for success */
+  color: #155724; /* Dark green text for success */
+  padding: 15px 20px;
+  border: 1px solid #c3e6cb; /* Border color for success */
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  font-size: 16px; /* Font size for the alert text */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10%, 90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Close button for the alert */
+.success-message .close-btn {
+  background: none;
+  border: none;
+  color: #155724; /* Same color as the alert text */
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.success-message .close-btn:hover {
+  color: #0b2e13; /* Darker shade for hover effect */
+}
+
 
 .separator {
   width: 80%; /* Reduce the width to make it smaller from left and right */
