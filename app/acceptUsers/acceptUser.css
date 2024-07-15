@@ -1,0 +1,35 @@
+.container {
+    direction: rtl;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Add space between grid items */
+    margin: 20px;
+    margin-top: 100px; /* Add margin around the container */
+  }
+
+  .user-list{
+display: flex;
+justify-content: center;
+align-items: center;
+border: solid;
+background-color: beige;
+  }
+
+  .user-card{
+margin: 5px;
+border: dotted;
+  }
+
+
+.icon-buttons{
+background-color:  beige;
+margin: 5px;
+border: none;
+cursor: pointer;
+
+}
+.icon-buttons img {
+  height: 35px;
+
+}

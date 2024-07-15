@@ -20,11 +20,15 @@ function Register() {
       console.log(user);
       if (user) {
         await setDoc(doc(db, "Users", user.uid), {
+          uid : user.uid,
           email: user.email,
           firstName: fname,
           lastName: lname,
-          photo: ""
+          photo: "",
+          status:"pending"
         });
+
+        
       }
       alert("User Registered Successfully!!");
       toast.success("User Registered Successfully!!", {
