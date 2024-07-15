@@ -1,6 +1,9 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { auth } from '../app/firebase/firebase';
+import Link from 'next/link';
+import Image from 'next/image';
+import { auth,db } from '../app/firebase/firebase';
+import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const NavBar = ({ language, toggleLanguage })  => {
@@ -27,10 +30,36 @@ const NavBar = ({ language, toggleLanguage })  => {
         window.addEventListener('resize', handleResize);
 
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            console.log("Auth state changed, current user:", currentUser);
-            setUser(currentUser);
-        });
+            const checkUserStatus = async () => {
+                if (currentUser) {
+                  const userDocRef = doc(db, 'Users', currentUser.uid);
+                  const userDoc = await getDoc(userDocRef);
+                  console.log(userDoc);
+        
+                  if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    if (userData.status === "pending" || userData.status === "rejected") {
+                      await signOut(auth);
+                      setUser(null);
+                    } else if (userData.status === "admin") {
+                      setUser(currentUser);
+                    }
+                  } else {
+                    console.log('No such document!');
+                    await signOut(auth);
+                    setUser(null);
+                  }
+                } else {
+                  setUser(null);
+                }
+              };
+        
+              checkUserStatus();
+            });
 
+
+        
+       
         return () => {
             window.removeEventListener('resize', handleResize);
             unsubscribe();
@@ -175,7 +204,9 @@ const NavBar = ({ language, toggleLanguage })  => {
                         >
                             {language === 'AR' ? 'تسجيل الخروج' : 'יציאה'}
                         </button>
-                    ) : (
+                        
+                    ) : 
+                    (
                         <button
                             id="signin-button"
                             style={hoveredButton === 'signin' ? { ...styles.signInButton, ...styles.enlargedSignInButton } : styles.signInButton}
@@ -186,6 +217,16 @@ const NavBar = ({ language, toggleLanguage })  => {
                             {language === 'AR' ? 'تسجيل الدخول' : 'כניסה'}
                         </button>
                     )}
+                    {user?(
+                        <Link href="/acceptUsers" >
+                        <button className= "notifications" style={styles.notifications} >
+                          <img src="\assets\images\bell.png" alt="Icon" width={30} className="bellimg"  style={styles.bellimg}/>
+                        
+                        </button>
+                      </Link>               )
+                    :
+                        null
+                    }
                     <button
                         style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
                         onMouseEnter={() => handleButtonMouseEnter('language')}
@@ -395,6 +436,17 @@ const styles = {
         color: 'rgb(33, 84, 84)', // Changed the color
         textDecoration: 'none', // Removed the underline for all links
     },
+    notifications:{
+        backgroundColor:'rgb(255, 247, 237)',
+        border:'none',
+        cursor:'pointer',
+        marginTop:'10px'
+    },
+    bellimg:{
+        backgroundColor:'rgb(255, 247, 237)',
+        border:'none'
+
+    }
 };
 
 export default NavBar;
