@@ -42,16 +42,16 @@ function Register() {
       const user = auth.currentUser;
       console.log(user);
       if (user) {
+        const timestamp = new Date().toISOString(); // Get the current date and time in ISO format
         await setDoc(doc(db, "Users", user.uid), {
-          uid : user.uid,
+          uid: user.uid,
           email: user.email,
           firstName: fname,
           lastName: lname,
           photo: "",
-          status:"pending"
+          status: "pending",
+          requestDate: timestamp // Save the registration date and time
         });
-
-        
       }
       alert("User Registered Successfully!!");
       toast.success("User Registered Successfully!!", {

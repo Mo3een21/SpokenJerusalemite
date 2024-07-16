@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { doc, getDoc, updateDoc } from 'firebase/firestore'; // Ensure this line is present
+import { db } from '../app/firebase/firebase'; // Adjust the import path as needed
 import './MyPage.css';
 import images from "../app/images.js";
+import Modal from './Modal'; // Assuming you have a modal component
+import { auth } from '../app/firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const AComponent = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,89 +36,479 @@ const AComponent = () => {
   );
 };
 
-const CategoryCard = ({ title, description, link, icon, language }) => (
-  <div className="category-card">
-    {icon && <img src={icon} alt={`${title} icon`} className="icon" />}
-    <h2>{title}</h2>
-    <p>{description}</p>
-    <a href={link} className="button">
-      {language === 'AR' ? 'اقرأ المزيد' : 'קראו עוד'}
-    </a>
-  </div>
-);
+const CategoryCard = ({ title, description, link, icon, language, onEdit }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+  }, []);
+
+  return (
+    <div className="category-card"> 
+      {icon && <img src={icon} alt={`${title} icon`} className="icon" />}
+      <h2>{title}</h2>
+      <p>{description}</p>
+      <a href={link} className="button">
+        {language === 'AR' ? 'اقرأ المزيد' : 'קראו עוד'}
+      </a>
+              {onEdit && isAuthenticated && (
+          <div className="button-container">
+            <button className='button-save' onClick={onEdit} >
+              <img 
+                src="/assets/images/edit.png" // Ensure this is the correct path to your image
+                alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+                width={20} // Adjust the width and height as needed
+                height={20}
+              />
+            </button>
+          </div>
+        )}
+    </div>
+  );
+};
+
+// ==================================================================
+const CategoryCard1 = ({ language }) => {
+  const [pageData, setPageData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempData, setTempData] = useState({ arabicText: '', hebrewText: '' });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    const fetchPageData = async () => {
+      try {
+        const docRef = doc(db, 'HomePage', 'AzexuEWPAoI5YUYdzkE9'); // Adjust the path as needed
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setPageData(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchPageData();
+  }, []);
+
+  const handleEdit = () => {
+    setTempData({ arabicText: pageData.text_A2, hebrewText: pageData.text_H2 });
+    setIsEditing(true);
+    console.log('Edit button clicked');
+  };
+
+  const handleSave = async () => {
+    console.log('Attempting to save data:', tempData); // Debug log
+    try {
+      const docRef = doc(db, 'HomePage', 'AzexuEWPAoI5YUYdzkE9'); // Adjust the path as needed
+      await updateDoc(docRef, {
+        text_A2: tempData.arabicText,
+        text_H2: tempData.hebrewText
+      });
+      setPageData({ text_A2: tempData.arabicText, text_H2: tempData.hebrewText });
+      setIsEditing(false);
+      console.log('Document updated successfully');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  };
+
+  if (!pageData) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div > 
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+        <div>
+          <label>
+          عربي
+            <textarea
+              value={tempData.arabicText}
+              onChange={(e) => setTempData({ ...tempData, arabicText: e.target.value })}
+            />
+          </label>
+          <label>
+          עברית
+            <textarea
+              value={tempData.hebrewText}
+              onChange={(e) => setTempData({ ...tempData, hebrewText: e.target.value })}
+            />
+          </label>
+          <button className='button-save' onClick={handleSave}>Save</button>
+        </div>
+      </Modal>
+      <CategoryCard
+          title={language === 'AR' ? 'لغة للفرص: بنحقق أحلامنا' : 'שפה להזדמנויות: بنحقق أحلامنا'}
+          description={language === 'AR' ? pageData.text_A2 : pageData.text_H2}
+          link="../chance"
+          icon={images.OpportunitiesIcon}
+          language={language}
+          onEdit={handleEdit}
+        />
+    </div>
+  );
+};
+
+
+
+// ==================================================================
+const CategoryCard2 = ({ language }) => {
+  const [pageData, setPageData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempData, setTempData] = useState({ arabicText: '', hebrewText: '' });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    const fetchPageData = async () => {
+      try {
+        const docRef = doc(db, 'HomePage', '87PH1GQPA7JkkxLUtK1d'); // Adjust the path as needed
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setPageData(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchPageData();
+  }, []);
+
+  const handleEdit = () => {
+    setTempData({ arabicText: pageData.text_A1, hebrewText: pageData.text_H1 });
+    setIsEditing(true);
+    console.log('Edit button clicked');
+  };
+
+  const handleSave = async () => {
+    console.log('Attempting to save data:', tempData); // Debug log
+    try {
+      const docRef = doc(db, 'HomePage', '87PH1GQPA7JkkxLUtK1d'); // Adjust the path as needed
+      await updateDoc(docRef, {
+        text_A1: tempData.arabicText,
+        text_H1: tempData.hebrewText
+      });
+      setPageData({ text_A1: tempData.arabicText, text_H1: tempData.hebrewText });
+      setIsEditing(false);
+      console.log('Document updated successfully');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  };
+
+  if (!pageData) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div >
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+        <div>
+          <label>
+          عربي
+            <textarea
+              value={tempData.arabicText}
+              onChange={(e) => setTempData({ ...tempData, arabicText: e.target.value })}
+            />
+          </label>
+          <label>
+          עברית
+            <textarea
+              value={tempData.hebrewText}
+              onChange={(e) => setTempData({ ...tempData, hebrewText: e.target.value })}
+            />
+          </label>
+          <button className='button-save' onClick={handleSave}>Save</button>
+        </div>
+      </Modal>
+      <CategoryCard
+          title={language === 'AR' ? 'دورات عبرية وعربية محكية' : 'קורסי עברית וערבית מדוברת'}
+          description={language === 'AR' ? pageData.text_A1 : pageData.text_H1}
+          link="/hebrew-arabic-courses"
+          icon={images.CoursesIcon}
+          language={language}
+          onEdit={handleEdit}
+        />
+    </div>
+  );
+};
+
+
+
+// ==================================================================
+const CategoryCard3 = ({ language }) => {
+  const [pageData, setPageData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempData, setTempData] = useState({ arabicText: '', hebrewText: '' });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    const fetchPageData = async () => {
+      try {
+        const docRef = doc(db, 'HomePage', 'E7WInjFavmTYHs2mqm4M'); 
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setPageData(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchPageData();
+  }, []);
+
+  const handleEdit = () => {
+    setTempData({ arabicText: pageData.text_A2, hebrewText: pageData.text_H2 });
+    setIsEditing(true);
+    console.log('Edit button clicked');
+  };
+
+  const handleSave = async () => {
+    console.log('Attempting to save data:', tempData); // Debug log
+    try {
+      const docRef = doc(db, 'HomePage', 'E7WInjFavmTYHs2mqm4M'); // Adjust the path as needed
+      await updateDoc(docRef, {
+        text_A2: tempData.arabicText,
+        text_H2: tempData.hebrewText
+      });
+      setPageData({ text_A2: tempData.arabicText, text_H2: tempData.hebrewText });
+      setIsEditing(false);
+      console.log('Document updated successfully');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  };
+
+  if (!pageData) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div >
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+        <div>
+          <label>
+          عربي
+            <textarea
+              value={tempData.arabicText}
+              onChange={(e) => setTempData({ ...tempData, arabicText: e.target.value })}
+            />
+          </label>
+          <label>
+          עברית
+            <textarea
+              value={tempData.hebrewText}
+              onChange={(e) => setTempData({ ...tempData, hebrewText: e.target.value })}
+            />
+          </label>
+          <button className='button-save' onClick={handleSave}>Save</button>
+        </div>
+      </Modal>
+      <CategoryCard 
+           title={language === 'AR' ? 'مجتمع التعلم: تبادل اللغات' : 'קהילה לומדת: חילופי שפות'}
+          description={language === 'AR' ? pageData.text_A2 : pageData.text_H2}
+          link="/hebrew-arabic-courses"
+          icon={images.CoursesIcon}
+          language={language}
+          onEdit={handleEdit}
+        />
+    </div>
+  );
+};
+
+
+// ==================================================================
 
 const Categories = ({ language }) => {
+  const [pageData, setPageData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempData, setTempData] = useState({ arabicText: '', hebrewText: '' });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    const fetchPageData = async () => {
+      try {
+        const docRef = doc(db, 'HomePage', 'sF2npE818vm5YiCg52Ck'); // Adjust the path as needed
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setPageData(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchPageData();
+  }, []);
+
+  const handleEdit = () => {
+    setTempData({ arabicText: pageData.text_A1, hebrewText: pageData.text_H1 });
+    setIsEditing(true);
+    console.log('Edit button clicked');
+  };
+
+  const handleSave = async () => {
+    console.log('Attempting to save data:', tempData); // Debug log
+    try {
+      const docRef = doc(db, 'HomePage', 'sF2npE818vm5YiCg52Ck'); // Adjust the path as needed
+      await updateDoc(docRef, {
+        text_A1: tempData.arabicText,
+        text_H1: tempData.hebrewText
+      });
+      setPageData({ text_A1: tempData.arabicText, text_H1: tempData.hebrewText });
+      setIsEditing(false);
+      console.log('Document updated successfully');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  };
+
+  if (!pageData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="categories-container">
       <h1 className="main-title">{language === 'AR' ? 'انضموا إلينا' : 'הצטרפו אלינו'}</h1>
       <p className="explanation">
-        {language === 'AR' ?
-          'نحن ننجح في خلق لغة مشتركة ولقاء بين مئات النساء، ونعمل على تعزيز المساواة في الحقوق والفرص، وضمان ألا تشكل اللغة حاجزًا أمام أي امرأة لتحقيق الاستقلال والتمكين الشخصي، ونقدم دورات لغة، وورش عمل، وخدمات ترجمة للأفراد والمنظمات من جميع أنحاء البلاد'
-          :
-          'אנחנו מצליחות ליצור יחד שפה משותפת ולהפגיש בין מאות נשים, ופועלות לקדם שוויון זכויות והזדמנויות, ולהבטיח שהשפה לא תהווה חסם בפני אף אישה לעצמאות והגשמה עצמית, ומציעות קורסי שפה, סדנאות ושירותי תרגום לא.נשים וארגונים מכל הארץ'
-        }
+        {language === 'AR' ? pageData.text_A1 : pageData.text_H1}
       </p>
+      {isAuthenticated && (
+       <div className="button-container">
+         <button onClick={handleEdit} className="edit-button">
+           <img 
+             src="/assets/images/edit.png" // Ensure this is the correct path to your image
+             alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+             width={20} // Adjust the width and height as needed
+             height={20}
+           />
+         </button>
+       </div>
+        )}
+      
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+        <div>
+          <label>
+          عربي
+            <textarea
+              value={tempData.arabicText}
+              onChange={(e) => setTempData({ ...tempData, arabicText: e.target.value })}
+            />
+          </label>
+          <label>
+          עברית
+            <textarea
+              value={tempData.hebrewText}
+              onChange={(e) => setTempData({ ...tempData, hebrewText: e.target.value })}
+            />
+          </label>
+          <button className='button-save' onClick={handleSave}>Save</button>
+        </div>
+      </Modal>
       <div className="categories">
-        <CategoryCard
-          title={language === 'AR' ? 'مجتمع التعلم: تبادل اللغات' : 'קהילה לומדת: חילופי שפות'}
-          description={language === 'AR' ? 'منصات متنوعة لممارسة اللغة العبرية والعربية المحكية مع الناطقات باللغة. مجتمع نسائي مقدسي من كل' : 'מגוון פלטפורמות לתרגול עברית וערבית מדוברת יחד עם דוברות השפה. קהילת נשים ירושלמית מכל'}
-          link="../community"
-          icon={images.LearningIcon}
-          language={language}
-        />
-        <CategoryCard
-          title={language === 'AR' ? 'لغة للفرص: بنحقق أحلامنا' : 'שפה להזדמנויות: بنحقق أحلامنا'}
-          description={language === 'AR' ? 'مجتمع نسائي مقدسي شرقي للتطوير الشخصي والمهني والمساعدة في مجالات التوظيف والأكاديميا واستغلال الحقوق' : 'קהילת נשים מזרח ירושלמית לפיתוח אישי ומקצועי ולסיוע בתחומי תעסוקה, אקדמיה ומיצוי זכויות'}
-          link="../chance"
-          icon={images.OpportunitiesIcon}
-          language={language}
-        />
-        <CategoryCard
-          title={language === 'AR' ? 'دورات عبرية وعربية محكية' : 'קורסי עברית וערבית מדוברת'}
-          description={language === 'AR' ? 'دورات لغة موجهة لمهارات المحادثة والتواصل والتعرف على المجتمع خلف اللغة' : 'קורסי שפה מוכווני מיומנויות שיחה, תקשורת והכרות עם החברה שמאחורי השפה'}
-          link="/hebrew-arabic-courses"
-          icon={images.CoursesIcon}
-          language={language}
-        />
+        <CategoryCard1 language={language} />
+        <CategoryCard2 language={language} />
+        <CategoryCard3 language={language} />
       </div>
     </div>
   );
 };
+// ==================================================================
+
 
 const ImageGrid = ({ language }) => {
   const [years, setYears] = useState(0);
   const [women, setWomen] = useState(0);
   const [volunteers, setVolunteers] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempData, setTempData] = useState({ years: 0, women: 0, volunteers: 0 });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const gridRef = useRef(null);
 
   useEffect(() => {
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Tel+Aviv+Modernist+Bold&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
+    const fetchNumbers = async () => {
+      try {
+        const docRef = doc(db, 'HomePage', 'jAaHVUltzrgQ2clDmm2N');
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setYears(data.number_1);
+          setWomen(data.number_2);
+          setVolunteers(data.number_3);
+          // Assuming startAnimation is defined elsewhere and correctly handles the animation
+          startAnimation(data.number_1, data.number_2, data.number_3);
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+  
+    fetchNumbers();
+  }, []); // Dependency array is empty, so this runs once on mount
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+  
+    return () => unsubscribe(); // Cleanup function to unsubscribe
+  }, []); // Dependency array is empty, so this runs once on mount
 
+  useEffect(() => {
     const handleScroll = () => {
       if (!hasAnimated && gridRef.current) {
         const rect = gridRef.current.getBoundingClientRect();
         if (rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
+          // Assuming startAnimation is defined elsewhere and correctly handles the animation
           startAnimation();
+          setHasAnimated(true); // Ensure animation doesn't run again
         }
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [hasAnimated]);
+  }, [hasAnimated]); // Re-run this effect if hasAnimated changes
 
-  const startAnimation = () => {
+  const startAnimation = (yearsFinal, womenFinal, volunteersFinal) => {
     const duration = 900;
     const steps = 100;
     const intervalDuration = duration / steps;
-
-    const yearsFinal = 7;
-    const womenFinal = 2900;
-    const volunteersFinal = 50;
 
     const yearsStep = yearsFinal / steps;
     const womenStep = womenFinal / steps;
@@ -135,8 +530,42 @@ const ImageGrid = ({ language }) => {
     setHasAnimated(true);
   };
 
+  const handleEdit = () => {
+    setTempData({ years, women, volunteers });
+    setIsEditing(true);
+  };
+
+  const handleSave = async () => {
+    try {
+      const docRef = doc(db, 'HomePage', 'jAaHVUltzrgQ2clDmm2N');
+      await updateDoc(docRef, {
+        number_1: tempData.years,
+        number_2: tempData.women,
+        number_3: tempData.volunteers
+      });
+      setYears(tempData.years);
+      setWomen(tempData.women);
+      setVolunteers(tempData.volunteers);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  };
+
   return (
     <div ref={gridRef} className="image-grid">
+      {isAuthenticated && (
+  <div className="button-container">
+    <button onClick={handleEdit} className="edit-button">
+      <img 
+        src="/assets/images/edit.png" // Ensure this is the correct path to your image
+        alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+        width={20} // Adjust the width and height as needed
+        height={20}
+      />
+    </button>
+  </div>
+)}
       <div className="image_threephotos">
         <img src={images.yearsImage} alt="Years" />
         <div className="number-box">
@@ -164,38 +593,155 @@ const ImageGrid = ({ language }) => {
           {language === 'AR' ? 'متطوعات' : 'מתנדבות'}
         </h2>
       </div>
+
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+        <div>
+          <label>
+          שנות קהילה / سنوات من المجتمع
+            <input
+              type="number"
+              value={tempData.years}
+              onChange={(e) => setTempData({ ...tempData, years: parseInt(e.target.value) })}
+            />
+          </label>
+          <label>
+          נשים מכל המגוון הירושלמי / امرأة من جميع أنحاء القدس 
+          <input
+              type="number"
+              value={tempData.women}
+              onChange={(e) => setTempData({ ...tempData, women: parseInt(e.target.value) })}
+            />
+          </label>
+          <label>
+          متطوعات / מתנדבות
+            <input
+              type="number"
+              value={tempData.volunteers}
+              onChange={(e) => setTempData({ ...tempData, volunteers: parseInt(e.target.value) })}
+            />
+          </label>
+          <button className='button-save' onClick={handleSave}>Save</button>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+// ==================================================================
+const MyPage = ({ language }) => {
+  const [pageData, setPageData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempData, setTempData] = useState({ arabicText_h1: '', hebrewText_h1: '' });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, []);
+
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        const docRef = doc(db, 'HomePage', 'C8OZrL3ycBZXzEDQ7c3u');
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setPageData(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchPageData();
+  }, []);
+
+  const handleEdit = () => {
+    setTempData({ arabicText_h1: pageData.arabicText_h1, hebrewText_h1: pageData.hebrewText_h1 });
+    setIsEditing(true);
+    console.log('Edit button clicked');
+  };
+
+  const handleSave = async () => {
+    try {
+      const docRef = doc(db, 'HomePage', 'C8OZrL3ycBZXzEDQ7c3u');
+      await updateDoc(docRef, {
+        arabicText_h1: tempData.arabicText_h1,
+        hebrewText_h1: tempData.hebrewText_h1
+      });
+      setPageData(tempData);
+      setIsEditing(false);
+      console.log('Document updated');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  };
+
+  if (!pageData) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="container_mypage">
+      <div className="text_mypage">
+        <p>
+          {language === 'AR' ? pageData.arabicText_h1 : pageData.hebrewText_h1}
+        </p>
+        <a href={pageData.readMoreLink} className="yuuuo">
+          {language === 'AR' ? 'اقرأ المزيد' : 'קראו עוד'}
+        </a>
+        {isAuthenticated && (
+         <div className="button-container">
+           <button onClick={handleEdit} className="edit-button">
+             <img 
+               src="/assets/images/edit.png" // Ensure this is the correct path to your image
+               alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+               width={20} // Adjust the width and height as needed
+               height={20}
+             />
+           </button>
+         </div>
+       )}
+      </div>
+      <div className="images_wrapper">
+        <img className="responsive-image" src={images.logo} alt="Description" />
+      </div>
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+        <div>
+          <label>
+            عربي
+            <textarea
+              value={tempData.arabicText_h1}
+              onChange={(e) => setTempData({ ...tempData, arabicText_h1: e.target.value })}
+            />
+          </label>
+          <label>
+           עברית
+            <textarea
+              value={tempData.hebrewText_h1}
+              onChange={(e) => setTempData({ ...tempData, hebrewText_h1: e.target.value })}
+            />
+          </label>
+          <button className='button-save' onClick={handleSave}>Save</button>
+        </div>
+      </Modal>
     </div>
   );
 };
 
-const MyPage = ({ language }) => {
-  return (
-    <div className="container_mypage">
-      
-      <div className="text_mypage">
-        <p>
-          {language === 'AR' ? '4% من سكان القدس الشرقية يتحدثون العبرية بطلاقة' : '4% מערבי ירושלים מדברים עברית ברמה גבוהה'}
-          <br />
-          {language === 'AR' ? 'أقل من 10% من اليهود في إسرائيل قادرون على إجراء محادثة باللغة العربية' : 'פחות מ-10% מהיהודים בישראל מסוגלים לנהל שיחה בערבית'}
-          <br />
-          {language === 'AR' ? 'بدون لغة مشتركة، كيف يمكننا التحدث عن حياة مشتركة؟' : 'בלי שפה משותפת, איך אפשר לדבר על חיים משותפים?'}
-          <br />
-          {language === 'AR' ? 'يروشاليميت مدبرة تعمل على تعزيز دراسة اللغة العربية والعبرية كأداة للتواصل وتكافؤ الفرص' : 'ירושלמית מדוברת פועלת לקדם לימודי ערבית ועברית ככלי לתקשורת ולשוויון ההזדמניות'}
-        </p>
-        <a href="../aboutus" className="yuuuo">
-          {language === 'AR' ? 'اقرأ المزيد' : 'קראו עוד'}
-        </a>
-      </div>
-      <div className="images_wrapper">
-        <img className="responsive-image" src={images.logo} alt="New_Description" />
-      </div>
-    </div>
-  );
-};
 
 
 
 const PhotoGallery = ({ language }) => {
+  const [pageData, setPageData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempData, setTempData] = useState({ arabicText: '', hebrewText: '' });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const photos = [
     {
       src: images.h_arets,
@@ -222,17 +768,94 @@ const PhotoGallery = ({ language }) => {
       link: 'https://www.da-magazine.co.il/%D7%94%D7%9E%D7%93%D7%A8%D7%99%D7%9A/%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%AA-%D7%94%D7%9F-%D7%9E%D7%93%D7%91%D7%A8%D7%95%D7%AA-%D7%90%D7%91%D7%9C-%D7%92%D7%9D-%D7%A2%D7%95%D7%A9%D7%95%D7%AA/'
     }
   ];
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    const fetchPageData = async () => {
+      try {
+        const docRef = doc(db, 'HomePage', 'PtTR4dN5ev44OhqtgPNK'); // Adjust the path as needed
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setPageData(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchPageData();
+  }, []);
+
+  const handleEdit = () => {
+    setTempData({ arabicText: pageData.text_A, hebrewText: pageData.text_H });
+    setIsEditing(true);
+    console.log('Edit button clicked');
+  };
+
+  const handleSave = async () => {
+    console.log('Attempting to save data:', tempData); // Debug log
+    try {
+      const docRef = doc(db, 'HomePage', 'PtTR4dN5ev44OhqtgPNK'); // Adjust the path as needed
+      await updateDoc(docRef, {
+        text_A: tempData.arabicText,
+        text_H: tempData.hebrewText
+      });
+      setPageData({ text_A: tempData.arabicText, text_H: tempData.hebrewText });
+      setIsEditing(false);
+      console.log('Document updated successfully');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  };
+
   return (
     <div className="gallery-container">
       <hr className="separator" />
       <h1 className="main-title">{language === 'AR' ? 'كتبوا عنا' : 'כתבו עלינו'}</h1>
       <p className="explanation">
         {language === 'AR' ?
-          'مؤسسات وصحف عديدة كتبت عنا، كتبت كيف بدأت يروشاليميت مدبرة، حيث بدأت بصديقتين، يهودية وفلسطينية، أرادتا تعلم لغة الأم لكل منهما. الطريقة نجحت، والمجموعة التي أنشأتاها تضم الآن مئات المشاركات - من شرق وغرب المدينة، وفازت بالعديد من الجوائز (جائزة مختاري المدينة 2020، جائزة يافا لندن-ياري)'
-          :
-          'מוסדות ועיתונים רבים כתבו עלינו, כתבו כיצד התחילה ירושלמית מדוברת, שזה התחיל בשתי חברות, יהודייה ופלסטינית, שרצו ללמוד כל אחת את שפת האם של השנייה. השיטה עבדה, הקבוצה שהקימו מונה כיום מאות משתתפות - ממזרח וממערב העיר, וזכו בהרבה פרסים (פרס נבחרי העיר 2020 , פרס יפה לונדון-יערי)'
+          pageData?.text_A :
+          pageData?.text_H
         }
       </p>
+      {isAuthenticated && (
+        <div className="button-container">
+          <button onClick={handleEdit} className="edit-button">
+            <img 
+              src="/assets/images/edit.png" // Ensure this is the correct path to your image
+              alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+              width={20} // Adjust the width and height as needed
+              height={20}
+            />
+          </button>
+        </div>
+      )}
+      
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+        <div>
+          <label>
+          عربي
+            <textarea
+              value={tempData.arabicText}
+              onChange={(e) => setTempData({ ...tempData, arabicText: e.target.value })}
+            />
+          </label>
+          <label>
+          עברית
+            <textarea
+              value={tempData.hebrewText}
+              onChange={(e) => setTempData({ ...tempData, hebrewText: e.target.value })}
+            />
+          </label>
+          <button className='button-save' onClick={handleSave}>Save</button>
+        </div>
+      </Modal>
       <div className="gallery">
         {photos.map((photo, index) => (
           <div className="photo-container" key={index}>
@@ -251,7 +874,6 @@ const PhotoGallery = ({ language }) => {
     </div>
   );
 };
-
 
 
 const ImageCarousel = ({ language }) => {
@@ -284,6 +906,55 @@ const ImageCarousel = ({ language }) => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
+  const [pageData, setPageData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempData, setTempData] = useState({ arabicText: '', hebrewText: '' });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    const fetchPageData = async () => {
+      try {
+        const docRef = doc(db, 'HomePage', 'o1e9hDJQ9Gyv4d00m5Lm'); // Adjust the path as needed
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setPageData(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error fetching document:', error);
+      }
+    };
+
+    fetchPageData();
+  }, []);
+
+  const handleEdit = () => {
+    setTempData({ arabicText: pageData.text_A, hebrewText: pageData.text_H });
+    setIsEditing(true);
+    console.log('Edit button clicked');
+  };
+
+  const handleSave = async () => {
+    console.log('Attempting to save data:', tempData); // Debug log
+    try {
+      const docRef = doc(db, 'HomePage', 'o1e9hDJQ9Gyv4d00m5Lm'); // Adjust the path as needed
+      await updateDoc(docRef, {
+        text_A: tempData.arabicText,
+        text_H: tempData.hebrewText
+      });
+      setPageData({ text_A: tempData.arabicText, text_H: tempData.hebrewText });
+      setIsEditing(false);
+      console.log('Document updated successfully');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -316,12 +987,42 @@ const ImageCarousel = ({ language }) => {
         <div className="title-separator"></div>
         <p className="explanation_nashot_khela">
           {language === 'AR' ?
-            'نساء المجتمع يشكلن ركيزة أساسية في المجتمع، ويؤدين أدوارًا متنوعة وهامة في الحياة اليومية. على الرغم من العديد من التحديات عبر التاريخ، أثبتن قوة وتصميم، واستمرن في التأثير وقيادة التغيير الإيجابي في بيئتهن'
-            :
-            'נשות הקהילה מהוות עמוד תווך חשוב בחברה, ממלאות תפקידים מגוונים ומשמעותיים בחיי היום-יום. למרות אתגרים רבים לאורך ההיסטוריה, הן הוכיחו כוח ונחישות, והמשיכו להשפיע ולהוביל שינוי חיובי בסביבתן'
+            pageData?.text_A :
+            pageData?.text_H
           }
         </p>
+        {isAuthenticated && (
+         <div className="button-container">
+           <button onClick={handleEdit} className="edit-button">
+             <img 
+               src="/assets/images/edit.png" // Ensure this is the correct path to your image
+               alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+               width={20} // Adjust the width and height as needed
+               height={20}
+             />
+           </button>
+         </div>
+         )}
       </header>
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+        <div>
+          <label>
+          عربي
+            <textarea
+              value={tempData.arabicText}
+              onChange={(e) => setTempData({ ...tempData, arabicText: e.target.value })}
+            />
+          </label>
+          <label>
+          עברית
+            <textarea
+              value={tempData.hebrewText}
+              onChange={(e) => setTempData({ ...tempData, hebrewText: e.target.value })}
+            />
+          </label>
+          <button className='button-save' onClick={handleSave}>Save</button>
+        </div>
+      </Modal>
       <div className="carousel-container">
         <div className="carousel-slide" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {image.map((image, index) => (

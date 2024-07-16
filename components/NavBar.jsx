@@ -14,6 +14,8 @@ const NavBar = ({ language, toggleLanguage })  => {
     const [isMobileView, setIsMobileView] = useState(false);
     const [isZoomedIn, setIsZoomedIn] = useState(false); // New state for zoomed-in view
     const [user, setUser] = useState(null);
+    const [hoveredBell, setHoveredBell] = useState(false);
+
 
 
     useEffect(() => {
@@ -217,16 +219,21 @@ const NavBar = ({ language, toggleLanguage })  => {
                             {language === 'AR' ? 'تسجيل الدخول' : 'כניסה'}
                         </button>
                     )}
-                    {user?(
-                        <Link href="/acceptUsers" >
-                        <button className= "notifications" style={styles.notifications} >
-                          <img src="\assets\images\bell.png" alt="Icon" width={30} className="bellimg"  style={styles.bellimg}/>
-                        
+                    {user ? (
+                        <Link href="/acceptUsers">
+                        <button className="notifications" style={styles.notifications}>
+                            <img
+                            src="/assets/images/bell.png"
+                            alt="Icon"
+                            width={30}
+                            className="bellimg"
+                            style={hoveredBell ? { ...styles.bellimg, ...styles.bellimgHover } : styles.bellimg}
+                            onMouseEnter={() => setHoveredBell(true)}
+                            onMouseLeave={() => setHoveredBell(false)}
+                            />
                         </button>
-                      </Link>               )
-                    :
-                        null
-                    }
+                        </Link>
+                    ) : null}
                     <button
                         style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
                         onMouseEnter={() => handleButtonMouseEnter('language')}
@@ -442,11 +449,15 @@ const styles = {
         cursor:'pointer',
         marginTop:'10px'
     },
-    bellimg:{
-        backgroundColor:'rgb(255, 247, 237)',
-        border:'none'
-
-    }
+    bellimg: {
+        backgroundColor: 'rgb(255, 247, 237)',
+        border: 'none',
+        transition: 'transform 0.3s ease',
+      },
+      bellimgHover: {
+        transform: 'scale(1.3)',
+      },
+      
 };
 
 export default NavBar;
