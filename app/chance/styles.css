@@ -1,0 +1,209 @@
+/* rgba(33, 84, 84, 0.5); green
+rgba(247, 199, 201, 0.5); pink
+rgba(255, 247, 237, 0.5); 
+rgba(235, 112, 105, 0.5); red */ 
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+html {
+  background-color:rgba(255, 247, 237);
+  color: black;
+}
+
+.main {
+  direction: rtl;
+  text-align: right;
+  width: 100%;
+  padding: 20px; /* Add padding around the main content */
+  box-sizing: border-box;
+}
+.scroll-button {
+  position: fixed;
+  top: 82px; /* Adjusted position */
+  right: 0.5px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(33, 84, 84, 0.7); /* semi-transparent background */
+  color: rgb(255, 247, 237);
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  font-size: 10px;
+  transition: background 0.3s ease;
+}
+
+.scroll-button:hover {
+  background: rgba(33, 84, 84, 0.9); /* darker shade on hover */
+}
+.section {
+  width: 100%;
+  padding: 20px; /* Add padding around each section */
+  box-sizing: border-box;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  padding-top: 6.25%;
+  /* background-size: 100%; Adjust this value to make the image smaller */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.image-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(247, 199, 201, 0.59);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s;
+  font-size: 24px; /* Adjust this value to increase the text size */
+}
+
+
+
+
+
+
+
+
+
+.slider-container {
+  position: relative;
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-content {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slider-image {
+  width: 100px; /* Adjust the size as needed */
+  height: 100px; /* Adjust the size as needed */
+  border-radius: 50%;
+  margin: 0 5px;
+  object-fit: cover;
+}
+
+.slider-button {
+  color: black;
+  border: none;
+  padding: 15px; /* Adjust size if needed */
+  font-size: 30px; /* Adjust size if needed */
+  cursor: pointer;
+  z-index: 1000;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none; /* Remove background */
+}
+
+.slider-button.left {
+  left: 0;
+}
+
+.slider-button.right {
+  right: 0;
+}
+
+.slider-button:focus {
+  outline: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.image-container:hover .image-title {
+  opacity: 1;
+}
+
+.lista {
+  list-style-type: disc;
+  padding-right: 20px;
+}
+
+.contact-form {
+  background: rgba(245, 146, 149, 0.42);
+  padding: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: rgb(33, 84, 84);
+  margin-top: 20px;
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 10px; /* Optional: Adding rounded corners for a nicer look */
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgb(255, 247, 237);
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 10px;
+  text-align: right;
+}
+
+.contact-form textarea {
+  height: 100px;
+  background-color: rgb(255, 247, 237);
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 10px;
+  text-align: right;
+}
+
+.contact-form button {
+  background: rgb(33, 84, 84); /* Use your brand color */
+  color: rgb(255, 247, 237);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.6s ease;
+}
+
+.contact-form button:hover {
+  background: rgb(255, 247, 237); /* A darker shade of the brand color */
+  color: #215454;
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 15px;
+}
