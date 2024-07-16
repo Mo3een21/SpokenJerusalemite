@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useRef } from 'react';
 import ProjectModal from '@/components/ProjectModal'; // import the modal component
+import Modal from '@/components/Modal';
+import CommunityForm from '@/components/CommunityForm'; // Correctly import CommunityForm
 import emailjs from '@emailjs/browser';
 
 emailjs.init({
@@ -24,6 +26,7 @@ const LanguageExchange = ({ language }) => {
 
   const [selectedProject, setSelectedProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [formBoolean, setFormBoolean] = useState(false);
 
   const handleProjectClick = (project) => {
     setSelectedProject(project);
@@ -32,6 +35,7 @@ const LanguageExchange = ({ language }) => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setFormBoolean(false);
   };
 
   const projects = [
@@ -82,22 +86,65 @@ const LanguageExchange = ({ language }) => {
     }
   ];
 
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
+  const validatePhoneNumber = (phone) => {
+    const regex = /^05\d{8}$/;
+    return regex.test(phone);
+  };
 
-
+  const validateName = (name) => {
+    const regex = /^[^\d]+$/;
+    return regex.test(name);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    const email = emailRef.current.value;
+    const phone = phoneRef.current.value;
+    const firstName = nameRef.current.value;
+    const newErrors = {};
+
+    if (!validateEmail(email)) {
+      newErrors.email = language === 'AR' ? 'صيغة البريد الإلكتروني غير صحيحة' : 'כתובת מייל לא תקינה';
+    }
+
+    if (!validatePhoneNumber(phone)) {
+      newErrors.phone = language === 'AR' ? 'رقم الهاتف غير صحيح. يجب أن يبدأ بـ 05 ويحتوي على 10 أرقام على الأقل.' : 'מספר הטלפון לא תקין. הוא צריך להתחיל ב-05 ולכלול לפחות 10 ספרות.';
+    }
+
+    if (!validateName(firstName)) {
+      newErrors.name = language === 'AR' ? 'يجب أن لا يحتوي الاسم على أرقام' : 'השם לא צריך להכיל מספרים';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrorMessage(Object.values(newErrors).join(', '));
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 10000);
+      return;
+    }
+
     emailjs.sendForm('service_onlznch', 'template_nm3z6tt', form.current, {
       publicKey: 'tWA5BESHzduW8do5B',
     }).then(
       () => {
-        setSuccessMessage(language === 'AR' ? "تم إرسال البريد الإلكتروني بنجاح" : "Email sent successfully");
+        setSuccessMessage(language === 'AR' ? "تم إرسال البريد الإلكتروني بنجاح" : "האימייל נשלח בהצלחה");
+        setErrorMessage('');
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 10000);
       },
       (error) => {
-        setErrorMessage(language === 'AR' ? "مشكلة في إرسال البريد الإلكتروني" : "Problem with sending email");
+        setErrorMessage(language === 'AR' ? "مشكلة في إرسال البريد الإلكتروني" : "בעיה בשליחת מייל");
         console.log(error);
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 10000);
       },
     );
 
@@ -110,7 +157,7 @@ const LanguageExchange = ({ language }) => {
 
   return (
     <div>
-      <button className="scroll-button" onClick={() => document.getElementById('contact-form').scrollIntoView({ behavior: 'smooth' })}>
+      <button className="scroll-button" onClick={() => setFormBoolean(true)}>
         {language === 'AR' ? 'للانضمام' : 'להצטרף'}
       </button>
       <div className='gallery-container'>
@@ -118,7 +165,7 @@ const LanguageExchange = ({ language }) => {
         <h1 className="main-title">{language === 'AR' ? 'شو منعمل ' : 'מה עושים'}</h1>
         <div className='gallery'>
           {projects.map((project) => (
-            <div className="photo-container"  onClick={() => handleProjectClick(project)}>
+            <div key={project.title} className="photo-container" onClick={() => handleProjectClick(project)}>
               <img src={project.img} alt={project.title} />
               <div className="line"></div>
               <div className="title">{project.title}</div>
@@ -128,63 +175,32 @@ const LanguageExchange = ({ language }) => {
             </div>
           ))}
         </div>
-      </div>
-      <ProjectModal show={showModal} onClose={handleCloseModal} project={selectedProject} />
-      
-      <div className='flexer'>
-        <div className="contact-form" id="contact-form">
-          <form ref={form} onSubmit={handleSubmit}>
-            <label htmlFor="name">{language === 'AR' ? 'اسم:' : 'שם:'}</label>
-            <input type="text" id="name" name="name" required ref={nameRef} />
+        <div className='textEnd' >
+          <p>
+          
+          
+          <button  className='formButton' onClick={() => setFormBoolean(true)}>{language === "AR" ? 'هذه' : 'זה'}</button>
 
-            <label htmlFor="email">{language === 'AR' ? 'البريد الإلكتروني:' : 'מייל:'}</label>
-            <input type="email" id="email" name="email" required ref={emailRef} />
-
-            <label htmlFor="phone">{language === 'AR' ? 'هاتف:' : 'טלפון:'}</label>
-            <input type="tel" id="phone" name="phone" required ref={phoneRef} />
-
-            <label htmlFor="course">{language === 'AR' ? 'لأي مجموعة حابة تنضمي؟' : 'לאיזו קבוצה את מעוניינת להצטרף?'}</label>
-            <select id="course" name="course" required ref={groupRef}>
-              <option value="">{language === 'AR' ? '...اختاري مجموعة' : 'בחרי קבוצה...'}</option>
-              <option value="חילופי שפות שבועיים">{language === 'AR' ? 'تبادل لغات اسبوعي' : 'חילופי שפות שבועיים'}</option>
-              <option value="אירועים קהילתיים">{language === 'AR' ? 'مناسبات مجتمعية' : 'אירועים קהילתיים'}</option>
-              <option value="זמינה לשיחה">{language === 'AR' ? 'فاضية نحكي؟' : 'זמינה לשיחה'}</option>
-              <option value="סטודנטיות">{language === 'AR' ? 'طالبات' : 'סטודנטיות'}</option>
-              <option value="זזות">{language === 'AR' ? ' كزدورة' : 'זזות'}</option>
-              <option value="הפיל שבחדר">{language === 'AR' ? 'الفيل بالغرفة' : 'הפיל שבחדר'}</option>
-              <option value="בית המדרש">{language === 'AR' ? 'محادثة دينية' : 'בית המדרש'}</option>
-              <option value="נבחרת המתקדמות">{language === 'AR' ? 'نخبة المتقدمات' : 'נבחרת המתקדמות'}</option>
-              <option value="מתחילות לדבר">{language === 'AR' ? 'مبتدئات' : 'מתחילות לדבר'}</option>
-            </select>
-
-            <label htmlFor="level">{language === 'AR' ? 'شو مستواكي في العبري؟' : 'מה רמת הערבית שלך? '}</label>
-            <select id="level" name="level" required ref={levelRef}>
-              <option value="">{language === 'AR' ? 'المستوى' : 'רמה'}</option>
-              <option value="אין לי בסיס בכלל">{language === 'AR' ? 'ما عندي أساس' : 'אין לי בסיס בכלל'}</option>
-              <option value="מתחילה">{language === 'AR' ? 'بلشت' : 'מתחילה'}</option>
-              <option value="וואלה משתפרת">{language === 'AR' ? ' عم بتقدم' : 'וואלה משתפרת'}</option>
-              <option value="מתקדמת - אלופה בערבית">{language === 'AR' ? ' بطلة بالعبري' : 'מתקדמת - אלופה בערבית'}</option>
-            </select>
-
-            <label htmlFor="opt">
-              {language === 'AR' ? 'حتى الان ما في لقائات مختلطة' : 'הקהילה מיועדת לנשים, בשלב זה עדיין אין לנו מפגשים מעורבים. '}
-            </label>
-            <div>
-              <label>
-                <input type="radio" name="communityOption" value="join" required />
-                {language === 'AR' ? ' אשמח להצטרף' : ' אשמח להצטרף'}
-              </label>
-              <label>
-                <input type="radio" name="communityOption" value="update" />
-                {language === 'AR' ? ' אשמח להתעדכן כשיהיו מפגשים מעורבים' : ' אשמח להתעדכן כשיהיו מפגשים מעורבים'}
-              </label>
-            </div>
-            <button type="submit">{language === 'AR' ? 'إرسال' : 'שלח'}</button>
-            {successMessage && <p>{successMessage}</p>}
-            {errorMessage && <p>{errorMessage}</p>}
-          </form>
+          {language === "AR" ? 'حابة تنضميلنا؟ الرجاء تعبئة الوثيقة ' : 'רוצה להצטרף אלינו? בבשקשה תמלי את הטיפס'}
+                    </p>
+         
         </div>
       </div>
+      <ProjectModal show={showModal} onClose={handleCloseModal} project={selectedProject} />
+      <Modal isOpen={formBoolean} onClose={handleCloseModal}>
+        <CommunityForm 
+          form={form} 
+          handleSubmit={handleSubmit}
+          nameRef={nameRef}
+          emailRef={emailRef}
+          phoneRef={phoneRef}
+          groupRef={groupRef}
+          levelRef={levelRef}
+          language={language}
+          successMessage={successMessage}
+          errorMessage={errorMessage}
+        />
+      </Modal>
     </div>
   );
 };

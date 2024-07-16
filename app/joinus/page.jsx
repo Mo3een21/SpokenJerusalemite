@@ -17,11 +17,10 @@ const JoinUs = () => { // Capitalize the component name
   return (
     <div className="joinUs"> {/* Fix className usage */}
       <NavBar language={language} toggleLanguage={toggleLanguage} />
-      <div className="textArea"> {/* Fix className usage */}
-        Text goes in here 
+      <div className='flexer'>
+     <img className='f2' src='/assets/images/suzan+lior.jpg'/>
+      <DynamicForm  language = {language}/> 
       </div>
-      <DynamicForm /> 
-
       <InfoSection language={language} />
     </div>
   );
