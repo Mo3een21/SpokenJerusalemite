@@ -55,7 +55,7 @@ const CategoryCard = ({ title, description, link, icon, language, onEdit }) => {
       </a>
               {onEdit && isAuthenticated && (
           <div className="button-container">
-            <button className='button-save' onClick={onEdit} className="edit-button">
+            <button className='button-save' onClick={onEdit} >
               <img 
                 src="/assets/images/edit.png" // Ensure this is the correct path to your image
                 alt={language === 'AR' ? 'تعديل' : 'ערוך'}
