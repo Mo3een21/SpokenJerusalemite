@@ -691,7 +691,7 @@ const MyPage = ({ language }) => {
         <p>
           {language === 'AR' ? pageData.arabicText_h1 : pageData.hebrewText_h1}
         </p>
-        <a href={pageData.readMoreLink} className="yuuuo">
+        <a href="../aboutus" className="yuuuo">
           {language === 'AR' ? 'اقرأ المزيد' : 'קראו עוד'}
         </a>
         {isAuthenticated && (

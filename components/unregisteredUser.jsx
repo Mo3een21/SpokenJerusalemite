@@ -4,12 +4,16 @@ import React, { useEffect, useState } from 'react';
 import { db, auth } from '../app/firebase/firebase';
 import { getDocs, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from 'next/navigation';
+import ListModal from './ListModal'; // Import ListModal
+import './acceptUser.css'; // Ensure this import
 
 const UnregisteredUserList = () => {
   const [users, setUsers] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState({ field: 'requestDate', order: 'asc' });
+  const [isListModalOpen, setIsListModalOpen] = useState(false); // State for ListModal
+  const [selectedUser, setSelectedUser] = useState(null); // State for selected user
   const router = useRouter();
 
   useEffect(() => {
@@ -104,6 +108,16 @@ const UnregisteredUserList = () => {
     setUsers(sortedUsers);
   };
 
+  const openListModal = (user) => {
+    setSelectedUser(user);
+    setIsListModalOpen(true);
+  };
+
+  const closeListModal = () => {
+    setSelectedUser(null);
+    setIsListModalOpen(false);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -118,13 +132,12 @@ const UnregisteredUserList = () => {
       <table className="user-table">
         <thead>
           <tr>
-            <th>Actions</th>
             <th>
               <div className="header-container">
-                <button onClick={() => sortUsers('requestDate')} className="sort-button">
+                <button onClick={() => sortUsers('firstName')} className="sort-button">
                   <img src="/assets/images/sort.png" alt="Sort" />
                 </button>
-                <span>Request Date</span>
+                <span>Name</span>
               </div>
             </th>
             <th>
@@ -137,32 +150,53 @@ const UnregisteredUserList = () => {
             </th>
             <th>
               <div className="header-container">
-                <button onClick={() => sortUsers('firstName')} className="sort-button">
+                <button onClick={() => sortUsers('requestDate')} className="sort-button">
                   <img src="/assets/images/sort.png" alt="Sort" />
                 </button>
-                <span>Name</span>
+                <span>Request Date</span>
               </div>
             </th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map(user => (
             <tr key={user.id}>
+              <td>{user.firstName} {user.lastName}</td>
+              <td>{user.email}</td>
+              <td>{new Date(user.requestDate).toLocaleString()}</td>
               <td>
-                <button onClick={() => handleReject(user.id)} className="icon-buttons reject">
-                  <img src="/assets/images/cross.png" alt="Reject" />
-                </button>
                 <button onClick={() => handleAccept(user.id)} className="icon-buttons accept">
                   <img src="/assets/images/tick.png" alt="Accept" />
                 </button>
+                <button onClick={() => handleReject(user.id)} className="icon-buttons reject">
+                  <img src="/assets/images/cross.png" alt="Reject" />
+                </button>
               </td>
-              <td>{new Date(user.requestDate).toLocaleString()}</td>
-              <td>{user.email}</td>
-              <td>{user.firstName} {user.lastName}</td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {isListModalOpen && (
+        <ListModal isOpen={isListModalOpen} onClose={closeListModal}>
+          {/* Custom content for ListModal */}
+          <div className="list-modal-content">
+            <h2>User Details</h2>
+            {selectedUser && (
+              <>
+                <p><strong>Name:</strong> {selectedUser.firstName} {selectedUser.lastName}</p>
+                <p><strong>Email:</strong> {selectedUser.email}</p>
+                <p><strong>Request Date:</strong> {new Date(selectedUser.requestDate).toLocaleString()}</p>
+                {/* Add any other details you want to display */}
+              </>
+            )}
+            <div className="button-container">
+              <button onClick={closeListModal} className="close-button">Close</button>
+            </div>
+          </div>
+        </ListModal>
+      )}
     </div>
   );
 };

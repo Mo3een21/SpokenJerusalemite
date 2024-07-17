@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { auth,db } from '../app/firebase/firebase';
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import UnregisteredUserList from './unregisteredUser'; // Import the component
+
 
 const NavBar = ({ language, toggleLanguage })  => {
     const [hoveredItem, setHoveredItem] = useState(null);
@@ -15,6 +17,8 @@ const NavBar = ({ language, toggleLanguage })  => {
     const [isZoomedIn, setIsZoomedIn] = useState(false); // New state for zoomed-in view
     const [user, setUser] = useState(null);
     const [hoveredBell, setHoveredBell] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
 
 
@@ -104,6 +108,9 @@ const NavBar = ({ language, toggleLanguage })  => {
             console.error("Error signing out: ", error);
         }
     };
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+      };
 
     const getItemStyle = (itemName) => {
         if (hoveredItem === itemName) {
@@ -220,8 +227,8 @@ const NavBar = ({ language, toggleLanguage })  => {
                         </button>
                     )}
                     {user ? (
-                        <Link href="/acceptUsers">
-                        <button className="notifications" style={styles.notifications}>
+                        <Link href="#">
+                        <button onClick={toggleModal}  className="notifications" style={styles.notifications}>
                             <img
                             src="/assets/images/bell.png"
                             alt="Icon"
@@ -289,6 +296,14 @@ const NavBar = ({ language, toggleLanguage })  => {
             <button style={styles.navToggleButton} onClick={toggleNav}>
                 {isNavOpen ? 'Close' : 'Open'}
             </button>
+            {isModalOpen && (
+                <div className="modal-overlay" style={styles.modalOl}>
+                    <div className="modal-content" style={styles.modalC}>
+                        <button onClick={toggleModal} className="modal-close-button" style={styles.modalCB}>×</button>
+                        <UnregisteredUserList />
+                    </div>
+                </div>
+            )}
         </nav>
     );
 }
@@ -457,6 +472,38 @@ const styles = {
       bellimgHover: {
         transform: 'scale(1.3)',
       },
+      modalOl: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000,
+    },
+    modalC: {
+        backgroundColor: 'rgb(255, 247, 237)',
+        padding: '20px',
+        borderRadius: '8px',
+        maxWidth: '80%',
+        maxHeight: '80%',
+        color:'rgb(33, 84, 84)',
+        overflowY: 'auto',
+    },
+    modalCB: {
+        position: 'absolute',
+        top: '10px',
+        right: '10px',
+        background: 'none',
+        border: 'none',
+        fontSize: '1.5rem',
+        cursor: 'pointer',
+        color:'black',
+        
+    },
       
 };
 

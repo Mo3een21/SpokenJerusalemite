@@ -3,6 +3,7 @@ body {
   background-color: rgb(255, 247, 237);
   color: rgb(33, 84, 84);
   margin: 0;
+  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 /* Container styles */
@@ -20,6 +21,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 0 5%; /* Add 10% padding to left and right */
+  box-sizing: border-box; /* Ensure padding is included in the width calculation */
 }
 
 /* Header container styles */
@@ -54,17 +56,19 @@ body {
 
 /* User table styles */
 .user-table {
-  width: 80%;
+  width: 100%; /* Ensure table takes full width of the container */
+  max-width: 100%; /* Prevent table from exceeding the container width */
   border-collapse: collapse;
   margin: 20px 0;
   font-size: 18px;
   text-align: left;
+  overflow-x: auto; /* Allow horizontal scrolling within the container if needed */
 }
 
 .user-table th, .user-table td {
   padding: 12px 15px;
   border: 1px solid #ddd;
-} 
+}
 
 .user-table th {
   color: rgb(255, 247, 237);
@@ -74,8 +78,8 @@ body {
 
 .user-table tr {
   border-bottom: 2px solid rgb(33, 84, 84);
-  border-right:2px solid rgb(33, 84, 84) ;
-  border-left:2px solid rgb(33, 84, 84) ;
+  border-right: 2px solid rgb(33, 84, 84);
+  border-left: 2px solid rgb(33, 84, 84);
 }
 
 .user-table tr:nth-of-type(even) {
@@ -92,8 +96,8 @@ body {
 
 /* Icon buttons styles */
 .icon-buttons {
-  background-color:transparent;
-  color: rgb(255, 247, 237);
+  background-color: transparent;
+  color: rgb(33, 84, 84);
   border: none;
   padding: 10px 20px;
   cursor: pointer;
@@ -117,6 +121,69 @@ body {
 }
 
 .icon-buttons img {
-  height: 30px; /* Adjust size as needed */
-  width: 30px; /* Adjust size as needed */
+  height: 30px;
+  width: 30px;
+}
+
+/* Customizing table text color */
+.user-table td {
+  color: rgb(33, 84, 84); /* Text color for table data */
+}
+
+.user-table th {
+  color: rgb(255, 247, 237); /* Text color for table header */
+  background-color: rgb(33, 84, 84); /* Background color for table header */
+}
+
+/* ListModal overlay */
+.list-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: hidden; /* Prevent horizontal scrolling */
+}
+
+/* ListModal content */
+.list-modal-content {
+  background-color: rgb(255, 247, 237);
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 900px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+/* ListModal close button */
+.list-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: rgb(33, 84, 84);
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.list-close-button:hover {
+  transform: scale(1.3);
+  color: rgb(255, 247, 237);
+  background-color: rgb(33, 84, 84);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
