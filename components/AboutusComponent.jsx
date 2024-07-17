@@ -55,21 +55,76 @@ export default function AboutusComponent({ language }) {
         return () => unsubscribe();
     }, []);
 
+
+    const validateEmail = (email) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+      };
+    
+      const validatePhoneNumber = (phone) => {
+        const regex = /^05\d{8}$/;
+        return regex.test(phone);
+      };
+    
+      const validateName = (name) => {
+        const regex = /^[^\d]+$/;
+        return regex.test(name);
+      };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+    const email = emailRef.current.value;
+    const phone = phoneRef.current.value;
+    const firstName = nameRef.current.value;
+    const newErrors = {};
+
+    if (!validateEmail(email)) {
+      newErrors.email = language === 'AR' ? 'صيغة البريد الإلكتروني غير صحيحة' : 'כתובת מייל לא תקינה';
+    }
+
+    if (!validatePhoneNumber(phone)) {
+      newErrors.phone = language === 'AR' ? 'رقم الهاتف غير صحيح. يجب أن يبدأ بـ 05 ويحتوي على 10 أرقام على الأقل.' : 'מספר הטלפון לא תקין. הוא צריך להתחיל ב-05 ולכלול לפחות 10 ספרות.';
+    }
+
+    if (!validateName(firstName)) {
+      newErrors.name = language === 'AR' ? 'يجب أن لا يحتوي الاسم على أرقام' : 'השם לא צריך להכיל מספרים';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+        setErrorMessage(Object.values(newErrors).join(', '));
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 10000);
+        return;
+      }
+  
+  
+      else{
+  
         emailjs.sendForm('service_onlznch', 'template_nm3z6tt', form.current, {
           publicKey: 'tWA5BESHzduW8do5B',
         }).then(
           () => {
             setSuccessMessage(language === 'AR' ? "تم إرسال البريد الإلكتروني بنجاح" : "האימייל נשלח בהצלחה");
+            setErrorMessage('');
+            setTimeout(() => {
+              setSuccessMessage('');
+            }, 10000);
           },
           (error) => {
-            setErrorMessage(language === 'AR' ? "مشكلة في إرسال البريد الإلكتروني" : "בעיה בשליחת מייל", error);
-            console.log(error)
+            setErrorMessage(language === 'AR' ? "مشكلة في إرسال البريد الإلكتروني" : "בעיה בשליחת מייל");
+            console.log(error);
+            setTimeout(() => {
+              setErrorMessage('');
+            }, 10000);
           },
-        );
-
+        );  
+    
+    
+    }
+  
         nameRef.current.value='';
         emailRef.current.value='';
         phoneRef.current.value='';

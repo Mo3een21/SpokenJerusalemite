@@ -4,7 +4,7 @@ body{
 .container {
     direction: rtl;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); /* Create responsive columns */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Create responsive columns */
     gap: 20px; /* Add space between grid items */
     margin: 20px;
     margin-top: 100px; /* Add margin around the container */
@@ -44,7 +44,7 @@ body{
   }
   
   .project {
-    height: 200px;
+    height: px;
     background-color: rgb(255, 242, 226); /* Background color for project cards */
     color: rgb(33, 84, 84);
     padding: 10px; /* Add padding inside project cards */
@@ -55,8 +55,8 @@ body{
   }
   
   .project img {
-    max-width: 85%;
-    height: 85%; /* Ensure images fit within the project cards */
+    max-width: 70%;
+    height: 70%; /* Ensure images fit within the project cards */
     border-radius: 8px; /* Rounded corners for images */
   }
   
@@ -72,12 +72,20 @@ body{
     color: #555; /* Slightly lighter color for descriptions */
   }
 
+  .close-button{
+    position: absolute;
+    top: 0;
+    background-color: white;
+    right: 5px;
+    width: 20px;
+  }
   .modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    margin-top: 30px;
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
     display: flex;
     justify-content: center;
@@ -94,8 +102,8 @@ body{
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     position: relative;
-    width: 80%;
-    max-width: 500px;
+    width: 90%;
+    max-width: 1000px;
     z-index: 100; /* Ensure modal is above backdrop */
   }
   
@@ -123,17 +131,19 @@ body{
  .flexer{
     display: flex;
     justify-content:  center;
-    
-    margin: 18px;;
+    align-items: center;
+    margin: 18px;
+    max-width: 950px;
+    height: 500px;
     
  } 
  .contact-form {
   background: rgba(245, 146, 149,0.42);
   padding: 30px;
+  max-height: 480px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   color: rgb(33, 84, 84);
   text-align: right;
-  margin-top: 20px;
   border: 2px solid rgb(33, 84, 84); /* Adding the green border */
   border-radius: 10px; /* Optional: Adding rounded corners for a nicer look */
   
@@ -212,7 +222,8 @@ body{
   gap: 30px; /* Increased gap for better spacing */
   justify-content: center;
   align-items: center;
-  max-width: 95%; /* Increased max-width */
+  max-width: 80%; /* Increased max-width */
+  max-height: 50%;
   margin: 30px auto;
   padding: 30px; /* Added padding */
   background-color: rgb(255, 247, 237); /* Background color for the gallery */
@@ -235,8 +246,35 @@ body{
   
 }
 
+.textEnd{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.textEnd p{
+  font-size: 1.6em;
+  color: #215454;
+  text-decoration: underline;
+}
+
+
+.formButton{
+  width: 100px;
+  background-color: #215454;
+  border-radius: 2px;
+  border: none;
+  margin-right: 20px;
+  height: 35px;
+  color: #ccc;
+}
+
+.formButton :hover{
+  cursor: pointer;
+}
+
 .photo-container img {
-   height: 250px;
+   height: 150px;
    width: auto;
   object-fit: cover;
   border-radius: 10px; /* Rounded corners for images */

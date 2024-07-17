@@ -12,8 +12,31 @@ function Register() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
 
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validateName = (name) => {
+    const regex = /^[^\d]+$/;
+    return regex.test(name);
+  };
+
+
   const handleRegister = async (e) => {
     e.preventDefault();
+    if(!validateEmail(email)){
+      setEmail("");
+        toast.error("Please enter a valid email address");
+    }
+    if(!validateName(fname)){
+      setFname("");
+      toast.error("Please enter a valid first name"); 
+    }
+    if(!validateName(lname)){
+      setLname("");
+      toast.error("Please enter a valid last name"); 
+    }
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       const user = auth.currentUser;
