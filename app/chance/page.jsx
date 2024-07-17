@@ -1,11 +1,20 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import NavBar from '/components/NavBar';
 import Link from 'next/link';
 import InfoSection from '@/components/InfoSection';
 import emailjs from '@emailjs/browser';
 import Slider from '/components/Slider';
 import './styles.css';
+
+import { auth } from '../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import Modal from '../../components/Modal';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase/firebase';
+
+
+
 
 emailjs.init({
     publicKey: 'tWA5BESHzduW8do5B',
@@ -26,6 +35,102 @@ const AboutUs = () => {
     const form = useRef();
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+
+    // State variables for text_A1 and text_H1
+    const [textA1, setTextA1] = useState('');
+    const [textH1, setTextH1] = useState('');
+    const [tempTextA1, setTempTextA1] = useState('');
+    const [tempTextH1, setTempTextH1] = useState('');
+    const [isEditing1, setIsEditing1] = useState(false);
+
+    // State variables for text_A2 and text_H2
+    const [textA2, setTextA2] = useState('');
+    const [textH2, setTextH2] = useState('');
+    const [tempTextA2, setTempTextA2] = useState('');
+    const [tempTextH2, setTempTextH2] = useState('');
+    const [isEditing2, setIsEditing2] = useState(false);
+
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const fetchTexts = async () => {
+            try {
+                const docRef1 = doc(db, 'opportunities', 'KJr2z1hrnGU8u86Gm3gE');
+                const docSnap1 = await getDoc(docRef1);
+                if (docSnap1.exists()) {
+                    const data = docSnap1.data();
+                    setTextA1(data.text_A1);
+                    setTextH1(data.text_H1);
+                    setTempTextA1(data.text_A1);
+                    setTempTextH1(data.text_H1);
+                } else {
+                    console.log('No such document!');
+                }
+
+                const docRef2 = doc(db, 'opportunities', '007I4kuAudohsHMLFPRm');
+                const docSnap2 = await getDoc(docRef2);
+                if (docSnap2.exists()) {
+                    const data = docSnap2.data();
+                    setTextA2(data.text_A2);
+                    setTextH2(data.text_H2);
+                    setTempTextA2(data.text_A2);
+                    setTempTextH2(data.text_H2);
+                } else {
+                    console.log('No such document!');
+                }
+            } catch (error) {
+                console.error('Error fetching documents:', error);
+            }
+        };
+
+        fetchTexts();
+    }, []);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setIsAuthenticated(!!user);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    const handleEdit1 = () => {
+        setIsEditing1(true);
+    };
+
+    const handleSave1 = async () => {
+        try {
+            const docRef = doc(db, 'opportunities', 'KJr2z1hrnGU8u86Gm3gE');
+            await updateDoc(docRef, {
+                text_A1: tempTextA1,
+                text_H1: tempTextH1
+            });
+            setTextA1(tempTextA1);
+            setTextH1(tempTextH1);
+            setIsEditing1(false);
+        } catch (error) {
+            console.error('Error updating document:', error);
+        }
+    };
+
+    const handleEdit2 = () => {
+        setIsEditing2(true);
+    };
+
+    const handleSave2 = async () => {
+        try {
+            const docRef = doc(db, 'opportunities', '007I4kuAudohsHMLFPRm');
+            await updateDoc(docRef, {
+                text_A2: tempTextA2,
+                text_H2: tempTextH2
+            });
+            setTextA2(tempTextA2);
+            setTextH2(tempTextH2);
+            setIsEditing2(false);
+        } catch (error) {
+            console.error('Error updating document:', error);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -53,6 +158,7 @@ const AboutUs = () => {
         setLanguage((prevLanguage) => (prevLanguage === 'AR' ? 'HE' : 'AR'));
     };
 
+
     return (
         <>
             <NavBar language={language} toggleLanguage={toggleLanguage} />
@@ -74,18 +180,43 @@ const AboutUs = () => {
                             <h2>{language === 'HE' ? 'שפה להזדמנויות' : 'لغة للفرص'}</h2>
                         </div>
                     </div>
+                    
                     <p>
-                        {language === 'HE'
-                            ? "73% מהנשים הערביות בירושלים אינן מצליחות להשתלב בשוק העבודה (לפי מכון ירושלים למחקרי מדיניות, 2022). במהלך שנות פעילותנו אנחנו פוגשות נשים מוכשרות ואיכותיות שאינן מצליחות למצות את הפוטנציאל שלהן. למה? חסם השפה, פחד וחוסר היכרות עם מערב העיר, היעדר נטוורקינג. בשנת 2020 החלטנו לנצל את כוחותינו כקהילה משותפת ולפתוח דלתות."
-                            : "73% من النساء العربيات في القدس لا ينجحن في الاندماج في سوق العمل (وفقًا لمعهد القدس لأبحاث السياسات ، 2022). خلال سنوات نشاطنا ، نلتقي بنساء موهوبات وذات جودة لا ينجحن في استيعاب إمكاناتهن الكاملة. لماذا؟ عائق اللغة ، الخوف وعدم المعرفة بمناطق غرب المدينة ، ونقص الشبكات الاجتماعية. في عام 2020 ، قررنا استغلال قوتنا كمجتمع مشترك وفتح أبوابًا."
-                        }
+                        {language === 'HE' ? textH1 : textA1}
                     </p>
-                    <p>
-                        {language === 'HE'
-                            ? "הקמנו את קהילת 'בנחקק אחלאמנה بنحقق أحلامنا' קהילת פיתוח אישי ומקצועי עבור נשים מירושלים המזרחית. חברות בקהילה כיום למעלה מאלף נשים מתחומי עיסוק מגוונים, המסייעות זו לזו בכל שאלה. הקהילה מציעה:"
-                            : "قمنا بتأسيس مجتمع 'بنحقق أحلامنا' كمجتمع للتطوير الشخصي والمهني للنساء في القدس الشرقية. تضم الآن أكثر من ألف امرأة من مختلف مجالات العمل ، يساعدن بعضهن البعض في أي مسألة. يقدم المجتمع:"
-                        }
-                    </p>
+                   
+                    {isAuthenticated && (
+                        <div className="button-container">
+                            <button onClick={handleEdit1} className="edit-button">
+                                <img 
+                                    src="/assets/images/edit.png"
+                                    alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+                                    width={20}
+                                    height={20}
+                                />
+                            </button>
+                        </div>
+                    )}
+                    <Modal isOpen={isEditing1} onClose={() => setIsEditing1(false)}>
+                        <div>
+                            <label>
+                                عربي
+                                <textarea
+                                    value={tempTextA1}
+                                    onChange={(e) => setTempTextA1(e.target.value)}
+                                />
+                            </label>
+                            <label>
+                                עברית
+                                <textarea
+                                    value={tempTextH1}
+                                    onChange={(e) => setTempTextH1(e.target.value)}
+                                />
+                            </label>
+                            <button className='button-save' onClick={handleSave1}>Save</button>
+                        </div>
+                    </Modal>
+
                     <ul className="lista">
                         <li>{language === 'HE' ? 'סיוע בכתיבת קורות חיים' : 'مساعدة في كتابة السيرة الذاتية'}</li>
                         <li>{language === 'HE' ? 'הכנה לראיונות עבודה' : 'تحضير لمقابلات العمل'}</li>
@@ -114,12 +245,43 @@ const AboutUs = () => {
                             <h2>{language === 'HE' ? 'קורסי העברית שלנו' : 'دورات اللغة العبرية لدينا'}</h2>
                         </div>
                     </div>
+                    {/* ====================== */}
                     <p>
-                        {language === 'HE'
-                            ? "הקורסים הייחודיים שלנו שמים דגש על מיומנויות שיחה ותקשורת פורמלית ובלתי פורמלית. הם נבנו במטרה להוציא את הלומד.ת כמה שיותר מהר מהכיתה, משלב הלמידה לשלב התרגול, הדיבור והיישום. הם כוללים מרכיבי תרגול רבים על מנת לאפשר צבירת ביטחון בשימוש בשפה. צוות המורות שלנו דוברות עברית שפת אם וערבית ברמה גבוהה, הן מכירות את החסמים ואת החברה המזרח ירושלמית ופועלות ליצור סביבה לימודית מיטבית."
-                            : "دوراتنا الفريدة التي تركز على مهارات التحدث والاتصال الرسمي وغير الرسمي. تم بناؤها لإخراج التلميذ بأسرع ما يمكن من الفصل، من مرحلة التعلم إلى مرحلة الممارسة من خلال التعليم الشخصي. نرى في ذلك وسيلة لتعزيز وتحسين الاستثمار والإنفاق."
-                        }
+                        {language === 'HE' ? textH2 : textA2}
                     </p>
+                   
+                    {isAuthenticated && (
+                        <div className="button-container">
+                            <button onClick={handleEdit2} className="edit-button">
+                                <img 
+                                    src="/assets/images/edit.png"
+                                    alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+                                    width={20}
+                                    height={20}
+                                />
+                            </button>
+                        </div>
+                    )}
+                    <Modal isOpen={isEditing2} onClose={() => setIsEditing2(false)}>
+                        <div>
+                            <label>
+                                عربي
+                                <textarea
+                                    value={tempTextA2}
+                                    onChange={(e) => setTempTextA2(e.target.value)}
+                                />
+                            </label>
+                            <label>
+                                עברית
+                                <textarea
+                                    value={tempTextH2}
+                                    onChange={(e) => setTempTextH2(e.target.value)}
+                                />
+                            </label>
+                            <button className='button-save' onClick={handleSave2}>Save</button>
+                        </div>
+                    </Modal>
+                    {/* ========================= */}
                     <p>
                         {language === 'HE'
                             ? "תלמידות ובוגרות הקורסים יכולות להצטרף ל"
