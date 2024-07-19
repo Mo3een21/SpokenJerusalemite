@@ -116,6 +116,22 @@ body, html {
     direction: rtl; /* Set text direction to right-to-left */
     z-index: 1000; /* Ensures the modal appears on top */
 }
+/* Add this CSS for the blurred background */
+body.modal-open {
+    overflow: hidden; /* Prevent scrolling */
+}
+
+.modal-background-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Blurring effect */
+    z-index: 999; /* Behind the modal but above other content */
+}
+
 
 .modal-input {
     width: 100%;
@@ -136,32 +152,33 @@ body, html {
     bottom: 20px; /* Increase bottom positioning to avoid overlap */
 }
 
-.save-button,
-.cancel-button {
-    padding: 10px 20px;
+.save-button, .cancel-button {
+    background: rgb(33, 84, 84); /* Use your brand color */
+    color: rgb(255, 247, 237);
+    padding: 5px 16px; /* Reduced padding for smaller size */
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-}
-
-.save-button {
-    background-color: #215454;
-    color: #fff7ed;
-}
-
-.cancel-button {
+    font-size: 0.9em; /* Slightly reduced font size */
+    transition: background 0.6s ease, color 0.6s ease; /* Add color transition for consistent border */
+    border: 2px solid rgb(33, 84, 84); /* Border color to match the page */
+  }
+  
+  .save-button:hover, .cancel-button:hover {
+    background: rgb(255, 247, 237); /* A darker shade of the brand color */
+    color: #215454;
+  }
+  
+  .cancel-button {
     background-color: #e36370;
-    color: #fff7ed;
-}
-
-.save-button:hover {
-    background-color: #1b4542;
-}
-
-.cancel-button:hover {
-    background-color: #c82333;
-}
+    border: 2px solid #e36370;
+  }
+  
+  .cancel-button:hover {
+    background-color: rgb(255, 247, 237);
+    color: #e36370;
+  }
+  
 
 .delete-story-modal {
     background-color: #fff7ed;

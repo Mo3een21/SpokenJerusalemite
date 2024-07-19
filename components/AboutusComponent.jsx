@@ -6,6 +6,7 @@ import { db, storage } from '../app/firebase/firebase'; // Import your Firestore
 import { doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import Modal from './Modal';
+import ContactFormModal from './ContactFormModal'; // Import the new modal component
 import { auth } from '../app/firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -46,6 +47,7 @@ export default function AboutusComponent({ language }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [memberToDelete, setMemberToDelete] = useState(null);
     const [deleteSuccessMessage, setDeleteSuccessMessage] = useState('');
+    const [isContactFormOpen, setIsContactFormOpen] = useState(false); // State to handle contact form modal
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -54,7 +56,6 @@ export default function AboutusComponent({ language }) {
 
         return () => unsubscribe();
     }, []);
-
 
     const validateEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,7 +71,6 @@ export default function AboutusComponent({ language }) {
         const regex = /^[^\d]+$/;
         return regex.test(name);
       };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -99,10 +99,7 @@ export default function AboutusComponent({ language }) {
         }, 10000);
         return;
       }
-  
-  
       else{
-  
         emailjs.sendForm('service_onlznch', 'template_nm3z6tt', form.current, {
           publicKey: 'tWA5BESHzduW8do5B',
         }).then(
@@ -121,8 +118,6 @@ export default function AboutusComponent({ language }) {
             }, 10000);
           },
         );  
-    
-    
     }
   
         nameRef.current.value='';
@@ -132,91 +127,183 @@ export default function AboutusComponent({ language }) {
         messageRef.current.value='';
     };
 
-    const ImageGrid = () => {
+    const ImageGrid = ({ language }) => {
         const [years, setYears] = useState(0);
         const [women, setWomen] = useState(0);
         const [volunteers, setVolunteers] = useState(0);
         const [hasAnimated, setHasAnimated] = useState(false);
+        const [isEditing, setIsEditing] = useState(false);
+        const [tempData, setTempData] = useState({ years: 0, women: 0, volunteers: 0 });
+        const [isAuthenticated, setIsAuthenticated] = useState(false);
         const gridRef = useRef(null);
-
+      
         useEffect(() => {
-          const link = document.createElement('link');
-          link.href = 'https://fonts.googleapis.com/css2?family=Tel+Aviv+Modernist+Bold&display=swap';
-          link.rel = 'stylesheet';
-          document.head.appendChild(link);
-
+          const fetchNumbers = async () => {
+            try {
+              const docRef = doc(db, 'HomePage', 'jAaHVUltzrgQ2clDmm2N');
+              const docSnap = await getDoc(docRef);
+              
+              if (docSnap.exists()) {
+                const data = docSnap.data();
+                setYears(data.number_1);
+                setWomen(data.number_2);
+                setVolunteers(data.number_3);
+                // Assuming startAnimation is defined elsewhere and correctly handles the animation
+                startAnimation(data.number_1, data.number_2, data.number_3);
+              } else {
+                console.log('No such document!');
+              }
+            } catch (error) {
+              console.error('Error fetching document:', error);
+            }
+          };
+        
+          fetchNumbers();
+        }, []); // Dependency array is empty, so this runs once on mount
+        
+        useEffect(() => {
+          const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setIsAuthenticated(!!user);
+          });
+        
+          return () => unsubscribe(); // Cleanup function to unsubscribe
+        }, []); // Dependency array is empty, so this runs once on mount
+      
+        useEffect(() => {
           const handleScroll = () => {
             if (!hasAnimated && gridRef.current) {
               const rect = gridRef.current.getBoundingClientRect();
               if (rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
+                // Assuming startAnimation is defined elsewhere and correctly handles the animation
                 startAnimation();
+                setHasAnimated(true); // Ensure animation doesn't run again
               }
             }
           };
-
+      
           window.addEventListener('scroll', handleScroll);
           return () => window.removeEventListener('scroll', handleScroll);
-        }, [hasAnimated]);
-
-        const startAnimation = () => {
+        }, [hasAnimated]); // Re-run this effect if hasAnimated changes
+      
+        const startAnimation = (yearsFinal, womenFinal, volunteersFinal) => {
           const duration = 900;
           const steps = 100;
           const intervalDuration = duration / steps;
-
-          const yearsFinal = 7;
-          const womenFinal = 2900;
-          const volunteersFinal = 50;
-
+      
           const yearsStep = yearsFinal / steps;
           const womenStep = womenFinal / steps;
           const volunteersStep = volunteersFinal / steps;
-
+      
           let currentStep = 0;
-
+      
           const interval = setInterval(() => {
             currentStep += 1;
             setYears(Math.min(Math.ceil(currentStep * yearsStep), yearsFinal));
             setWomen(Math.min(Math.ceil(currentStep * womenStep), womenFinal));
             setVolunteers(Math.min(Math.ceil(currentStep * volunteersStep), volunteersFinal));
-
+      
             if (currentStep >= steps) {
               clearInterval(interval);
             }
           }, intervalDuration);
-
+      
           setHasAnimated(true);
         };
-
+      
+        const handleEdit = () => {
+          setTempData({ years, women, volunteers });
+          setIsEditing(true);
+        };
+      
+        const handleSave = async () => {
+          try {
+            const docRef = doc(db, 'HomePage', 'jAaHVUltzrgQ2clDmm2N');
+            await updateDoc(docRef, {
+              number_1: tempData.years,
+              number_2: tempData.women,
+              number_3: tempData.volunteers
+            });
+            setYears(tempData.years);
+            setWomen(tempData.women);
+            setVolunteers(tempData.volunteers);
+            setIsEditing(false);
+          } catch (error) {
+            console.error('Error updating document:', error);
+          }
+        };
+      
         return (
-            <div ref={gridRef} className="image-grid">
-            <div className="image_threephotos">
-                <img src={images.yearsImage} alt="Years" />
-                <div className="number-box">
-                    <p className="number">{years}+</p>
-                </div>
-                <h2 className="description">
-                    {language === 'AR' ? 'سنوات من المجتمع' : 'שנות קהילה'}
-                </h2>
-            </div>
-            <div className="image_threephotos">
-                <img src={images.womanImage} alt="Women" />
-                <div className="number-box">
-                    <p className="number">{women}+</p>
-                </div>
-                <h2 className="description">
-                    {language === 'AR' ? 'امرأة من جميع أنحاء القدس' : 'נשים מכל המגוון הירושלמי'}
-                </h2>
-            </div>
-            <div className="image_threephotos">
-                <img src={images.volunteerImage} alt="Volunteers" />
-                <div className="number-box">
-                    <p className="number">{volunteers}+</p>
-                </div>
-                <h2 className="description">
-                    {language === 'AR' ? 'متطوعات' : 'מתנדבות'}
-                </h2>
-            </div>
+          <div ref={gridRef} className="image-grid">
+            {isAuthenticated && (
+        <div className="button-container">
+          <button onClick={handleEdit} className="edit-button">
+            <img 
+              src="/assets/images/edit.png" // Ensure this is the correct path to your image
+              alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+              width={20} // Adjust the width and height as needed
+              height={20}
+            />
+          </button>
         </div>
+      )}
+            <div className="image_threephotos">
+              <img src={images.yearsImage} alt="Years" />
+              <div className="number-box">
+                <p className="number">{years}+</p>
+              </div>
+              <h2 className="description">
+                {language === 'AR' ? 'سنوات من المجتمع' : 'שנות קהילה'}
+              </h2>
+            </div>
+            <div className="image_threephotos">
+              <img src={images.womanImage} alt="Women" />
+              <div className="number-box">
+                <p className="number">{women}+</p>
+              </div>
+              <h2 className="description">
+                {language === 'AR' ? 'امرأة من جميع أنحاء القدس' : 'נשים מכל המגוון הירושלמי'}
+              </h2>
+            </div>
+            <div className="image_threephotos">
+              <img src={images.volunteerImage} alt="Volunteers" />
+              <div className="number-box">
+                <p className="number">{volunteers}+</p>
+              </div>
+              <h2 className="description">
+                {language === 'AR' ? 'متطوعات' : 'מתנדבות'}
+              </h2>
+            </div>
+      
+            <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+              <div>
+                <label>
+                שנות קהילה / سنوات من المجتمع
+                  <input
+                    type="number"
+                    value={tempData.years}
+                    onChange={(e) => setTempData({ ...tempData, years: parseInt(e.target.value) })}
+                  />
+                </label>
+                <label>
+                נשים מכל המגוון הירושלמי / امرأة من جميع أنحاء القدس 
+                <input
+                    type="number"
+                    value={tempData.women}
+                    onChange={(e) => setTempData({ ...tempData, women: parseInt(e.target.value) })}
+                  />
+                </label>
+                <label>
+                متطوعات / מתנדבות
+                  <input
+                    type="number"
+                    value={tempData.volunteers}
+                    onChange={(e) => setTempData({ ...tempData, volunteers: parseInt(e.target.value) })}
+                  />
+                </label>
+                <button className='save-button' onClick={handleSave}>Save</button>
+              </div>
+            </Modal>
+          </div>
         );
       };
 
@@ -366,7 +453,7 @@ export default function AboutusComponent({ language }) {
 
     return (
         <div className="container">
-            <button className="scroll-button" onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}>
+            <button className="scroll-button" onClick={() => setIsContactFormOpen(true)}>
                  {language === 'AR' ? 'للأنضمام' : 'להצטרף'}
             </button>
             <div className="text-container">
@@ -480,7 +567,7 @@ export default function AboutusComponent({ language }) {
                     </div>
                 )}
             </div>
-            <div className="separator"></div>
+            {/* <div className="separator"></div> */}
 
             <Modal isOpen={isAdding} onClose={() => setIsAdding(false)}>
                 <div className="add-member-modal">
@@ -597,39 +684,42 @@ export default function AboutusComponent({ language }) {
                 </div>
             )}
 
-            <h2 className="title" id="contact">{language === 'AR' ? 'تحدثوا إلينا!' : 'דברו איתנו!'}</h2>
-            <div className="contact-form">
-                <form ref={form} onSubmit={handleSubmit}>
-                    <label htmlFor="name">{language === 'AR' ? 'اسم:' : 'שם:'}</label>
-                    <input type="text" id="name" name="name" required ref={nameRef} />
-                    
-                    <label htmlFor="email">{language === 'AR' ? 'البريد الإلكتروني:' : 'מייל:'}</label>
-                    <input type="email" id="email" name="email" required ref={emailRef}/>
-                    
-                    <label htmlFor="phone">{language === 'AR' ? 'هاتف:' : 'טלפון:'}</label>
-                    <input type="tel" id="phone" name="phone" required ref={phoneRef}/>
-                    
-                    <label htmlFor="subject">{language === 'AR' ? 'موضوع الاستفسار:' : 'נושא הפנייה:'}</label>
-                    <select id="subject" name="subject" required ref={subjectRef}>
-                        <option value="">{language === 'AR' ? '...اختر الموضوع' : 'בחר נושא...'}</option>
-                        <option value="language_exchange">{language === 'AR' ? 'تبادل اللغات' : 'חילופי שפות'}</option>
-                        <option value="hebrew_arabic_courses">{language === 'AR' ? 'دورات عبرية / عربية محكية' : 'קורסי עברית / ערבית מדוברת'}</option>
-                        <option value="translation_services">{language === 'AR' ? 'طلب خدمات الترجمة' : 'הזמנת שירותי תרגום'}</option>
-                        <option value="workshop_activity">{language === 'AR' ? 'طلب ورشة عمل أو نشاط' : 'הזמנת סדנה או פעילות'}</option>
-                        <option value="volunteering">{language === 'AR' ? 'تطوع' : 'התנדבות'}</option>
-                        <option value="employment_help">{language === 'AR' ? 'مساعدة في التوظيف' : 'עזרה בתעסוקה'}</option>
-                        <option value="collaboration">{language === 'AR' ? 'اقتراحات للتعاون' : 'הצעות לשיתוף פעולה'}</option>
-                        <option value="other">{language === 'AR' ? 'أخرى' : 'אחר'}</option>
-                    </select>
-                    
-                    <label htmlFor="message">{language === 'AR' ? 'نص الرسالة:' : 'תוכן ההודעה:'}</label>
-                    <textarea id="message" name="message" required ref={messageRef}></textarea>
-                    
-                    <button type="submit">{language === 'AR' ? 'إرسال' : 'שליחה'}</button>
-                    {successMessage && <p>{successMessage}</p>}
-                    {errorMessage && <p>{errorMessage}</p>}
-                </form>
-            </div>
+            <ContactFormModal isOpen={isContactFormOpen} onClose={() => setIsContactFormOpen(false)}>
+                <h2 className="title" id="contact">{language === 'AR' ? 'تحدثوا إلينا!' : 'דברו איתנו!'}</h2>
+                <div className="contact-form">
+                {/* <button className="contact-close-button" onClick={() => setIsContactFormOpen(false)}>&times;</button> */}
+                    <form ref={form} onSubmit={handleSubmit}>
+                        <label htmlFor="name">{language === 'AR' ? 'اسم:' : 'שם:'}</label>
+                        <input type="text" id="name" name="name" required ref={nameRef} />
+                        
+                        <label htmlFor="email">{language === 'AR' ? 'البريد الإلكتروني:' : 'מייל:'}</label>
+                        <input type="email" id="email" name="email" required ref={emailRef}/>
+                        
+                        <label htmlFor="phone">{language === 'AR' ? 'هاتف:' : 'טלפון:'}</label>
+                        <input type="tel" id="phone" name="phone" required ref={phoneRef}/>
+                        
+                        <label htmlFor="subject">{language === 'AR' ? 'موضوع الاستفسار:' : 'נושא הפנייה:'}</label>
+                        <select id="subject" name="subject" required ref={subjectRef}>
+                            <option value="">{language === 'AR' ? '...اختر الموضوع' : 'בחר נושא...'}</option>
+                            <option value="language_exchange">{language === 'AR' ? 'تبادل اللغات' : 'חילופי שפות'}</option>
+                            <option value="hebrew_arabic_courses">{language === 'AR' ? 'دورات عبرية / عربية محكية' : 'קורסי עברית / ערבית מדוברת'}</option>
+                            <option value="translation_services">{language === 'AR' ? 'طلب خدمات الترجمة' : 'הזמנת שירותי תרגום'}</option>
+                            <option value="workshop_activity">{language === 'AR' ? 'طلب ورشة عمل أو نشاط' : 'הזמנת סדנה או פעילות'}</option>
+                            <option value="volunteering">{language === 'AR' ? 'تطوع' : 'התנדבות'}</option>
+                            <option value="employment_help">{language === 'AR' ? 'مساعدة في التوظيف' : 'עזרה בתעסוקה'}</option>
+                            <option value="collaboration">{language === 'AR' ? 'اقتراحات للتعاون' : 'הצעות לשיתוף פעולה'}</option>
+                            <option value="other">{language === 'AR' ? 'أخرى' : 'אחר'}</option>
+                        </select>
+                        
+                        <label htmlFor="message">{language === 'AR' ? 'نص الرسالة:' : 'תוכן ההודעה:'}</label>
+                        <textarea id="message" name="message" required ref={messageRef}></textarea>
+                        
+                        <button type="submit">{language === 'AR' ? 'إرسال' : 'שליחה'}</button>
+                        {successMessage && <p>{successMessage}</p>}
+                        {errorMessage && <p>{errorMessage}</p>}
+                    </form>
+                </div>
+            </ContactFormModal>
         </div>
     );
 }

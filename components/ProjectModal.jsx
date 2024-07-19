@@ -12,7 +12,7 @@ const ProjectModal = ({ show, onClose, project }) => {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>{project.title}</h2>
         <p>{project.description}</p>
-        <button onClick={onClose}>Close</button>
+        <button className='button-close' onClick={onClose}>Close</button>
       </div>
     </div>
   );

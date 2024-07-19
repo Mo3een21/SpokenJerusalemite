@@ -111,7 +111,13 @@ body {
   background-color: transparent;
   color: rgb(33, 84, 84);
 }
+.icon-buttons.accept {
+  background-color: transparent;
+}
 
+.icon-buttons.accept:hover {
+  background-color: transparent;
+}
 .icon-buttons.reject {
   background-color: transparent;
 }
@@ -174,6 +180,23 @@ body {
   cursor: pointer;
   color: rgb(33, 84, 84);
   transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+/* Close button for the modal */
+.modalCB {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: black;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.modalCB:hover {
+  transform: scale(1.2);
+  color: rgba(245, 146, 149);
 }
 
 .list-close-button:hover {

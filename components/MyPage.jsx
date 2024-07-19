@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef,useCallback  } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore'; // Ensure this line is present
 import { db } from '../app/firebase/firebase'; // Adjust the import path as needed
 import './MyPage.css';
@@ -627,11 +627,15 @@ const ImageGrid = ({ language }) => {
   );
 };
 // ==================================================================
+// Create a cache to store the fetched data
+let pageDataCache = null;
+
 const MyPage = ({ language }) => {
-  const [pageData, setPageData] = useState(null);
+  const [pageData, setPageData] = useState(pageDataCache);
   const [isEditing, setIsEditing] = useState(false);
   const [tempData, setTempData] = useState({ arabicText_h1: '', hebrewText_h1: '' });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(!pageDataCache); // Set loading state based on cache
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -641,24 +645,30 @@ const MyPage = ({ language }) => {
     return () => unsubscribe(); // Cleanup subscription on unmount
   }, []);
 
-  useEffect(() => {
-    const fetchPageData = async () => {
-      try {
-        const docRef = doc(db, 'HomePage', 'C8OZrL3ycBZXzEDQ7c3u');
-        const docSnap = await getDoc(docRef);
+  const fetchPageData = useCallback(async () => {
+    try {
+      const docRef = doc(db, 'HomePage', 'C8OZrL3ycBZXzEDQ7c3u');
+      const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          setPageData(docSnap.data());
-        } else {
-          console.log('No such document!');
-        }
-      } catch (error) {
-        console.error('Error fetching document:', error);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        pageDataCache = data; // Cache the data
+        setPageData(data);
+      } else {
+        console.log('No such document!');
       }
-    };
-
-    fetchPageData();
+    } catch (error) {
+      console.error('Error fetching document:', error);
+    } finally {
+      setIsLoading(false); // Set loading to false after the data is fetched
+    }
   }, []);
+
+  useEffect(() => {
+    if (!pageData) {
+      fetchPageData();
+    }
+  }, [fetchPageData, pageData]);
 
   const handleEdit = () => {
     setTempData({ arabicText_h1: pageData.arabicText_h1, hebrewText_h1: pageData.hebrewText_h1 });
@@ -673,6 +683,7 @@ const MyPage = ({ language }) => {
         arabicText_h1: tempData.arabicText_h1,
         hebrewText_h1: tempData.hebrewText_h1
       });
+      pageDataCache = tempData; // Update cache
       setPageData(tempData);
       setIsEditing(false);
       console.log('Document updated');
@@ -681,7 +692,7 @@ const MyPage = ({ language }) => {
     }
   };
 
-  if (!pageData) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -695,17 +706,17 @@ const MyPage = ({ language }) => {
           {language === 'AR' ? 'اقرأ المزيد' : 'קראו עוד'}
         </a>
         {isAuthenticated && (
-         <div className="button-container">
-           <button onClick={handleEdit} className="edit-button">
-             <img 
-               src="/assets/images/edit.png" // Ensure this is the correct path to your image
-               alt={language === 'AR' ? 'تعديل' : 'ערוך'}
-               width={20} // Adjust the width and height as needed
-               height={20}
-             />
-           </button>
-         </div>
-       )}
+          <div className="button-container">
+            <button onClick={handleEdit} className="edit-button">
+              <img 
+                src="/assets/images/edit.png" // Ensure this is the correct path to your image
+                alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+                width={20} // Adjust the width and height as needed
+                height={20}
+              />
+            </button>
+          </div>
+        )}
       </div>
       <div className="images_wrapper">
         <img className="responsive-image" src={images.logo} alt="Description" />
@@ -720,7 +731,7 @@ const MyPage = ({ language }) => {
             />
           </label>
           <label>
-           עברית
+            עברית
             <textarea
               value={tempData.hebrewText_h1}
               onChange={(e) => setTempData({ ...tempData, hebrewText_h1: e.target.value })}
@@ -732,7 +743,6 @@ const MyPage = ({ language }) => {
     </div>
   );
 };
-
 
 
 

@@ -180,7 +180,6 @@ const UnregisteredUserList = () => {
 
       {isListModalOpen && (
         <ListModal isOpen={isListModalOpen} onClose={closeListModal}>
-          {/* Custom content for ListModal */}
           <div className="list-modal-content">
             <h2>User Details</h2>
             {selectedUser && (
@@ -188,7 +187,6 @@ const UnregisteredUserList = () => {
                 <p><strong>Name:</strong> {selectedUser.firstName} {selectedUser.lastName}</p>
                 <p><strong>Email:</strong> {selectedUser.email}</p>
                 <p><strong>Request Date:</strong> {new Date(selectedUser.requestDate).toLocaleString()}</p>
-                {/* Add any other details you want to display */}
               </>
             )}
             <div className="button-container">

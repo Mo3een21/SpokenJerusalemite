@@ -297,9 +297,9 @@ const NavBar = ({ language, toggleLanguage })  => {
                 {isNavOpen ? 'Close' : 'Open'}
             </button>
             {isModalOpen && (
-                <div className="modal-overlay" style={styles.modalOl}>
-                    <div className="modal-content" style={styles.modalC}>
-                        <button onClick={toggleModal} className="modal-close-button" style={styles.modalCB}>×</button>
+                <div className="modalOl" style={styles.modalOl}>
+                    <div className="modalC" style={styles.modalC}>
+                        <button onClick={toggleModal} className="modalCB" style={styles.modalCB}>×</button>
                         <UnregisteredUserList />
                     </div>
                 </div>
@@ -483,17 +483,18 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 1000,
-    },
-    modalC: {
+      },
+      modalC: {
+        position: 'relative', // Ensure the modal content is positioned relative
         backgroundColor: 'rgb(255, 247, 237)',
         padding: '20px',
         borderRadius: '8px',
         maxWidth: '80%',
         maxHeight: '80%',
-        color:'rgb(33, 84, 84)',
+        color: 'rgb(33, 84, 84)',
         overflowY: 'auto',
-    },
-    modalCB: {
+      },
+      modalCB: {
         position: 'absolute',
         top: '10px',
         right: '10px',
@@ -501,9 +502,8 @@ const styles = {
         border: 'none',
         fontSize: '1.5rem',
         cursor: 'pointer',
-        color:'black',
-        
-    },
+        color: 'black',
+      },
       
 };
 

@@ -166,6 +166,14 @@ const WomenComponent = ({ language }) => {
     setIsEditing(true);
   };
 
+  useEffect(() => {
+    if (isAdding || isEditing || isDeleteModalOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+  }, [isAdding, isEditing, isDeleteModalOpen]);
+
   return (
     <div className="page-container">
       <div className="story-page">
@@ -188,7 +196,7 @@ const WomenComponent = ({ language }) => {
                 <h2>{language === 'AR' ? story.headerArabic : story.headerHebrew}</h2>
                 <p>{language === 'AR' ? story.textArabic : story.textHebrew}</p>
                 {isAuthenticated && (
-                  <div className="button-container">
+                    <div className="button-container">
                       <img
                       src="/assets/images/editStory.png"
                       alt={language === 'AR' ? 'تعديل' : 'ערוך'}
@@ -201,7 +209,7 @@ const WomenComponent = ({ language }) => {
                       onClick={() => openDeleteModal(story)}
                       className="delete-button"
                       />
-                      </div>
+                    </div>
                   )}
               </div>
             </div>
@@ -275,7 +283,7 @@ const WomenComponent = ({ language }) => {
               className="modal-input"
             />
             <textarea
-              placeholder={language === 'AR' ? 'النص بالعبرית' : 'תוכן בעברית'}
+              placeholder={language === 'AR' ? 'النص بالعبرية' : 'תוכן בעברית'}
               value={newStory.textHebrew}
               onChange={(e) => setNewStory({ ...newStory, textHebrew: e.target.value })}
               className="modal-input"
@@ -308,9 +316,10 @@ const WomenComponent = ({ language }) => {
                   </button>
                   </div>
               </div>
-          </Modal>
+        </Modal>
 
       </div>
+      { (isAdding || isEditing || isDeleteModalOpen) && <div className="modal-background-blur"></div> }
     </div>
   );
 };

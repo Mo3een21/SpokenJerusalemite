@@ -9,18 +9,20 @@ body {
 }
 
 form {
-    width: 600px; /* Set a fixed width for the form */
-    padding: 40px; /* Increase padding */
-    color: #fff;
-    background: #215454; /* C:86 M:49 Y:58 K:33 R:33 G:84 B:84 */
-    box-shadow: 4px  4px 4px rgba(0,0,0,0.1);
-    border-radius: 4px;
-    font-family: Arial, sans-serif;
+    width: 500px; /* Reduced width for the form */
+    padding: 30px; /* Reduced padding */
+    color: #215454;
+    background: #fff7ed; /* C:86 M:49 Y:58 K:33 R:33 G:84 B:84 */
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 37px;
+    font-family: Arial, sans-serif; 
+    border: 4px solid #215454;
 }
 
 h3 {
+    border: #215454;
     text-align: center;
-    color: #fff7ed;
+    color: #215454;
     margin-bottom: 20px;
     font-size: 30px;
 }
@@ -28,44 +30,54 @@ h3 {
 /* Input and label styles */
 .mb-3 {
     margin-bottom: 15px;
+    border: #215454;
 }
 
 label {
+    border: #215454;
     display: block;
     margin-bottom: 10px; /* Increase space between label and input */
-    color: #fff7ed;
+    color: #215454;
 }
 
 .form-control {
     width: 100%;
     padding: 15px; /* Increase padding */
     margin-top: 5px;
-    border: 1px solid #ccc;
+    border: 2px solid #215454;
     border-radius: 4px;
     box-sizing: border-box;
     background-color: #fff7ed; /* C:0 M:2 Y:5 K:0 R:255 G:247 B:237 */
+    border-radius: 15px;
 }
 
 /* Button styles */
 .btn {
     display: inline-block;
-    width: 100%;
-    padding: 15px; /* Increase padding */
+    width: 50%;
+    padding: 15px;
     background-color: #f7c7c9;
     color: #215454;
-    border: none;
-    border-radius: 4px;
+    border: 1px solid #215454;
+    border-radius: 17px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 18px; /* Increase font size */
+    transition: all 0.3s ease;
+    font-size: 18px;
+    margin: 0 auto; /* Center the button horizontally */
+    display: block; /* Change display to block for margin auto to work */
+    margin-top: 20px;
 }
 
 .btn:hover {
-    background-color: #f7a9ac;
+    transform: scale(1.1);
+    background: linear-gradient(45deg, #f7a9ac, #f7c7c9);
+    border: 1px solid #f7a9ac;
+    color: #fff7ed;
 }
 
 /* Forgot password link styles */
 .forgot-password {
+    border: #215454;
     text-align: right;
     margin-top: 10px;
 }
@@ -84,4 +96,52 @@ label {
 .d-grid {
     display: grid;
     grid-template-columns: 1fr;
+}
+
+/* ========================================= */
+/* CustomAlert.css */
+.custom-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.custom-alert {
+    color: #215454;
+    background-color: #fff7ed;
+    border: 5px solid #215454;
+    font-size: 25px;
+    padding: 60px;
+    border-radius: 24px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-width: 450px;
+    width: 100%;
+    height: 20%;
+    text-align: center;
+    white-space: pre-line;
+}
+
+.custom-alert-close {
+    border-radius: 7px;
+    background-color: #215454;
+    color: #fff7ed;
+    border: 3px solid #215454;
+    padding: 7px 15px;
+    font-size: 23px;
+    cursor: pointer;
+    margin-top: 40px;
+    position: relative; /* Add this line */
+    top: 40px; /* Adjust this value to move the element down */
+}
+
+.custom-alert-close:hover {
+    color: #215454;
+    background-color: #fff7ed;
 }

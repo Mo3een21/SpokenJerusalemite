@@ -2,7 +2,6 @@ body {
   background-color: rgb(255, 247, 237);
   color: rgb(33, 84, 84);
   margin: 0;
-  
 }
 
 .container {
@@ -53,6 +52,7 @@ body {
   justify-content: flex-start; /* Align buttons to the left */
   gap: 10px; /* Add space between buttons */
 }
+
 .button-container button {
   margin: 0 1%;
   margin-top: 5px;
@@ -84,7 +84,6 @@ body {
   background-color: #c82333;
 }
 
-
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
@@ -92,7 +91,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5); /* Background blur effect */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -125,17 +124,16 @@ textarea {
   padding: 10px;
   margin: 10px 0;
   background-color: rgb(255, 247, 237);
-  color:#215454;
+  color: #215454;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 20px;
-
 }
 
 .title {
   font-size: 1.1em;
   line-height: 1.6;
-  color:#215454;
+  color: #215454;
   padding-right: 30px;
   padding-left: 30px;
   padding-bottom: 30px;
@@ -190,6 +188,89 @@ textarea {
   margin: 0 auto;
   bottom: -50px;
 }
+
+/* Additional Styles for ImageGrid Editing */
+
+.image-grid .edit-button:hover {
+  transform: scale(1.1);
+  background-color: rgb(245, 146, 149);
+}
+
+.image-grid .edit-button img {
+  width: 20px;
+  height: 20px;
+}
+
+.image-grid .save-button {
+  background: rgb(33, 84, 84);
+  color: rgb(255, 247, 237);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.6s ease;
+}
+
+.image-grid .save-button:hover {
+  background: rgb(255, 247, 237);
+  color: #215454;
+  border: 2px solid rgb(33, 84, 84);
+}
+
+.image-grid .modal-input {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgb(255, 247, 237);
+  border: 2px solid rgb(33, 84, 84);
+  color: #215454;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Additional styles for larger text fields/areas */
+.image-grid .modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.image-grid .modal-content label {
+  font-size: 1.2em;
+  color: #215454;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.image-grid .modal-content label input {
+  width: 70%;
+  border: 2px solid rgb(33, 84, 84); /* Green border */
+  padding: 10px;
+  font-size: 1.2em;
+}
+
+.image-grid .modal-content .button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.image-grid .modal-content .save-button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+}
+
+.image-grid .modal-content .cancel-button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+}
+
 
 .image_threephotos {
   display: flex;
@@ -330,6 +411,7 @@ textarea {
   border-radius: 50%; /* Rounded shape */
   transition: box-shadow 0.3s ease;
 }
+
 .team-member.add-member-button {
   display: flex;
   align-items: center;
@@ -344,6 +426,7 @@ textarea {
 .team-member.add-member-button:hover {
   transform: scale(1.1); /* Enlarge on hover */
 }
+
 .team-member img {
   width: 100%;
   height: 100%;
@@ -451,8 +534,6 @@ textarea {
   transform: scale(1.1);
 }
 
-
-
 .team-member .details button:hover img {
   filter: brightness(1.2); /* Slightly brighten the image on hover */
 }
@@ -467,6 +548,7 @@ textarea {
 .team-member .details button:hover img {
   filter: brightness(1.2); /* Slightly brighten the image on hover */
 }
+
 /* Delete Confirmation Modal Styles */
 .delete-modal {
   background-color: rgb(255, 247, 237);
@@ -519,7 +601,6 @@ textarea {
   background-color: rgb(255, 247, 237);
   color: #e36370;
 }
-
 
 /* Success Alert Styles */
 .success-alert {
@@ -610,7 +691,6 @@ textarea {
   color: #0b2e13; /* Darker shade for hover effect */
 }
 
-
 .separator {
   width: 80%; /* Reduce the width to make it smaller from left and right */
   height: 2px; /* Adjust the height as needed */
@@ -651,20 +731,111 @@ textarea {
   text-align: right;
 }
 
+
+
+/* ContactFormModal Styles */
+.contact-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Background blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.contact-modal-content {
+  background-color: rgb(255, 247, 237);
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%; /* Increased width */
+  max-width: 600px; /* Increased max-width */
+  max-height: 90vh; /* Ensure the modal doesn't exceed viewport height */
+  overflow-y: auto; /* Add scroll for overflow */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.contact-close-button {
+  position: absolute;
+  top: 10px;
+  left: 10px; /* Move to the left */
+  background: none;
+  border: none;
+  font-size: 20px; /* Increased font size */
+  cursor: pointer;
+  color: #215454; /* Matching the color scheme */
+}
+
+.contact-modal-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: rgb(255, 247, 237);
+  color: #215454;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px; /* Reduced font size */
+}
+
+/* Contact Form Button Styles */
 .contact-form button {
-  background: rgb(33, 84, 84); /* Use your brand color */
-  color: rgb(255, 247, 237);
+  background-color: #215454; /* Dark green background */
+  color: #fff7ed; /* Light text color */
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1em;
-  transition: background 0.6s ease;
+  transition: background 0.3s ease, transform 0.3s ease;
+  margin-top: 20px; /* Move up a bit */
 }
 
 .contact-form button:hover {
-  background: rgb(255, 247, 237); /* A darker shade of the brand color */
+  background-color: #e36370; /* Light red background on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Success and Error Messages */
+.contact-form p {
+  font-size: 0.9em;
+  color: #e36370; /* Matching error color */
+  margin-top: 10px;
+}
+
+.contact-form .success-message {
+  color: #215454; /* Matching success color */
+}
+
+/* Label Styles */
+.contact-form label {
+  font-size: 1em;
+  color: #215454; /* Matching label color */
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Input and Select Styles */
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgb(255, 247, 237); /* Matching background color */
+  border: 2px solid #215454; /* Dark green border */
   color: #215454;
-  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
-  border-radius: 15px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Textarea Styles */
+.contact-form textarea {
+  height: 100px;
+  resize: vertical;
 }

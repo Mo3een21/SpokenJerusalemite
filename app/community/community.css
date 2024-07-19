@@ -1,144 +1,131 @@
-body{
+body {
   background-color: rgb(255, 247, 237);
 }
 .container {
-    direction: rtl;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Create responsive columns */
-    gap: 20px; /* Add space between grid items */
-    margin: 20px;
-    margin-top: 100px; /* Add margin around the container */
-  }
-  .scroll-button {
-    position: fixed;
-    top: 82px; /* Adjusted position */
-    right: 0.5px;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: rgba(33, 84, 84, 0.7); /* semi-transparent background */
-    color: rgb(255, 247, 237);
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-    font-size: 10px;
-    transition: background 0.3s ease;
-  }
-  
-  .scroll-button:hover {
-    background: rgba(33, 84, 84, 0.9); /* darker shade on hover */
-  }
-  .text{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-  }
-  .highlight{
+  direction: rtl;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Create responsive columns */
+  gap: 20px; /* Add space between grid items */
+  margin: 20px;
+  margin-top: 100px; /* Add margin around the container */
+}
+.scroll-button {
+  position: fixed;
+  top: 82px; /* Adjusted position */
+  right: 10px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(33, 84, 84, 0.7); /* semi-transparent background */
+  color: rgb(255, 247, 237);
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 2000; /* Ensure it's above other elements */
+  font-size: 10px;
+  transition: background 0.3s ease;
+}
+.scroll-button:hover {
+  background: rgba(33, 84, 84, 0.9); /* darker shade on hover */
+}
+.text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.highlight {
   max-width: 500px;  
-  }
-  
-  .project {
-    height: px;
-    background-color: rgb(255, 242, 226); /* Background color for project cards */
-    color: rgb(33, 84, 84);
-    padding: 10px; /* Add padding inside project cards */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
-    text-align: center; /* Center-align text inside project cards */
-    border: 2px solid rgb(33, 84, 84); /* Solid green border */
-  }
-  
-  .project img {
-    max-width: 70%;
-    height: 70%; /* Ensure images fit within the project cards */
-    border-radius: 8px; /* Rounded corners for images */
-  }
-  
-  .project-title {
-    font-size: 1.2em; /* Increase font size for titles */
-    margin-top: 10px; /* Add space above titles */
-    font-weight: bold; /* Bold titles */
-  }
-  
-  .project-description {
-    font-size: 1em; /* Standard font size for descriptions */
-    margin-top: 5px; /* Add space above descriptions */
-    color: #555; /* Slightly lighter color for descriptions */
-  }
+}
+.project {
+  height: px;
+  background-color: rgb(255, 242, 226); /* Background color for project cards */
+  color: rgb(33, 84, 84);
+  padding: 10px; /* Add padding inside project cards */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+  text-align: center; /* Center-align text inside project cards */
+  border: 2px solid rgb(33, 84, 84); /* Solid green border */
+}
+.project img {
+  max-width: 70%;
+  height: 70%; /* Ensure images fit within the project cards */
+  border-radius: 8px; /* Rounded corners for images */
+}
+.project-title {
+  font-size: 1.2em; /* Increase font size for titles */
+  margin-top: 10px; /* Add space above titles */
+  font-weight: bold; /* Bold titles */
+}
+.project-description {
+  font-size: 1em; /* Standard font size for descriptions */
+  margin-top: 5px; /* Add space above descriptions */
+  color: #555; /* Slightly lighter color for descriptions */
+}
+.close-button {
+  position: absolute;
+  top: 0;
+  background-color: white;
+  right: 5px;
+  width: 20px;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin-top: 30px;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px); /* Adds blur effect to the background */
+}
+/* Updated CSS for modal content */
+.modal-content {
+  background-color: rgb(255, 247, 237);
+  color: rgb(33, 84, 84);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  width: 90%;
+  max-width: 1000px;
+  z-index: 100; /* Ensure modal is above backdrop */
+}
+.modal-content h2 {
+  margin-top: 0;
+}
+.modal-content button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: rgb(33, 84, 84);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease; /* Add transition for smooth scaling */
+} 
 
-  .close-button{
-    position: absolute;
-    top: 0;
-    background-color: white;
-    right: 5px;
-    width: 20px;
-  }
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin-top: 30px;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(5px); /* Adds blur effect to the background */
-  }
-  
-  /* Updated CSS for modal content */
-  .modal-content {
-    background-color: rgb(255, 247, 237);
-    color:rgb(33, 84, 84);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    position: relative;
-    width: 90%;
-    max-width: 1000px;
-    z-index: 100; /* Ensure modal is above backdrop */
-  }
-  
-  .modal-content h2 {
-    margin-top: 0;
-  }
-  
-  .modal-content button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: rgb(33, 84, 84);
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .modal-content button:hover {
-    background-color: rgb(19, 58, 58);
-  }
-
-
-
-  
- .flexer{
-    display: flex;
-    justify-content:  center;
-    align-items: center;
-    margin: 18px;
-    max-width: 950px;
-    height: 500px;
-    
- } 
- .contact-form {
-  background: rgba(245, 146, 149,0.42);
+.modal-content button:hover {
+  transform: scale(1.2);
+  background-color: rgba(245, 146, 149);
+}
+.flexer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 18px;
+  max-width: 950px;
+  height: 500px;
+} 
+.contact-form {
+  background: rgba(245, 146, 149, 0.42);
   padding: 30px;
   max-height: 480px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -146,67 +133,56 @@ body{
   text-align: right;
   border: 2px solid rgb(33, 84, 84); /* Adding the green border */
   border-radius: 10px; /* Optional: Adding rounded corners for a nicer look */
-  
 }
 .contact-form input, .contact-form select, .contact-form textarea {
-    width: 100%;
-    padding: 8px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: rgb(255, 247, 237);
-    border: 2px solid rgb(33, 84, 84); /* Adding the green border */
-    border-radius: 10px;
-    text-align: right;
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgb(255, 247, 237);
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 10px;
+  text-align: right;
 }
-
 .contact-form textarea {
-    height: 100px;
-    background-color: rgb(255, 247, 237);
-    border: 2px solid rgb(33, 84, 84); /* Adding the green border */
-    border-radius: 10px;
-    text-align: right;
+  height: 100px;
+  background-color: rgb(255, 247, 237);
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 10px;
+  text-align: right;
 }
-
 .contact-form button {
-    background: rgb(33, 84, 84); /* Use your brand color */
-    color: rgb(255, 247, 237);
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background 0.6s ease;
+  background: rgb(33, 84, 84); /* Use your brand color */
+  color: rgb(255, 247, 237);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.6s ease;
 }
-
 .contact-form button:hover {
-    background: rgb(255, 247, 237); /* A darker shade of the brand color */
-    color:#215454;
-    border: 2px solid rgb(33, 84, 84); /* Adding the green border */
-    /* border-radius: 1px; */
-    border-radius: 15%;
+  background: rgb(255, 247, 237); /* A darker shade of the brand color */
+  color: #215454;
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 15%;
 }
-
-
-
 .gallery-container {
   text-align: center;
   padding: 20px;
 }
-
 .main-title {
   font-size: 2.5em;
   color: #215454;
   margin-bottom: 10px;
   margin-top: 65px;
 }
-
 .explanation {
   font-size: 1.2em;
   color: #215454;
   margin-bottom: 30px;
 }
-
 .separator {
   border: 0;
   height: 3px; /* Slightly thicker for better visibility */
@@ -214,7 +190,6 @@ body{
   margin: 20px auto; /* Center the line and add margin */
   max-width: 80%; /* Limit the width of the line */
 }
-
 /* Existing styles for the gallery */
 .gallery {
   display: grid;
@@ -229,12 +204,7 @@ body{
   background-color: rgb(255, 247, 237); /* Background color for the gallery */
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a better look */
-  /* border: 2px solid rgb(33, 84, 84); */
 }
-
-
-
-
 .photo-container {
   position: relative;
   width: 100%;
@@ -242,24 +212,18 @@ body{
   border-radius: 10px; /* Rounded corners for images */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   transition: transform 0.3s ease; /* Smooth transition for hover effect */
-
-  
 }
-
-.textEnd{
+.textEnd {
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
-.textEnd p{
+.textEnd p {
   font-size: 1.6em;
   color: #215454;
   text-decoration: underline;
 }
-
-
-.formButton{
+.formButton {
   width: 100px;
   background-color: #215454;
   border-radius: 2px;
@@ -268,38 +232,33 @@ body{
   height: 35px;
   color: #ccc;
 }
-
-.formButton :hover{
+.formButton:hover {
   cursor: pointer;
 }
-
 .photo-container img {
-   height: 150px;
-   width: auto;
+  height: 150px;
+  width: auto;
   object-fit: cover;
   border-radius: 10px; /* Rounded corners for images */
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 10px;
 }
-
 .line {
   max-width: 80%;
   height: 2px;
   background-color: rgb(33, 84, 84); /* Color of the line */
   margin: 20px auto; /* Increased margin */
 }
-
 .title {
   text-align: center;
   margin-top: 10px;
   font-size: 18px; /* Increased font size */
   font-weight: bold;
-  color:rgb(33, 84, 84); /* Darker color for better readability */
+  color: rgb(33, 84, 84); /* Darker color for better readability */
   padding-top: 10px;
   padding-bottom: 10px;
 }
-
 .overlay {
   position: absolute;
   top: 0;
@@ -316,16 +275,13 @@ body{
   transition: opacity 0.3s ease;
   border-radius: 10px; /* Rounded corners for overlay */
 }
-
 .photo-container:hover .overlay {
   opacity: 1;
 }
-
 .description_iii {
   padding: 10px;
   text-align: center;
 }
-
 .read-more {
   margin-top: 10px;
   padding: 8px 16px; /* Increased padding */
@@ -336,8 +292,144 @@ body{
   color: #215454;
   background: rgba(255, 255, 255, 0.766);
 }
-
 .read-more:hover {
   background-color: #215454;
   color: #fff;
+}
+/* ContactFormModal Styles */
+.contact-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Background blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.contact-modal-content {
+  background-color: rgb(255, 247, 237);
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px; /* Increased max-width */
+  max-height: 95vh; /* Ensure the modal doesn't exceed viewport height */
+  overflow-y: auto; /* Add scroll for overflow */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.contact-close-button {
+  position: absolute;
+  top: 10px;
+  left: 1px; /* Move to the left */
+  background: none;
+  border: none;
+  font-size: 20px; /* Increased font size */
+  cursor: pointer;
+  color: #215454; /* Matching the color scheme */
+}
+
+.contact-modal-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: rgb(255, 247, 237);
+  color: #215454;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px; /* Reduced font size */
+}
+
+/* Contact Form Button Styles */
+.contact-form button {
+  background-color: #215454; /* Dark green background */
+  color: #fff7ed; /* Light text color */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s ease, transform 0.3s ease;
+  margin-top: 20px; /* Move up a bit */
+}
+
+.contact-form button:hover {
+  background-color: #e36370; /* Light red background on hover */
+  color: #fff7ed; /* Light text color */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  border: none;
+}
+
+/* Success and Error Messages */
+.contact-form p {
+  font-size: 0.9em;
+  color: #e36370; /* Matching error color */
+  margin-top: 10px;
+}
+
+.contact-form .success-message {
+  color: #215454; /* Matching success color */
+}
+
+.contact-form label {
+  display: block; /* Ensure labels are block elements */
+  width: 100%; /* Make sure labels take the full width */
+  margin-bottom: 5px; /* Add some margin to the bottom of labels */
+}
+
+/* Input and Select Styles */
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgb(255, 247, 237); /* Matching background color */
+  border: 2px solid #215454; /* Dark green border */
+  color: #215454;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Textarea Styles */
+.contact-form textarea {
+  height: 120px; /* Increased height */
+  resize: vertical;
+}
+
+/* Contact Form Specific Styles */
+.contact-form {
+  background: rgba(245, 146, 149, 0.42);
+  padding: 30px;
+  max-height: 700px; /* Increased max-height */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: rgb(33, 84, 84);
+  text-align: right;
+  border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+  border-radius: 10px; /* Optional: Adding rounded corners for a nicer look */
+}
+
+.contact-form .radio-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px; /* Add some margin to the top of the radio group */
+}
+
+.contact-form .radio-group label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  width: 100%; /* Ensure labels in radio group take full width */
+  text-align: right; /* Align text to the right */
+}
+
+.contact-form input[type="radio"] {
+  margin-left: 10px; /* Add some margin to the left of radio buttons */
 }

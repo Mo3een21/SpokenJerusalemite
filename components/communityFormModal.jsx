@@ -1,11 +1,11 @@
 // components/Modal.js
 import React from 'react';
 
-const Modal = ({ isOpen, onClose, children }) => {
+const commModal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay">
+        <div className="modal-card">
             <div className="modal-content">
                 <button className="close-button" onClick={onClose}>×</button>
                 {children}
@@ -14,4 +14,4 @@ const Modal = ({ isOpen, onClose, children }) => {
     );
 };
 
-export default Modal;
+export default commModal;
