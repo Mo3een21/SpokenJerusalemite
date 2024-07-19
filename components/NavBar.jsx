@@ -15,6 +15,8 @@ const NavBar = ({ language, toggleLanguage })  => {
     const [isZoomedIn, setIsZoomedIn] = useState(false); // New state for zoomed-in view
     const [user, setUser] = useState(null);
     const [hoveredBell, setHoveredBell] = useState(false);
+    const [hoveredStats, setHoveredStats] = useState(false);
+
 
 
 
@@ -130,20 +132,6 @@ const NavBar = ({ language, toggleLanguage })  => {
         };
     };
 
-
-
-    const redirectToLinkedIn = () => {
-        window.location.href = 'https://www.linkedin.com/company/spoken-jerusalemite-%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%9E%D7%99%D7%AA-%D7%9E%D7%93%D7%95%D7%91%D7%A8%D7%AA-%D9%9E%D8%AD%D8%A7%D8%93%D8%AA%D8%A9-%D9%85%D9%82%D8%AF%D8%B3%D9%99%D8%A9/';
-    };
-
-    const redirectToFacebook = () => {
-        window.location.href = 'https://www.facebook.com/SpokenJerusalemite';
-    };
-
-    const redirectToInstagram = () => {
-        window.location.href = 'https://www.instagram.com/spokenjerusalemite/';
-    };
-
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
         setIsZoomedIn(isMobileView && !isNavOpen); // Set isZoomedIn only in mobile view and when opening the nav
@@ -157,9 +145,9 @@ const NavBar = ({ language, toggleLanguage })  => {
             { label: 'שפה להזדמנויות', id: 'chance', url: '../chance' },
             { label: 'נשות הקהילה', id: 'women', url: '../women' },
             { label: 'קורסי שפה', id: 'courses', url: '../courses' },
-            { label: 'שירותי תרגום', id: 'services', url: '../services' },
+       //     { label: 'שירותי תרגום', id: 'services', url: '../services' },
             { label: 'הצטרפו אלינו', id: 'joinus', url: '../joinus' },
-            { label: 'תמכו בנו', id: 'donate', url: '../donate' }
+         //   { label: 'תמכו בנו', id: 'donate', url: '../donate' }
         ],
         AR: [
             // { label: 'الصفحة الرئيسية', id: 'home', url: '../' },
@@ -168,9 +156,9 @@ const NavBar = ({ language, toggleLanguage })  => {
             { label: 'اللغة للفرص', id: 'chance', url: '../chance' },
             { label: 'نساء المجتمع', id: 'women', url: '../women' },
             { label: 'دورات اللغة', id: 'courses', url: '../courses' },
-            { label: 'خدمات الترجمة', id: 'services', url: '../services' },
+           // { label: 'خدمات الترجمة', id: 'services', url: '../services' },
             { label: 'انضموا إلينا', id: 'joinus', url: '../joinus' },
-            { label: 'ادعمونا', id: 'donate', url: '../donate' }
+           // { label: 'ادعمونا', id: 'donate', url: '../donate' }
         ]
     };
 
@@ -234,6 +222,26 @@ const NavBar = ({ language, toggleLanguage })  => {
                         </button>
                         </Link>
                     ) : null}
+                  
+                    {user ? (
+                        <Link href="/stats">
+                        <button className="statistics" style={styles.notifications}>
+                            <img
+                            src="/assets/images/stats.png"
+                            alt="Icon"
+                            width={25}
+                            className="statsImg"
+                            style={hoveredStats ? { ...styles.statsImg, ...styles.statsImgHover } : styles.statsImg}
+                            onMouseEnter={() => setHoveredStats(true)}
+                            onMouseLeave={() => setHoveredStats(false)}
+                            />
+                        </button>
+                        </Link>
+                    ) : null}
+                  
+                  
+                  
+                  
                     <button
                         style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
                         onMouseEnter={() => handleButtonMouseEnter('language')}
@@ -264,17 +272,28 @@ const NavBar = ({ language, toggleLanguage })  => {
                 } 
                 : styles.navList
             }>
-                {navItems[language].map(({ label, id, url }) => (
+
+            <li key={navItems[language][0].id}
+            style={{ ...(isMobileView ? styles.mobileNavItem : styles.navItem), ...getItemStyle(navItems[language][0].label) }}
+            onMouseEnter={() => handleMouseEnter(navItems[language][0].label)}
+            onMouseLeave={handleMouseLeave}>
+            <a href={navItems[language][0].url} style={{ ...styles.navLink, ...getLinkStyle(navItems[language][0].label) }}>
+            <strong>{navItems[language][0].label}</strong>
+            {hoveredItem === navItems[language][0].label && <div style={styles.navItemUnderline}></div>}
+        </a>
+
+            </li>
+                {navItems[language].slice(1).map(({ label, id, url }) => (
                     <li
                         key={id}
                         style={{ ...(isMobileView ? styles.mobileNavItem : styles.navItem), ...getItemStyle(label) }}
                         onMouseEnter={() => handleMouseEnter(label)}
                         onMouseLeave={handleMouseLeave}
                     >
-                        <a href={url} style={{ ...styles.navLink, ...getLinkStyle(label) }}>
+                        <Link href={url} style={{ ...styles.navLink, ...getLinkStyle(label) }}>
                             <strong>{label}</strong>
                             {hoveredItem === label && <div style={styles.navItemUnderline}></div>}
-                        </a>
+                        </Link>
                     </li>
                 ))}
             </ul>
@@ -457,6 +476,14 @@ const styles = {
       bellimgHover: {
         transform: 'scale(1.3)',
       },
+      statsImgHover: {
+        transform: 'scale(1.3)',
+      },
+      statsImg:{
+        backgroundColor: 'rgb(255, 247, 237)',
+        border: 'none',
+        transition: 'transform 0.3s ease',
+      }
       
 };
 
