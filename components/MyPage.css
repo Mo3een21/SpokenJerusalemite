@@ -468,6 +468,7 @@ body{
 
 /* ======================================== */
 .carousel-page {
+  
   text-align: center;
   padding: 20px;
   padding: 0 10%; /* Add 10% padding to left and right */
@@ -492,6 +493,7 @@ body{
 }
 
 .carousel-container {
+  border-radius: 15px;
   position: relative;
   width: 100%;
   max-width: 600px; /* Adjust to your desired width */
@@ -547,6 +549,7 @@ body{
 }
 
 .carousel-button {
+  border-radius: 5px;
   display: inline-block;
   margin-top: 10px;
   padding: 10px 20px;
