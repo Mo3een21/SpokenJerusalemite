@@ -9,7 +9,7 @@ import './acceptUser.css'; // Ensure this import
 
 const UnregisteredUserList = () => {
   const [users, setUsers] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdminOrOwner, setIsAdminOrOwner] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState({ field: 'requestDate', order: 'asc' });
   const [isListModalOpen, setIsListModalOpen] = useState(false); // State for ListModal
@@ -17,13 +17,13 @@ const UnregisteredUserList = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const checkAdminStatus = async () => {
+    const checkAdminOrOwnerStatus = async () => {
       const user = auth.currentUser;
       if (user) {
         const userDocRef = doc(db, 'Users', user.uid);
         const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists() && userDoc.data().status === 'admin') {
-          setIsAdmin(true);
+        if (userDoc.exists() && (userDoc.data().status === 'admin' || userDoc.data().status === 'owner')) {
+          setIsAdminOrOwner(true);
         } else {
           alert("You do not have permission to access this page.");
           setTimeout(() => {
@@ -36,7 +36,7 @@ const UnregisteredUserList = () => {
       setLoading(false);
     };
 
-    checkAdminStatus();
+    checkAdminOrOwnerStatus();
   }, [router]);
 
   useEffect(() => {
@@ -58,10 +58,10 @@ const UnregisteredUserList = () => {
       }
     };
 
-    if (isAdmin) {
+    if (isAdminOrOwner) {
       fetchUsers();
     }
-  }, [isAdmin]);
+  }, [isAdminOrOwner]);
 
   const handleAccept = async (uid) => {
     try {
@@ -122,7 +122,7 @@ const UnregisteredUserList = () => {
     return <div>Loading...</div>;
   }
 
-  if (!isAdmin) {
+  if (!isAdminOrOwner) {
     return null;
   }
 

@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import "./login.css";
 import "react-toastify/dist/ReactToastify.css";
 
-
 const CustomAlert = ({ message, type, onClose }) => {
   return (
     <div className="custom-alert-overlay">
@@ -24,6 +23,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [errors, setErrors] = useState({});
   const [passwordStrength, setPasswordStrength] = useState("");
   const [focused, setFocused] = useState(false);
@@ -37,6 +37,7 @@ function Register() {
     if (!lname) errors.lname = "Last name is required.";
     if (!email) errors.email = "Email is required.";
     if (!password) errors.password = "Password is required.";
+    if (!phoneNumber) errors.phoneNumber = "Phone number is required.";
 
     // Check if first name and last name contain only letters
     const nameRegex = /^[A-Za-z]+$/;
@@ -47,6 +48,12 @@ function Register() {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     if (password && !passwordRegex.test(password)) {
       errors.password = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+    }
+
+    // Check if phone number is valid
+    const phoneRegex = /^05\d{8}$/;
+    if (phoneNumber && !phoneRegex.test(phoneNumber)) {
+      errors.phoneNumber = "Phone number must be a valid Israeli phone number (e.g., 0501234567).";
     }
 
     setErrors(errors);
@@ -73,10 +80,10 @@ function Register() {
           email: user.email,
           firstName: fname,
           lastName: lname,
+          phoneNumber: phoneNumber,
           photo: "",
           status: "pending",
           requestDate: timestamp // Save the registration date and time
-
         });
       }
       setAlert({ message: "Registration Request Sent.\nWait for Acceptance!!!", type: "success" });
@@ -100,7 +107,7 @@ function Register() {
       }
 
       const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-      const mediumPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[d]).{6,}$/;
+      const mediumPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
       if (strongPasswordRegex.test(password)) {
         setPasswordStrength("strong");
@@ -167,6 +174,18 @@ function Register() {
             required
           />
           {errors.email && <p className="error-text">{errors.email}</p>}
+        </div>
+
+        <div className="mb-3">
+          <label>Phone Number</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter phone number"
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
+          />
+          {errors.phoneNumber && <p className="error-text">{errors.phoneNumber}</p>}
         </div>
 
         <div className="mb-3">

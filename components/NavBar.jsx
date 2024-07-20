@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { auth,db } from '../app/firebase/firebase';
-import { getDoc, doc } from "firebase/firestore";
+import { auth, db } from '../app/firebase/firebase';
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import UnregisteredUserList from './unregisteredUser'; // Import the component
+import AdminUserList from './AdminUserList'; // Import AdminUserList
 
-
-const NavBar = ({ language, toggleLanguage })  => {
+const NavBar = ({ language, toggleLanguage }) => {
     const [hoveredItem, setHoveredItem] = useState(null);
     const [hoveredButton, setHoveredButton] = useState(null); // State to track hovered button
     const [isLogoHovered, setIsLogoHovered] = useState(false);
@@ -18,9 +18,10 @@ const NavBar = ({ language, toggleLanguage })  => {
     const [user, setUser] = useState(null);
     const [hoveredBell, setHoveredBell] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-
+    const [hoveredStats, setHoveredStats] = useState(false);
+    const [isAdminModalOpen, setIsAdminModalOpen] = useState(false); // State for admin modal
+    const [hoveredAdmin, setHoveredAdmin] = useState(false); // State to track hovered admin button
+    const [isOwner, setIsOwner] = useState(false); // State to check if the user is an owner
 
     useEffect(() => {
         const handleResize = () => {
@@ -38,40 +39,37 @@ const NavBar = ({ language, toggleLanguage })  => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             const checkUserStatus = async () => {
                 if (currentUser) {
-                  const userDocRef = doc(db, 'Users', currentUser.uid);
-                  const userDoc = await getDoc(userDocRef);
-                  console.log(userDoc);
-        
-                  if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    if (userData.status === "pending" || userData.status === "rejected") {
-                      await signOut(auth);
-                      setUser(null);
-                    } else if (userData.status === "admin") {
-                      setUser(currentUser);
+                    const userDocRef = doc(db, 'Users', currentUser.uid);
+                    const userDoc = await getDoc(userDocRef);
+                    console.log(userDoc);
+
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        if (userData.status === "pending" || userData.status === "rejected") {
+                            await signOut(auth);
+                            setUser(null);
+                        } else if (userData.status === "admin" || userData.status === "owner") {
+                            setUser(currentUser);
+                            setIsOwner(userData.status === "owner");
+                        }
+                    } else {
+                        console.log('No such document!');
+                        await signOut(auth);
+                        setUser(null);
                     }
-                  } else {
-                    console.log('No such document!');
-                    await signOut(auth);
-                    setUser(null);
-                  }
                 } else {
-                  setUser(null);
+                    setUser(null);
                 }
-              };
-        
-              checkUserStatus();
-            });
+            };
 
+            checkUserStatus();
+        });
 
-        
-       
         return () => {
             window.removeEventListener('resize', handleResize);
             unsubscribe();
         };
     }, []);
-
 
     const handleLogoMouseEnter = () => {
         setIsLogoHovered(true);
@@ -100,17 +98,28 @@ const NavBar = ({ language, toggleLanguage })  => {
     const handleLogoClick = () => {
         window.location.href = '/'; // Redirect to the home page
     };
+
     const handleSignOut = async () => {
         try {
+            const user = auth.currentUser;
+            if (user) {
+                const userDocRef = doc(db, 'Users', user.uid);
+                await updateDoc(userDocRef, { isActive: false });
+            }
             await signOut(auth);
             console.log("User signed out successfully");
         } catch (error) {
             console.error("Error signing out: ", error);
         }
     };
+
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
-      };
+    };
+
+    const toggleAdminModal = () => {
+        setIsAdminModalOpen(!isAdminModalOpen);
+    };
 
     const getItemStyle = (itemName) => {
         if (hoveredItem === itemName) {
@@ -137,20 +146,6 @@ const NavBar = ({ language, toggleLanguage })  => {
         };
     };
 
-
-
-    const redirectToLinkedIn = () => {
-        window.location.href = 'https://www.linkedin.com/company/spoken-jerusalemite-%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%9E%D7%99%D7%AA-%D7%9E%D7%93%D7%95%D7%91%D7%A8%D7%AA-%D9%9E%D8%AD%D8%A7%D8%93%D8%AA%D8%A9-%D9%85%D9%82%D8%AF%D8%B3%D9%99%D8%A9/';
-    };
-
-    const redirectToFacebook = () => {
-        window.location.href = 'https://www.facebook.com/SpokenJerusalemite';
-    };
-
-    const redirectToInstagram = () => {
-        window.location.href = 'https://www.instagram.com/spokenjerusalemite/';
-    };
-
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
         setIsZoomedIn(isMobileView && !isNavOpen); // Set isZoomedIn only in mobile view and when opening the nav
@@ -164,9 +159,9 @@ const NavBar = ({ language, toggleLanguage })  => {
             { label: 'שפה להזדמנויות', id: 'chance', url: '../chance' },
             { label: 'נשות הקהילה', id: 'women', url: '../women' },
             { label: 'קורסי שפה', id: 'courses', url: '../courses' },
-            { label: 'שירותי תרגום', id: 'services', url: '../services' },
+            // { label: 'שירותי תרגום', id: 'services', url: '../services' },
             { label: 'הצטרפו אלינו', id: 'joinus', url: '../joinus' },
-            { label: 'תמכו בנו', id: 'donate', url: '../donate' }
+            // { label: 'תמכו בנו', id: 'donate' }
         ],
         AR: [
             // { label: 'الصفحة الرئيسية', id: 'home', url: '../' },
@@ -175,35 +170,35 @@ const NavBar = ({ language, toggleLanguage })  => {
             { label: 'اللغة للفرص', id: 'chance', url: '../chance' },
             { label: 'نساء المجتمع', id: 'women', url: '../women' },
             { label: 'دورات اللغة', id: 'courses', url: '../courses' },
-            { label: 'خدمات الترجمة', id: 'services', url: '../services' },
+            // { label: 'خدمات الترجمة', id: 'services', url: '../services' },
             { label: 'انضموا إلينا', id: 'joinus', url: '../joinus' },
-            { label: 'ادعمونا', id: 'donate', url: '../donate' }
+            // { label: 'ادعمونا', id: 'donate' }
         ]
     };
 
     return (
         <nav style={styles.nav}>
-        {isMobileView && (
-            <a
-                href="javascript:void(0)"
-                className="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px ShowWhenFocus"
-                id="kt_header_menu_mobile_toggle"
-                aria-label="פתיחת תפריט אישי להגדרות משתמש"
-                aria-expanded={isNavOpen}
-                role="button"
-                onClick={toggleNav}
-            >
-                <span className="svg-icon svg-icon-2x" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" style={{ fill: 'none' }}>
-                        <path d="M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z" fill="black"></path>
-                        <path opacity="0.3" d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z" fill="black"></path>
-                    </svg>
-                </span>
-            </a>
-        )}
-        <div style={styles.row}>
-            <div style={styles.topRow}>
-            {user ? (
+            {isMobileView && (
+                <a
+                    href="javascript:void(0)"
+                    className="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px ShowWhenFocus"
+                    id="kt_header_menu_mobile_toggle"
+                    aria-label="פתיחת תפריט אישי להגדרות משתמש"
+                    aria-expanded={isNavOpen}
+                    role="button"
+                    onClick={toggleNav}
+                >
+                    <span className="svg-icon svg-icon-2x" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" style={{ fill: 'none' }}>
+                            <path d="M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z" fill="black"></path>
+                            <path opacity="0.3" d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z" fill="black"></path>
+                        </svg>
+                    </span>
+                </a>
+            )}
+            <div style={styles.row}>
+                <div style={styles.topRow}>
+                    {user ? (
                         <button
                             id="signout-button"
                             style={hoveredButton === 'signout' ? { ...styles.signInButton, ...styles.enlargedSignInButton } : styles.signInButton}
@@ -213,9 +208,8 @@ const NavBar = ({ language, toggleLanguage })  => {
                         >
                             {language === 'AR' ? 'تسجيل الخروج' : 'יציאה'}
                         </button>
-                        
-                    ) : 
-                    (
+
+                    ) : (
                         <button
                             id="signin-button"
                             style={hoveredButton === 'signin' ? { ...styles.signInButton, ...styles.enlargedSignInButton } : styles.signInButton}
@@ -223,22 +217,54 @@ const NavBar = ({ language, toggleLanguage })  => {
                             onMouseLeave={handleButtonMouseLeave}
                             onClick={() => window.location.href = '../login'}
                         >
-                            {language === 'AR' ? 'تسجيل الدخول' : 'כניסה'}
+                            {language === 'AR' ? 'طاقم' : 'צוות'}
                         </button>
                     )}
                     {user ? (
-                        <Link href="#">
-                        <button onClick={toggleModal}  className="notifications" style={styles.notifications}>
-                            <img
-                            src="/assets/images/bell.png"
-                            alt="Icon"
-                            width={30}
-                            className="bellimg"
-                            style={hoveredBell ? { ...styles.bellimg, ...styles.bellimgHover } : styles.bellimg}
-                            onMouseEnter={() => setHoveredBell(true)}
-                            onMouseLeave={() => setHoveredBell(false)}
-                            />
-                        </button>
+                        <>
+                            <Link href="#">
+                                <button onClick={toggleModal} className="notifications" style={styles.notifications}>
+                                    <img
+                                        src="/assets/images/bell.png"
+                                        alt="Icon"
+                                        width={30}
+                                        className="bellimg"
+                                        style={hoveredBell ? { ...styles.bellimg, ...styles.bellimgHover } : styles.bellimg}
+                                        onMouseEnter={() => setHoveredBell(true)}
+                                        onMouseLeave={() => setHoveredBell(false)}
+                                    />
+                                </button>
+                            </Link>
+                            {isOwner && (
+                                <Link href="#">
+                                    <button onClick={toggleAdminModal} className="admin-info-button" style={styles.notifications}>
+                                        <img
+                                            src="/assets/images/admin.png"
+                                            alt="Admin Icon"
+                                            width={30}
+                                            className="adminImg"
+                                            style={hoveredAdmin ? { ...styles.adminImg, ...styles.adminImgHover } : styles.adminImg}
+                                            onMouseEnter={() => setHoveredAdmin(true)}
+                                            onMouseLeave={() => setHoveredAdmin(false)}
+                                        />
+                                    </button>
+                                </Link>
+                            )}
+                        </>
+                    ) : null}
+                    {user ? (
+                        <Link href="/stats">
+                            <button className="statistics" style={styles.notifications}>
+                                <img
+                                    src="/assets/images/stats.png"
+                                    alt="Icon"
+                                    width={25}
+                                    className="statsImg"
+                                    style={hoveredStats ? { ...styles.statsImg, ...styles.statsImgHover } : styles.statsImg}
+                                    onMouseEnter={() => setHoveredStats(true)}
+                                    onMouseLeave={() => setHoveredStats(false)}
+                                />
+                            </button>
                         </Link>
                     ) : null}
                     <button
@@ -249,12 +275,12 @@ const NavBar = ({ language, toggleLanguage })  => {
                     >
                         {language === 'AR' ? 'HE' : 'AR'}
                     </button>
-            
+
+                </div>
+
             </div>
-            
-        </div>
-            <ul style={isMobileView 
-                ? { 
+            <ul style={isMobileView
+                ? {
                     ...styles.navList,
                     display: (isNavOpen ? 'flex' : 'none'),
                     flexDirection: (isZoomedIn ? 'column' : 'row'),
@@ -268,7 +294,7 @@ const NavBar = ({ language, toggleLanguage })  => {
                     boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
                     padding: '10px',
                     zIndex: 1000
-                } 
+                }
                 : styles.navList
             }>
                 {navItems[language].map(({ label, id, url }) => (
@@ -304,6 +330,14 @@ const NavBar = ({ language, toggleLanguage })  => {
                     </div>
                 </div>
             )}
+            {isAdminModalOpen && (
+                <div className="modalOl" style={styles.modalOl}>
+                    <div className="modalC" style={styles.modalC}>
+                        <button onClick={toggleAdminModal} className="modalCB" style={styles.modalCB}>×</button>
+                        <AdminUserList />
+                    </div>
+                </div>
+            )}
         </nav>
     );
 }
@@ -323,7 +357,7 @@ const styles = {
         color: 'rgb(247, 199, 201)',
         borderBottom: '4px solid rgb(33, 84, 84)',
         height: '60px', // Decreased the height of the navigation bar
-        fontSize:'16px',
+        fontSize: '16px',
         flexWrap: 'nowrap', // Ensure no wrapping
 
     },
@@ -335,7 +369,7 @@ const styles = {
         padding: 0,
         direction: 'rtl',
         whiteSpace: 'nowrap', // Prevent items from wrapping
-        marginRight:'10%'
+        marginRight: '10%'
     },
     navListHidden: {
         display: 'none',
@@ -354,7 +388,7 @@ const styles = {
         backgroundColor: 'transparent',
         cursor: 'pointer',
         padding: '8px 16px', // Added padding for button size
-        paddingBottom:'15px',
+        paddingBottom: '15px',
         color: 'rgb(33, 84, 84)',
         fontSize: '14px',
         transition: 'transform 0.3s ease, background-color 0.3s ease', // Add transition
@@ -458,21 +492,21 @@ const styles = {
         color: 'rgb(33, 84, 84)', // Changed the color
         textDecoration: 'none', // Removed the underline for all links
     },
-    notifications:{
-        backgroundColor:'rgb(255, 247, 237)',
-        border:'none',
-        cursor:'pointer',
-        marginTop:'10px'
+    notifications: {
+        backgroundColor: 'rgb(255, 247, 237)',
+        border: 'none',
+        cursor: 'pointer',
+        marginTop: '10px'
     },
     bellimg: {
         backgroundColor: 'rgb(255, 247, 237)',
         border: 'none',
         transition: 'transform 0.3s ease',
-      },
-      bellimgHover: {
+    },
+    bellimgHover: {
         transform: 'scale(1.3)',
-      },
-      modalOl: {
+    },
+    modalOl: {
         position: 'fixed',
         top: 0,
         left: 0,
@@ -483,8 +517,8 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 1000,
-      },
-      modalC: {
+    },
+    modalC: {
         position: 'relative', // Ensure the modal content is positioned relative
         backgroundColor: 'rgb(255, 247, 237)',
         padding: '20px',
@@ -493,8 +527,8 @@ const styles = {
         maxHeight: '80%',
         color: 'rgb(33, 84, 84)',
         overflowY: 'auto',
-      },
-      modalCB: {
+    },
+    modalCB: {
         position: 'absolute',
         top: '10px',
         right: '10px',
@@ -503,8 +537,23 @@ const styles = {
         fontSize: '1.5rem',
         cursor: 'pointer',
         color: 'black',
-      },
-      
+    },
+    statsImgHover: {
+        transform: 'scale(1.3)',
+    },
+    statsImg: {
+        backgroundColor: 'rgb(255, 247, 237)',
+        border: 'none',
+        transition: 'transform 0.3s ease',
+    },
+    adminImg: {
+        backgroundColor: 'rgb(255, 247, 237)',
+        border: 'none',
+        transition: 'transform 0.3s ease',
+    },
+    adminImgHover: {
+        transform: 'scale(1.3)',
+    }
 };
 
 export default NavBar;

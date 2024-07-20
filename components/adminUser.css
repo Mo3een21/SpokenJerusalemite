@@ -1,0 +1,93 @@
+/* General table styles */
+.table-container {
+    background-color: #fff7ed;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.user-table th,
+.user-table td {
+    padding: 10px;
+    border: 1px solid #215454;
+    text-align: left;
+}
+.user-table td {
+    text-align: center; /* Center content horizontally */
+    vertical-align: middle; /* Center content vertically */
+}
+
+.user-table th {
+    background-color: #215454;  
+    color: #fff7ed;
+}
+
+.icon-buttons {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.icon-buttons img {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.icon-buttons:hover img {
+    transform: scale(1.2);
+}
+
+.admin-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.admin-close-button {
+    /* background-color: #215454; */
+    color: #fff7ed;
+    border: 2px solid #215454;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.admin-close-button:hover {
+    background-color: #fff7ed;
+    color: #215454;
+}
+
+.delete-user-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    background-color: transparent;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+.delete-user-icon {
+    width: 50px;
+    height: 50px;
+    transition: transform 0.3s ease;
+    background-color: transparent;  
+}
+
+.delete-user-button:hover .delete-user-icon {
+    background-color: transparent;
+    transform: scale(1.3);
+}
+.status-icon {
+    width: 30px;
+    height: 30px;
+}

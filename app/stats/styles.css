@@ -1,0 +1,23 @@
+.body{
+    background-color: rgb(255, 247, 237);
+  
+  }
+  .container {
+      margin:   70px 0;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: #215424;
+  
+    }
+    
+    h1 {
+      margin-bottom: 20px;
+    }
+    
+    .chartContainer {
+      
+      margin:  0 80px;
+    }
+    

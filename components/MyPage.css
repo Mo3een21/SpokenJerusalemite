@@ -679,11 +679,11 @@ body{
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
   border: 2px solid #215454;
 }
-
+/* 
 button:hover {
   background-color: #215454;
   color: #fff;
-}
+} */
 
 .button_yamen {
   margin-right: 20px;

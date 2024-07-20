@@ -1,0 +1,458 @@
+/* Gallery Container Styles */
+.gallery-container {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Projects Container Styles */
+.projects-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; /* Adjust gap to control spacing between items */
+    padding: 10px; /* Reduced padding for better fit */
+    max-width: 1000px; /* Limit the maximum width of the projects container */
+    margin: 0 auto; /* Center container horizontally */
+}
+
+/* Gallery Item Styles */
+.gallery {
+    position: relative;
+    width: 175px; /* Fixed width for uniformity */
+    height: 320px; /* Fixed height to maintain aspect ratio */
+    overflow: hidden;
+    border: 2px solid rgba(33, 84, 84, 0.5); /* Border color */
+    border-radius: 6px; /* Rounded corners */
+    background-color: rgb(255, 247, 237); /* Background color */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery img {
+    width: 100%;
+    height: 80%;
+    object-fit: cover;
+    border-bottom: 2px solid rgba(33, 84, 84, 0.5); /* Border between image and title */
+}
+
+.gallery .title {
+    font-size: 0.8em;
+    margin-top: 5px; /* Spacing between image and title */
+    font-weight: bold;
+    text-align: center;
+}
+
+.gallery .line {
+    width: 100%;
+    height: 2px;
+    background: rgba(33, 84, 84, 0.5); /* Line color */
+    margin: 5px 0; /* Spacing above and below the line */
+}
+
+.gallery .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(247, 199, 201, 0.5); /* Overlay color */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery:hover .overlay {
+    opacity: 1;
+}
+
+.gallery:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.scroll-button {
+    position: fixed;
+    top: 82px; /* Adjusted position */
+    right: 0.5px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(33, 84, 84, 0.7); /* semi-transparent background */
+    color: rgb(255, 247, 237);
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Ensure the button is on top */
+    font-size: 10px;
+    transition: background 0.3s ease;
+}
+
+.scroll-button:hover {
+    background: rgba(33, 84, 84, 0.9); /* darker shade on hover */
+}
+
+.project-description {
+    font-size: 1em; /* Standard font size for descriptions */
+    margin-top: 5px; /* Add space above descriptions */
+    color: #555; /* Slightly lighter color for descriptions */
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px); /* Adds blur effect to the background */
+}
+
+/* Updated CSS for modal content */
+.modal-content {
+    background-color: rgb(255, 247, 237);
+    color: rgb(33, 84, 84);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    z-index: 1000; /* Ensure modal is above backdrop */
+}
+
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.modal-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: rgb(33, 84, 84);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Add transition for smooth scaling */
+}
+
+.modal-content .close-button {
+    position: relative;
+    top: 5px;
+    left: 1px; /* Move to the left */
+    background: none;
+    border: none;
+    font-size: 20px; /* Increased font size */
+    cursor: pointer;
+    color: #215454; /* Matching the color scheme */
+    background-color: transparent;
+}
+
+.modal-content .close-button:hover {
+    color: #215454;
+    background-color: transparent;
+}
+
+.modal-content button:hover {
+    transform: scale(1.2);
+    background-color: rgba(245, 146, 149);
+}
+
+.close-button:hover {
+    transform: scale(1.1);
+    background-color: rgb(255, 247, 237);
+    color: #ffffff;
+}
+
+.modal-content label {
+    display: block; /* Stack labels and inputs vertically */
+    margin-bottom: 15px; /* Add spacing between fields */
+    text-align: right; /* Align text to the right */
+}
+
+.modal-content input,
+.modal-content textarea {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 15px; /* Increased padding for better usability */
+    border: 1px solid #ccc; /* Add border to inputs */
+    border-radius: 4px; /* Rounded corners for inputs */
+    direction: rtl; /* Right-to-left text direction */
+    text-align: right; /* Align text to the right */
+    font-size: 18px; /* Adjusted font size */
+    font-family: 'Arial', sans-serif; /* Added font family */
+    background-color: rgb(255, 247, 237);
+    color: #215454;
+}
+
+.modal-content textarea {
+    height: 100px; /* Set a fixed height for the textarea */
+    resize: vertical; /* Allow vertical resizing */
+}
+
+.button-save {
+    background-color: rgb(33, 84, 84); /* Consistent button color */
+    color: rgb(255, 247, 237); /* Consistent text color */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button-save:hover {
+    transform: scale(1.1);
+    background-color: rgba(245, 146, 149);
+    color: rgb(33, 84, 84); /* Hover text color */
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-start; /* Align buttons to the left */
+    gap: 10px; /* Add space between buttons */
+}
+
+.button-container button {
+    margin: 0 1%;
+    margin-top: 5px;
+    background-color: rgb(255, 247, 237);
+    cursor: pointer;
+    padding: 5px 7px;
+    color: rgb(33, 84, 84);
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid rgb(33, 84, 84);
+    border-radius: 5px;
+    outline: none;
+    transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.button-container button:hover {
+    transform: scale(1.1);
+    background-color: rgb(245, 146, 149);
+    color: rgb(33, 84, 84);
+}
+
+.button-container .cancel-button {
+    color: rgb(255, 247, 237);
+    background-color: #e36370;
+}
+
+.button-container .cancel-button:hover {
+    color: rgb(255, 247, 237);
+    background-color: #c82333;
+}
+
+/* Contact Form Modal Styles */
+.contact-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Background blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.contact-modal-content {
+    background-color: rgb(255, 247, 237);
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px; /* Increased max-width */
+    max-height: 95vh; /* Ensure the modal doesn't exceed viewport height */
+    overflow-y: auto; /* Add scroll for overflow */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    text-align: right; /* Align text to the right */
+}
+
+.contact-close-button {
+    position: absolute;
+    top: 10px;
+    left: 1px; /* Move to the left */
+    background: none;
+    border: none;
+    font-size: 20px; /* Increased font size */
+    cursor: pointer;
+    color: #215454; /* Matching the color scheme */
+}
+
+.contact-form {
+    background: rgba(245, 146, 149, 0.42);
+    padding: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: rgb(33, 84, 84);
+    margin-top: 20px;
+    border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+    border-radius: 10px; /* Optional: Adding rounded corners for a nicer look */
+    text-align: right; /* Align text to the right */
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: rgb(255, 247, 237); /* Matching background color */
+    border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+    color: #215454;
+    font-size: 16px;
+    box-sizing: border-box;
+    text-align: right; /* Align text to the right */
+}
+
+.contact-form textarea {
+    height: 120px; /* Increased height */
+    resize: vertical;
+}
+
+.contact-form button {
+    background: rgb(33, 84, 84); /* Use your brand color */
+    color: rgb(255, 247, 237);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.6s ease;
+}
+
+.contact-form button:hover {
+    background: rgb(255, 247, 237); /* A darker shade of the brand color */
+    color: #215454;
+    border: 2px solid rgb(33, 84, 84); /* Adding the green border */
+    border-radius: 15px;
+}
+
+/* Success and Error Messages */
+.contact-form p {
+    font-size: 0.9em;
+    color: #e36370; /* Matching error color */
+    margin-top: 10px;
+    text-align: right; /* Align text to the right */
+}
+
+.contact-form .success-message {
+    color: #215454; /* Matching success color */
+    text-align: right; /* Align text to the right */
+}
+
+.contact-form label {
+    display: block; /* Ensure labels are block elements */
+    width: 100%; /* Make sure labels take the full width */
+    margin-bottom: 5px; /* Add some margin to the bottom of labels */
+    text-align: right; /* Align text to the right */
+}
+
+/* Contact Form Specific Styles */
+.contact-form .radio-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align items to the right */
+    margin-top: 10px; /* Add some margin to the top of the radio group */
+}
+
+.contact-form .radio-group label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    width: 100%; /* Ensure labels in radio group take full width */
+    text-align: right; /* Align text to the right */
+}
+
+.contact-form input[type="radio"] {
+    margin-left: 10px; /* Add some margin to the left of radio buttons */
+}
+/* Project Detail Modal Styles */
+.project-detail-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px); /* Add blur effect */
+    z-index: 1000;
+}
+
+.project-detail-modal-content {
+    background-color: rgb(255, 247, 237);
+    color: rgb(33, 84, 84);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    width: 80%; /* Reduced width */
+    max-width: 500px; /* Reduced max-width */
+    z-index: 1001; /* Ensure modal is above backdrop */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure content and button are spaced correctly */
+    min-height: 150px; /* Reduced min-height */
+}
+
+.project-detail-modal-content h2 {
+    margin-top: 0;
+}
+
+.project-detail-modal-content p {
+    flex: 1;
+    margin-bottom: 20px; /* Ensure there's space above the button */
+}
+
+.project-detail-modal-content button {
+    align-self: flex-start; /* Align button to the left */
+    margin-top: 20px; /* Ensure the button is at the bottom */
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #215454;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Add transition for smooth scaling */
+}
+
+.project-detail-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #215454;
+}
+
+.project-detail-close-button:hover {
+    color: #215454;
+    background-color: transparent;
+}
+
+.project-detail-modal-content button:hover {
+    transform: scale(1.4);
+    /* background-color: rgba(245, 146, 149); */
+}
+

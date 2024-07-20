@@ -1,7 +1,7 @@
 import { signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
 import React, { useState } from "react";
 import { auth, db } from "../app/firebase/firebase";
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import "./login.css";
 
 const CustomAlert = ({ message, type, onClose }) => {
@@ -94,6 +94,9 @@ function Login() {
           }, 2000); // Delay for 2 seconds to allow alert to be visible
           return;
         }
+
+        // Update the isActive field to true
+        await updateDoc(userDocRef, { isActive: true });
 
         setAlert({ message: "Welcome!", type: "success" });
         setTimeout(() => {
