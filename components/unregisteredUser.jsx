@@ -134,26 +134,26 @@ const UnregisteredUserList = () => {
           <tr>
             <th>
               <div className="header-container">
+                <span>Name</span>
                 <button onClick={() => sortUsers('firstName')} className="sort-button">
                   <img src="/assets/images/sort.png" alt="Sort" />
                 </button>
-                <span>Name</span>
               </div>
             </th>
             <th>
               <div className="header-container">
+                <span>Email</span>
                 <button onClick={() => sortUsers('email')} className="sort-button">
                   <img src="/assets/images/sort.png" alt="Sort" />
                 </button>
-                <span>Email</span>
               </div>
             </th>
             <th>
               <div className="header-container">
+                <span>Request Date</span>
                 <button onClick={() => sortUsers('requestDate')} className="sort-button">
                   <img src="/assets/images/sort.png" alt="Sort" />
                 </button>
-                <span>Request Date</span>
               </div>
             </th>
             <th>Actions</th>

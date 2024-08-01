@@ -252,7 +252,7 @@ const NavBar = ({ language, toggleLanguage }) => {
                             )}
                         </>
                     ) : null}
-                    {user ? (
+                    {/* {user ? (
                         <Link href="/stats">
                             <button className="statistics" style={styles.notifications}>
                                 <img
@@ -266,7 +266,7 @@ const NavBar = ({ language, toggleLanguage }) => {
                                 />
                             </button>
                         </Link>
-                    ) : null}
+                    ) : null} */}
                     <button
                         style={hoveredButton === 'language' ? { ...styles.languageButton, ...styles.enlargedLanguageButton } : styles.languageButton}
                         onMouseEnter={() => handleButtonMouseEnter('language')}
