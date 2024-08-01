@@ -1,0 +1,56 @@
+{
+  "hosting": {
+    "public": "out",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/aboutus",
+        "destination": "/aboutus.html"
+      },
+      {
+        "source": "/community",
+        "destination": "/community.html"
+      },
+      {
+        "source": "/courses",
+        "destination": "/courses.html"
+      },
+      {
+        "source": "/donate",
+        "destination": "/donate.html"
+      },
+      {
+        "source": "/joinus",
+        "destination": "/joinus.html"
+      },
+      {
+        "source": "/login",
+        "destination": "/login.html"
+      },
+      {
+        "source": "/register",
+        "destination": "/register.html"
+      },
+      {
+        "source": "/stats",
+        "destination": "/stats.html"
+      },
+      {
+        "source": "/women",
+        "destination": "/women.html"
+      },
+      {
+        "source": "/chance",
+        "destination": "/chance.html"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

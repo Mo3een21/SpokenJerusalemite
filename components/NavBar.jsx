@@ -180,7 +180,7 @@ const NavBar = ({ language, toggleLanguage }) => {
         <nav style={styles.nav}>
             {isMobileView && (
                 <a
-                    href="javascript:void(0)"
+                    href="#"
                     className="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px ShowWhenFocus"
                     id="kt_header_menu_mobile_toggle"
                     aria-label="פתיחת תפריט אישי להגדרות משתמש"

@@ -1,3 +1,5 @@
+/* Styles from A.css */
+@import url('https://fonts.googleapis.com/css2?family=Tel+Aviv+Modernist+Bold&display=swap');
 /* Styles from mypage.css */
 body{
   background-color:rgb(255, 247, 237) ;
@@ -146,8 +148,7 @@ body{
   color: #fff;
 }
 
-/* Styles from A.css */
-@import url('https://fonts.googleapis.com/css2?family=Tel+Aviv+Modernist+Bold&display=swap');
+
 
 .image-grid {
   position: relative;

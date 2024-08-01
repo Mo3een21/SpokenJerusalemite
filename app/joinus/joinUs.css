@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Tel+Aviv+Modernist+Bold&display=swap');
 body {
   background-color: rgb(255, 247, 237);
   color: rgb(33, 84, 84);
@@ -12,7 +13,7 @@ body {
 }
 
 
-@import url('https://fonts.googleapis.com/css2?family=Tel+Aviv+Modernist+Bold&display=swap');
+
 
 
 .flexer{
