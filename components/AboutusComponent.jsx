@@ -128,182 +128,184 @@ export default function AboutusComponent({ language }) {
     };
 
     const ImageGrid = ({ language }) => {
-      const [years, setYears] = useState(0);
-      const [women, setWomen] = useState(0);
-      const [volunteers, setVolunteers] = useState(0);
-      const [hasAnimated, setHasAnimated] = useState(false);
-      const [isEditing, setIsEditing] = useState(false);
-      const [tempData, setTempData] = useState({ years: 0, women: 0, volunteers: 0 });
-      const [isAuthenticated, setIsAuthenticated] = useState(false);
-      const gridRef = useRef(null);
-  
-      useEffect(() => {
-          const fetchNumbers = async () => {
-              try {
-                  const docRef = doc(db, 'HomePage', 'jAaHVUltzrgQ2clDmm2N');
-                  const docSnap = await getDoc(docRef);
-                  
-                  if (docSnap.exists()) {
-                      const data = docSnap.data();
-                      setYears(data.number_1);
-                      setWomen(data.number_2);
-                      setVolunteers(data.number_3);
-                      startAnimation(data.number_1, data.number_2, data.number_3);
-                  } else {
-                      console.log('No such document!');
-                  }
-              } catch (error) {
-                  console.error('Error fetching document:', error);
-              }
-          };
-        
-          fetchNumbers();
-      }, []);
+        const [years, setYears] = useState(0);
+        const [women, setWomen] = useState(0);
+        const [volunteers, setVolunteers] = useState(0);
+        const [hasAnimated, setHasAnimated] = useState(false);
+        const [isEditing, setIsEditing] = useState(false);
+        const [tempData, setTempData] = useState({ years: 0, women: 0, volunteers: 0 });
+        const [isAuthenticated, setIsAuthenticated] = useState(false);
+        const gridRef = useRef(null);
     
-      useEffect(() => {
-          const unsubscribe = onAuthStateChanged(auth, (user) => {
-              setIsAuthenticated(!!user);
-          });
-        
-          return () => unsubscribe(); // Cleanup function to unsubscribe
-      }, []);
+        useEffect(() => {
+            const fetchNumbers = async () => {
+                try {
+                    const docRef = doc(db, 'HomePage', 'jAaHVUltzrgQ2clDmm2N');
+                    const docSnap = await getDoc(docRef);
     
-      useEffect(() => {
-          const handleScroll = () => {
-              if (!hasAnimated && gridRef.current) {
-                  const rect = gridRef.current.getBoundingClientRect();
-                  if (rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
-                      startAnimation(years, women, volunteers);
-                      setHasAnimated(true);
-                  }
-              }
-          };
-      
-          window.addEventListener('scroll', handleScroll);
-          return () => window.removeEventListener('scroll', handleScroll);
-      }, [hasAnimated, years, women, volunteers]);
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        setYears(data.number_1);
+                        setWomen(data.number_2);
+                        setVolunteers(data.number_3);
+                        startAnimation(data.number_1, data.number_2, data.number_3);
+                    } else {
+                        console.log('No such document!');
+                    }
+                } catch (error) {
+                    console.error('Error fetching document:', error);
+                }
+            };
     
-      const startAnimation = (yearsFinal, womenFinal, volunteersFinal) => {
-          const duration = 900;
-          const steps = 100;
-          const intervalDuration = duration / steps;
-      
-          const yearsStep = yearsFinal / steps;
-          const womenStep = womenFinal / steps;
-          const volunteersStep = volunteersFinal / steps;
-      
-          let currentStep = 0;
-      
-          const interval = setInterval(() => {
-              currentStep += 1;
-              setYears(Math.min(Math.ceil(currentStep * yearsStep), yearsFinal));
-              setWomen(Math.min(Math.ceil(currentStep * womenStep), womenFinal));
-              setVolunteers(Math.min(Math.ceil(currentStep * volunteersStep), volunteersFinal));
-      
-              if (currentStep >= steps) {
-                  clearInterval(interval);
-              }
-          }, intervalDuration);
-      
-          setHasAnimated(true);
-      };
+            fetchNumbers();
+        }, []);
     
-      const handleEdit = () => {
-          setTempData({ years, women, volunteers });
-          setIsEditing(true);
-      };
+        useEffect(() => {
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+                setIsAuthenticated(!!user);
+            });
     
-      const handleSave = async () => {
-          try {
-              const docRef = doc(db, 'HomePage', 'jAaHVUltzrgQ2clDmm2N');
-              await updateDoc(docRef, {
-                  number_1: tempData.years,
-                  number_2: tempData.women,
-                  number_3: tempData.volunteers
-              });
-              setYears(tempData.years);
-              setWomen(tempData.women);
-              setVolunteers(tempData.volunteers);
-              setIsEditing(false);
-          } catch (error) {
-              console.error('Error updating document:', error);
-          }
-      };
+            return () => unsubscribe(); // Cleanup function to unsubscribe
+        }, []);
     
-      return (
-          <div ref={gridRef} className="image-grid">
-              {isAuthenticated && (
-                  <div className="button-container">
-                      <button onClick={handleEdit} className="edit-button">
-                          <img 
-                              src="/assets/images/edit.png" // Ensure this is the correct path to your image
-                              alt={language === 'AR' ? 'تعديل' : 'ערוך'}
-                              width={20} // Adjust the width and height as needed
-                              height={20}
-                          />
-                      </button>
-                  </div>
-              )}
-              <div className="image_threephotos">
-                  <img src={images.yearsImage} alt="Years" />
-                  <div className="number-box">
-                      <p className="number">{years}+</p>
-                  </div>
-                  <h2 className="description">
-                      {language === 'AR' ? 'سنوات من المجتمع' : 'שנות קהילה'}
-                  </h2>
-              </div>
-              <div className="image_threephotos">
-                  <img src={images.womanImage} alt="Women" />
-                  <div className="number-box">
-                      <p className="number">{women}+</p>
-                  </div>
-                  <h2 className="description">
-                      {language === 'AR' ? 'امرأة من جميع أنحاء القدس' : 'נשים מכל המגוון הירושלמי'}
-                  </h2>
-              </div>
-              <div className="image_threephotos">
-                  <img src={images.volunteerImage} alt="Volunteers" />
-                  <div className="number-box">
-                      <p className="number">{volunteers}+</p>
-                  </div>
-                  <h2 className="description">
-                      {language === 'AR' ? 'متطوعات' : 'מתנדבות'}
-                  </h2>
-              </div>
-      
-              <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
-                  <div>
-                      <label>
-                          שנות קהילה / سنوات من المجتمع
-                          <input
-                              type="number"
-                              value={tempData.years}
-                              onChange={(e) => setTempData({ ...tempData, years: parseInt(e.target.value) })}
-                          />
-                      </label>
-                      <label>
-                          נשים מכל המגוון הירושלמי / امرأة من جميع أنحاء القدس 
-                          <input
-                              type="number"
-                              value={tempData.women}
-                              onChange={(e) => setTempData({ ...tempData, women: parseInt(e.target.value) })}
-                          />
-                      </label>
-                      <label>
-                          מתנדבות / متطوعات
-                          <input
-                              type="number"
-                              value={tempData.volunteers}
-                              onChange={(e) => setTempData({ ...tempData, volunteers: parseInt(e.target.value) })}
-                          />
-                      </label>
-                      <button className='save-button' onClick={handleSave}>Save</button>
-                  </div>
-              </Modal>
-          </div>
-      );
-  };
+        useEffect(() => {
+            const handleScroll = () => {
+                if (!hasAnimated && gridRef.current) {
+                    const rect = gridRef.current.getBoundingClientRect();
+                    if (rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) {
+                        startAnimation(years, women, volunteers);
+                        setHasAnimated(true);
+                    }
+                }
+            };
+    
+            window.addEventListener('scroll', handleScroll);
+            return () => window.removeEventListener('scroll', handleScroll);
+        }, [hasAnimated, years, women, volunteers]);
+    
+        const startAnimation = (yearsFinal, womenFinal, volunteersFinal) => {
+            const duration = 900;
+            const steps = 100;
+            const intervalDuration = duration / steps;
+    
+            const yearsStep = yearsFinal / steps;
+            const womenStep = womenFinal / steps;
+            const volunteersStep = volunteersFinal / steps;
+    
+            let currentStep = 0;
+    
+            const interval = setInterval(() => {
+                currentStep += 1;
+                setYears(Math.min(Math.ceil(currentStep * yearsStep), yearsFinal));
+                setWomen(Math.min(Math.ceil(currentStep * womenStep), womenFinal));
+                setVolunteers(Math.min(Math.ceil(currentStep * volunteersStep), volunteersFinal));
+    
+                if (currentStep >= steps) {
+                    clearInterval(interval);
+                }
+            }, intervalDuration);
+    
+            setHasAnimated(true);
+        };
+    
+        const handleEdit = () => {
+            setTempData({ years, women, volunteers });
+            setIsEditing(true);
+        };
+    
+        const handleSave = async () => {
+            try {
+                const docRef = doc(db, 'HomePage', 'jAaHVUltzrgQ2clDmm2N');
+                await updateDoc(docRef, {
+                    number_1: tempData.years,
+                    number_2: tempData.women,
+                    number_3: tempData.volunteers
+                });
+                setYears(tempData.years);
+                setWomen(tempData.women);
+                setVolunteers(tempData.volunteers);
+                setIsEditing(false);
+            } catch (error) {
+                console.error('Error updating document:', error);
+            }
+        };
+    
+        return (
+            <div ref={gridRef} className="image-grid">
+                {isAuthenticated && (
+                    <div className="button-container">
+                        <button onClick={handleEdit} className="edit-button">
+                            <img 
+                                src="/assets/images/edit.png" // Ensure this is the correct path to your image
+                                alt={language === 'AR' ? 'تعديل' : 'ערוך'}
+                                width={20} // Adjust the width and height as needed
+                                height={20}
+                            />
+                        </button>
+                    </div>
+                )}
+                <div className="image_threephotos">
+                    <img src={images.yearsImage} alt="Years" />
+                    <div className="number-box">
+                        <p className="number">{years}+</p>
+                    </div>
+                    <h2 className="description">
+                        {language === 'AR' ? 'سنوات من المجتمع' : 'שנות קהילה'}
+                    </h2>
+                </div>
+                <div className="image_threephotos">
+                    <img src={images.womanImage} alt="Women" />
+                    <div className="number-box">
+                        <p className="number">{women}+</p>
+                    </div>
+                    <h2 className="description">
+                        {language === 'AR' ? 'امرأة من جميع أنحاء القدس' : 'נשים מכל המגוון הירושלמי'}
+                    </h2>
+                </div>
+                <div className="image_threephotos">
+                    <img src={images.volunteerImage} alt="Volunteers" />
+                    <div className="number-box">
+                        <p className="number">{volunteers}+</p>
+                    </div>
+                    <h2 className="description">
+                        {language === 'AR' ? 'متطوعات' : 'מתנדבות'}
+                    </h2>
+                </div>
+    
+                <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+                    <div>
+                        <label>
+                            {language === 'AR' ? 'سنوات من المجتمع' : 'שנות קהילה'}
+                            <input
+                                type="number"
+                                value={tempData.years}
+                                onChange={(e) => setTempData({ ...tempData, years: parseInt(e.target.value) })}
+                            />
+                        </label>
+                        <label>
+                            {language === 'AR' ? 'امرأة من جميع أنحاء القدس' : 'נשים מכל המגוון הירושלמי'}
+                            <input
+                                type="number"
+                                value={tempData.women}
+                                onChange={(e) => setTempData({ ...tempData, women: parseInt(e.target.value) })}
+                            />
+                        </label>
+                        <label>
+                            {language === 'AR' ? 'متطوعات' : 'מתנדבות'}
+                            <input
+                                type="number"
+                                value={tempData.volunteers}
+                                onChange={(e) => setTempData({ ...tempData, volunteers: parseInt(e.target.value) })}
+                            />
+                        </label>
+                        <button className='save-button' onClick={handleSave}>
+                            {language === 'AR' ? 'حفظ' : 'שמור'}
+                        </button>
+                    </div>
+                </Modal>
+            </div>
+        );
+    };
 
     // Define fetchTeamMembers outside of useEffect
     const fetchTeamMembers = useCallback(async () => {

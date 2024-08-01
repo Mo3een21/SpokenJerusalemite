@@ -91,3 +91,17 @@
     width: 30px;
     height: 30px;
 }
+.promote-user-button {
+    background-color: #215454; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition for background color and transform */
+}
+
+.promote-user-button:hover {
+    background-color: #215454; /* Darker green on hover */
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+}

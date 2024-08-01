@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../app/firebase/firebase';
-import { getDocs, collection, doc, getDoc, deleteDoc } from "firebase/firestore";
+import { getDocs, collection, doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import ListModal from './ListModal'; // Import ListModal
 import './adminUser.css'; // Ensure this import
 
@@ -40,8 +40,9 @@ const AdminUserList = () => {
                 const admins = [];
 
                 querySnapshot.forEach((doc) => {
-                    if (doc.data().status === "admin") {
-                        admins.push({ id: doc.id, ...doc.data() });
+                    const data = doc.data();
+                    if (data.status === "admin" || data.status === "owner") {
+                        admins.push({ id: doc.id, ...data });
                     }
                 });
 
@@ -77,6 +78,17 @@ const AdminUserList = () => {
         }
     };
 
+    const promoteToOwner = async (uid) => {
+        try {
+            const userDocRef = doc(db, 'Users', uid);
+            await updateDoc(userDocRef, { status: 'owner' });
+            setAdminUsers(adminUsers.map(user => user.id === uid ? { ...user, status: 'owner' } : user));
+            alert("User promoted to owner successfully");
+        } catch (error) {
+            console.error("Error promoting user to owner: ", error);
+        }
+    };
+
     const sortUsers = (field) => {
         const order = sortOrder.field === field && sortOrder.order === 'asc' ? 'desc' : 'asc';
         const sortedUsers = [...adminUsers].sort((a, b) => {
@@ -103,7 +115,7 @@ const AdminUserList = () => {
 
     return (
         <div className="table-container">
-            <h1>Admin Users</h1>
+            <h1>Admin and Owner Users</h1>
             <table className="user-table">
                 <thead>
                     <tr>
@@ -159,6 +171,11 @@ const AdminUserList = () => {
                                 <button onClick={() => deleteAdminUser(user.id)} className="delete-user-button">
                                     <img src="/assets/images/deleteStory.png" alt="Delete" className="delete-user-icon" />
                                 </button>
+                                {user.status === 'admin' && (
+                                    <button onClick={() => promoteToOwner(user.id)} className="promote-user-button">
+                                        Promote to Owner
+                                    </button>
+                                )}
                             </td>
                         </tr>
                     ))}
